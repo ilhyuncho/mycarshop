@@ -33,10 +33,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
-
-
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
@@ -44,6 +41,17 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.2.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Thymeleaf layout ( 24.10.17 )
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
+    // Thymeleaf java8time ( 24.10.17 )
+    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-java8time', version: '3.0.4.RELEASE'
+
+
+
+
+    // spring security (24.10.17 )
+    //implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 tasks.named('test') {
