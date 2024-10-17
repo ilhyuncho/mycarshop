@@ -46,9 +46,8 @@ dependencies {
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
     // Thymeleaf java8time ( 24.10.17 )
     implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-java8time', version: '3.0.4.RELEASE'
-
-
-
+    // 리액티브 웹 의존성 WebTestClient 사용을 위해( 24.10.17 )
+    testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 
     // spring security (24.10.17 )
     //implementation 'org.springframework.boot:spring-boot-starter-security'
