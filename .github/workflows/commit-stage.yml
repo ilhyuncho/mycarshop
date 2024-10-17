@@ -3,7 +3,7 @@ on: push  # 새 코드를 저장소로 푸시하면 워크플로 를 시작 함
 
 jobs:
   build:
-    name: Buiild and Test
+    name: Build and Test
     runs-on: ubuntu-22.04
     permissions:    # 작업에 부여된 권한
       contents: read    # 현재 깃 저장소를 체크 아웃할 수 있는 권한
