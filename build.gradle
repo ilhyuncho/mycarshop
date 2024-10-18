@@ -26,6 +26,11 @@ repositories {
     mavenCentral()
 }
 
+// 스프링 클라우드 컨피그 클라이언트 의존성 추가 ( 24.10.18 )
+ext {
+    set('springCloudVersion',"2021.0.3")
+}
+
 bootRun {
     systemProperty 'spring.profiles.active', 'test'
 }
@@ -54,11 +59,20 @@ dependencies {
     // 스프링 부트 설정 프로세서 의존성 추가 ( 24.10.18 )
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
+    // 스프링 클라우드 컨피그 클라이언트 의존성 추가 ( 24.10.18 )
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
 
 
     // spring security (24.10.17 )
     //implementation 'org.springframework.boot:spring-boot-starter-security'
+}
+
+// 스프링 클라우드 컨피그 클라이언트 의존성 추가 ( 24.10.18 )
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 tasks.named('test') {
