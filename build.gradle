@@ -58,11 +58,11 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
     // 스프링 부트 설정 프로세서 의존성 추가 ( 24.10.18 )
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-
+    
     // 스프링 클라우드 컨피그 클라이언트 의존성 추가 ( 24.10.18 )
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
-
-
+    // 스프링 리트라이 의존성( 24.10.18 ) - 설정 서버 연결 실패시 재 시도 하도록
+    implementation 'org.springframework.retry:spring-retry'
 
     // spring security (24.10.17 )
     //implementation 'org.springframework.boot:spring-boot-starter-security'

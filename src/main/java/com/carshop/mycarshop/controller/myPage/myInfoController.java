@@ -17,13 +17,13 @@ public class myInfoController {
     @GetMapping("/info")
     public String getMyInfo(){
 
-        return "/myPage/myInfo";
+        return "myPage/myInfo";
     }
 
     @GetMapping("/carDetail")
     public String getcarDetail(){
 
-        return "/myPage/carDetail";
+        return "myPage/carDetail";
     }
 
 }
