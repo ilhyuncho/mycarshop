@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT  // 임의의 포트를 듣는 서블릿 컨테이너 로드
 )
 
-@ActiveProfiles("integration")
+@ActiveProfiles("test")
 class MycarshopApplicationTests {
 
     @Autowired
@@ -22,7 +22,7 @@ class MycarshopApplicationTests {
     @Test
     void createTest(){
         var bookData = Book.builder()
-                .bookNumber("0201fsd11f")
+                .bookNumber("0201f133sd11f")
                 .build();
 
         webTestClient.post()
