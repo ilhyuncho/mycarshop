@@ -18,29 +18,29 @@ jobs:
           user: 'webuser'
           password: 'abcd1234'
       - name: Checkout source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3     # 현재 깃 저장소를 체크아웃
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v3   # 자바 런타임을 설치 하고 설정
         with:
           distribution: temurin
           java-version: 17
           cache: gradle
       - name: Code vulnerability scanning
-        uses: anchore/scan-action@v3
-        id: scan
+        uses: anchore/scan-action@v3        # 그라이프를 사용해 취약성을 스캔
+        id: scan                            # 현재 단계의 식별자를 할당 하고 이후의 단계에서 참고 할수 있도록
         with:
-          path: "${{ github.workspace }}"
-          fail-build: false
-          severity-cutoff: high
-          acs-report-enable: true
+          path: "${{ github.workspace }}"   # 체크아웃 저장소 패스
+          fail-build: false                 # 취약성 발견시 빌드 실패 여부
+          severity-cutoff: high             # 오류로 간주할 최소 수준의 보안 유형(낮음, 중간, 높음, 치명적)
+          acs-report-enable: true           # 스캔 완료 후 리포트 생성 여부
       - name: Upload vulnerability report
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v2    #깃허브로 취약성 리포트 전송
         if: success() || failure()
         with:
-          sarif_file: ${{ steps.scan.outputs.sarif }}
+          sarif_file: ${{ steps.scan.outputs.sarif }}     # 이전 단계 결과의 리포트를 가져온다
       - name: Build, unit tests and integration tests
-        run: |
-          chmod +x gradlew
+        run: |                                    # 윈도우 호환성 해결, 그래들 스크립트를 실행 가능하게 
+          chmod +x gradlew          
           ./gradlew build
 
 

@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("books")
 @RequiredArgsConstructor
@@ -19,6 +21,11 @@ public class BookController {
     public Book post(@RequestBody Book book) {
 
         return bookService.addBookData(book);
+    }
+
+    @GetMapping
+    public List<Book> getBooks(){
+        return bookService.getBooks();
     }
 
 }

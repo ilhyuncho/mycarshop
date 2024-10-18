@@ -16,7 +16,6 @@ sourceCompatibility = '17'
 //    }
 //}
 
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -25,6 +24,10 @@ configurations {
 
 repositories {
     mavenCentral()
+}
+
+bootRun {
+    systemProperty 'spring.profiles.active', 'test'
 }
 
 dependencies {
@@ -48,6 +51,11 @@ dependencies {
     implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-java8time', version: '3.0.4.RELEASE'
     // 리액티브 웹 의존성 WebTestClient 사용을 위해( 24.10.17 )
     testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+    // 스프링 부트 설정 프로세서 의존성 추가 ( 24.10.18 )
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+
+
 
     // spring security (24.10.17 )
     //implementation 'org.springframework.boot:spring-boot-starter-security'

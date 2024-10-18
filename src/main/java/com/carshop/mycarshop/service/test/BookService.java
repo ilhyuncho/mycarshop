@@ -6,6 +6,7 @@ import com.carshop.mycarshop.domain.test.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -13,6 +14,10 @@ import java.util.Optional;
 public class BookService {
 
     private final BookRepository bookRepository;
+
+    public List<Book> getBooks(){
+        return bookRepository.findAll();
+    }
 
     public Book addBookData(Book book) {
         return bookRepository.save(book);
