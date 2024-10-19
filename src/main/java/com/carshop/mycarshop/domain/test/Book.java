@@ -1,5 +1,6 @@
 package com.carshop.mycarshop.domain.test;
 
+import com.carshop.mycarshop.domain.BaseEntity;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @ToString
 @Table(name="Books")
 @Log4j2
-public class Book {
+public class Book extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="bookId")
