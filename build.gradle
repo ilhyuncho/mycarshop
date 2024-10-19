@@ -61,8 +61,13 @@ dependencies {
     
     // 스프링 클라우드 컨피그 클라이언트 의존성 추가 ( 24.10.18 )
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
-    // 스프링 리트라이 의존성( 24.10.18 ) - 설정 서버 연결 실패시 재 시도 하도록
+    // 스프링 리트라이 의존성 ( 24.10.18 ) - 설정 서버 연결 실패시 재 시도 하도록
     implementation 'org.springframework.retry:spring-retry'
+
+    // 스프링 부트 액추에이터 ( 24.10.19 ) - 최초에는 RefreshScopeRefreshed가 발생 하도록 엔드포인트를 제공 하려고 추가
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+
 
     // spring security (24.10.17 )
     //implementation 'org.springframework.boot:spring-boot-starter-security'
