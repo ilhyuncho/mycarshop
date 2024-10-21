@@ -35,6 +35,25 @@ bootRun {
     systemProperty 'spring.profiles.active', 'test'
 }
 
+// 클라우드 네이티브 빌드팩 설정
+// 빌드팩을 사용해 OCI 이미지를 빌드하기 위한 스프링 부트 플러그인 작업
+// 추가적으로 (원격)컨테이너 저장소에 저장 가능 (github packages 에 등록됨)
+// ./gradlew bootBuildImage --imageName ghcr.io/ilhyuncho/mycarshop
+// --publishImage -PregistryUrl='ghcr.io' -PregistryUsername=ilhyuncho
+// -PregistryToken=<your_github_token>
+bootBuildImage{
+    imageName = "${project.name}"
+    environment = ["BP_JVM_VERSION" : "17.*"]
+
+    docker{ // 컨테이너 저장소 인증을 설정하기 위한 섹션, 같은 그래들 속성을 통해 전달 됨
+        publishRegistry{
+            username=project.findProperty("registryUsername")
+            password=project.findProperty("registryToken")
+            url=project.findProperty("registryUrl")
+        }
+    }
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
