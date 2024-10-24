@@ -5,6 +5,10 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ilhyuncho/mycarshop
   VERSION: latest
+  AWS_REGION: us-east-1 #리전
+  S3_BUCKET_NAME: mycarshop-deploy #버킷 이름
+  CODE_DEPLOY_APPLICATION_NAME: mycarshop_codedeploy #CodeDeploy 애플리케이션 이름
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: mycarshop_deployment_group #CodeDeploy 배포 그룹 이름
 jobs:
   build:
     name: Build and Test
@@ -90,4 +94,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }} # 저장소와 인증하기 위해 필요한 토큰. 깃허브 액션이 제공 함
       - name: Publish container image # 릴리스 후보를 저장소로 푸시
         run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
-
+      # (6) AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
