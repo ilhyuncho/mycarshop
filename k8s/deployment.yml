@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mycarshop
+  labels:
+    app: mycarshop
+spec:
+  selector:
+    matchLabels:
+      app: mycarshop
+  template:     # 파드 생성을 위한 템플릿
+    metadata:
+      labels:
+        app: mycarshop
+    spec:
+      containers:       #파드 내 컨테이너의 목록
+        - name: mycarshop     #파드 이름
+          image: mycarshop
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:        #파드로 전달되는 환경 변수의 목록
+            - name: BPL_JVM_THREAD_COUNT
+              value: "50"
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mariadb://mycarshop-mariadb/project2db
+#            - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+#              value: org.hibernate.dialect.MariaDBDialect
+            - name: SPRING_DATASOURCE_DRIVER-CLASS-NAME
+              value: org.mariadb.jdbc.Driver
+
+#            - name: SPRING_PROFILES_ACTIVE
+#              value: test
+
+

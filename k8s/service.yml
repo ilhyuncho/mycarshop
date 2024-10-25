@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mycarshop-service
+  labels:
+    app: mycarshop-service
+spec:
+  type: ClusterIP
+  selector:
+    app: mycarshop-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
