@@ -17,7 +17,6 @@ public class myInfoController {
     @GetMapping("/info")
     public String getMyInfo(){
 
-
         return "myPage/myInfo";
     }
 
