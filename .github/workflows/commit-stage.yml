@@ -119,11 +119,13 @@ jobs:
           java-version: 17
           cache: gradle
       # (5) Gradle build (Test 제외)
+#      - name: Build container image
+#        run: |
+#          chmod +x gradlew
+#          ./gradlew bootBuildImage \
+#            --imageName ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
       - name: Build container image
-        run: |
-          chmod +x gradlew
-          ./gradlew bootBuildImage \
-            --imageName ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        run: ./gradlew clean build -x test
       # (6) AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
