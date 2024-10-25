@@ -39,3 +39,6 @@ out/
 /gradle/wrapper/gradle-wrapper.properties
 /gradlew
 /gradlew.bat
+
+### AWS codedeploy db info
+application-aws.properties
