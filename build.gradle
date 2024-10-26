@@ -54,7 +54,8 @@ bootBuildImage{
     }
 }
 
-jar {
+
+jar {   // executable jar 파일만 생성
     enabled = false
 }
 
