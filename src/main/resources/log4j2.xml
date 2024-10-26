@@ -58,9 +58,9 @@
             <appender-ref ref="console" />
         </logger>
 
-<!--        <logger name="com.carshop.mycarshop.common.aspect" level="INFO" additivity="false" >-->
-<!--            <appender-ref ref="console_aspect_error" />-->
-<!--        </logger>-->
+        <logger name="com.carshop.mycarshop.common.aspect" level="INFO" additivity="false" >
+            <appender-ref ref="console_aspect_error" />
+        </logger>
 <!--        <logger name="com.carshop.mycarshop.common.Interceptor" level="INFO" additivity="false" >-->
 <!--            <appender-ref ref="console_aspect_error" />-->
 <!--        </logger>-->
