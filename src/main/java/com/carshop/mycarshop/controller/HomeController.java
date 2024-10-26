@@ -14,6 +14,7 @@ public class HomeController {
     @GetMapping("/")
     public String getGreeting(){
 
+
         return userDefineProperties.getGreeting();
     }
 }
