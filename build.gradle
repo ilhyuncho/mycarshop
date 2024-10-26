@@ -110,6 +110,9 @@ dependencies {
     // AOP 적용 ( 24.10.26 )
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 
+    // validation ( 24.10.26 )
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 
     // spring security (24.10.17 )
     //implementation 'org.springframework.boot:spring-boot-starter-security'
