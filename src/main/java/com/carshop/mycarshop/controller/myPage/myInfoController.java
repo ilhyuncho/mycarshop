@@ -17,6 +17,7 @@ public class myInfoController {
     @GetMapping("/info")
     public String getMyInfo(){
 
+        log.error("myinfo/info - call");
         return "myPage/myInfo";
     }
 
