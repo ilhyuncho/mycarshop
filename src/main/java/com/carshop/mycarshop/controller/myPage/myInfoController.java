@@ -4,6 +4,7 @@ package com.carshop.mycarshop.controller.myPage;
 import com.carshop.mycarshop.dto.PageRequestDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/myInfo")
 @RequiredArgsConstructor
 @Log4j2
+@PreAuthorize("hasRole('USER')")
 public class myInfoController {
 
     @GetMapping("/info")

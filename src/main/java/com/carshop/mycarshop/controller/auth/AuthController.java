@@ -13,10 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthController {
 
     @GetMapping("/login")
-    public void login(){
+    public void login(String error, String logout){
 
-        log.error("auth/login call");
-        log.info("auth/login call");
+        log.error("login get................");
+
+        // 로그아웃 호출 URL : http://localhost:8090/logout
+        // 으로 redirect : http://localhost:8090/auth/login?logout
+        if( logout != null){
+            log.error("user logout======================");
+        }
     }
     @GetMapping("/register")
     public void register(){
