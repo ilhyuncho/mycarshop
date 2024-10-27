@@ -30,8 +30,8 @@
         </Console>
 
         <RollingFile name="FileAppender"
-                     fileName="logs/application-log4j2.log"
-                     filePattern="logs/application-log4j2-%d{yyyy-MM-dd}-%i.log">
+                     fileName="/home/ubuntu/app/logs/application-log4j2.log"
+                     filePattern="/home/ubuntu/app/logs/application-log4j2-%d{yyyy-MM-dd}-%i.log">
             <PatternLayout>
                 <Pattern>${LOG_PATTERN}</Pattern>
             </PatternLayout>
