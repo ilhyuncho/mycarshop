@@ -25,6 +25,7 @@ class MycarshopApplicationTests {
                 .bookNumber("0201f133sd11f")
                 .build();
 
+
         webTestClient.post()
                 .uri("/books")
                 .bodyValue(bookData)
