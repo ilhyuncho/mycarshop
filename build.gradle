@@ -113,9 +113,8 @@ dependencies {
     // validation ( 24.10.26 )
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-
-    // spring security (24.10.17 )
-    //implementation 'org.springframework.boot:spring-boot-starter-security'
+    // spring security (24.10.27 )
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 // 스프링 클라우드 컨피그 클라이언트 의존성 추가 ( 24.10.18 )
