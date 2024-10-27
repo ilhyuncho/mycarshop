@@ -65,9 +65,9 @@
 <!--            <appender-ref ref="console_aspect_error" />-->
 <!--        </logger>-->
 
-        <!--        <logger name="com.example.cih" level="WARN" >-->
-        <!--            <appender-ref ref="FileAppender" />-->
-        <!--        </logger>-->
+        <logger name="com.carshop" level="WARN" >
+            <appender-ref ref="FileAppender" />
+        </logger>
 
         <root level="INFO">
             <AppenderRef ref="console"/>
