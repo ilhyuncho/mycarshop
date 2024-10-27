@@ -115,6 +115,12 @@ dependencies {
 
     // spring security (24.10.27 )
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // test 코드에 대한 lombok 주입 ( test 시 log 에러 발생 때문에 - insertBoard() )
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.projectlombok:lombok'
+
 }
 
 // 스프링 클라우드 컨피그 클라이언트 의존성 추가 ( 24.10.18 )
