@@ -16,6 +16,7 @@ public class AuthController {
     public void login(){
 
         log.error("auth/login call");
+        log.info("auth/login call");
     }
     @GetMapping("/register")
     public void register(){

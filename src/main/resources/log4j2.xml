@@ -29,18 +29,18 @@
             <PatternLayout disableAnsi="false" pattern="${LOG_ASPECT_PATTERN}" />
         </Console>
 
-<!--        <RollingFile name="FileAppender"-->
-<!--                     fileName="logs/application-log4j2.log"-->
-<!--                     filePattern="logs/application-log4j2-%d{yyyy-MM-dd}-%i.log">-->
-<!--            <PatternLayout>-->
-<!--                <Pattern>${LOG_PATTERN}</Pattern>-->
-<!--            </PatternLayout>-->
-<!--            <Policies>-->
-<!--                <SizeBasedTriggeringPolicy size="10MB" />-->
-<!--                <TimeBasedTriggeringPolicy interval="7"/>-->
-<!--                <DefaultRolloverStrategy max="10"/>-->
-<!--            </Policies>-->
-<!--        </RollingFile>-->
+        <RollingFile name="FileAppender"
+                     fileName="logs/application-log4j2.log"
+                     filePattern="logs/application-log4j2-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <Pattern>${LOG_PATTERN}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB" />
+                <TimeBasedTriggeringPolicy interval="7"/>
+                <DefaultRolloverStrategy max="10"/>
+            </Policies>
+        </RollingFile>
     </Appenders>
 
     <loggers>
