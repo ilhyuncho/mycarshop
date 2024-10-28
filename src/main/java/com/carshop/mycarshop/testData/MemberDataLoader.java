@@ -34,6 +34,7 @@ public class MemberDataLoader {
     public void loadMemberTestData(){
 
         log.error("loadMemberTestData()!!!!!!!!!!!!!!");
+
         memberRepository.deleteAll();
 
         // member 생성
