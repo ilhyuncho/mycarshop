@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>Item Detail Info</title>
+</head>
+
+<div layout:fragment="content">
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          상품 상세 정보( 관리자 용 )
+        </div>
+        <div class="card-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">ShopItemId</span>
+            <label><input type="text" class="form-control" th:value="${responseDTO.shopItemId}" readonly></label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">ItemName</span>
+            <label><input type="text" class="form-control" th:value="${responseDTO.itemName}" readonly></label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">originalPrice</span>
+            <label><input type="text" class="form-control" th:value="${responseDTO.originalPrice}" readonly></label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">StockCount</span>
+            <label><input type="text" class="form-control" th:value="${responseDTO.stockCount}" readonly></label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">optionType1</span>
+            <label><input type="text" class="form-control" th:value="${responseDTO.getOptionType(0).optionType}" readonly></label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">optionValue1</span>
+            <input type="text" class="form-control" th:value="${responseDTO.getOptionType(0).optionValueForView}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">optionType2</span>
+            <label>
+              <input type="text" th:if="${responseDTO.listOptionType.size() > 1}"
+                     class="form-control" th:value="${responseDTO.getOptionType(1).optionType}" readonly>
+            </label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">optionValue2</span>
+            <input type="text" th:if="${responseDTO.listOptionType.size() > 1}"
+                   class="form-control" th:value="${responseDTO.getOptionType(1).optionValueForView}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">MembershipPercent</span>
+            <label><input type="text" class="form-control" th:value="${responseDTO.membershipPercent}" readonly>
+            </label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">이벤트 할인 적용 유무</span>
+            <label>
+              <input type="radio" name="isEventTarget" value="1" th:checked="${responseDTO.isEventTarget eq true}" onclick="return false;">적용</input>
+              <input type="radio" name="isEventTarget" value="0" th:checked="${responseDTO.isEventTarget eq false}" onclick="return false;">미적용</input>
+            </label>
+          </div>
+
+          <div class="my-4">
+            <div class="float-end">
+              <a th:href="|@{/admin/shopItem}|" class="text-decoration-none">
+                <button type="button" class="btn btn-primary">List</button>
+              </a>
+              <a th:href="|@{'/admin/shopItemModify/' + ${responseDTO.shopItemId}}|" class="text-decoration-none">
+                <button type="button" class="btn btn-info">기본 정보 수정</button>
+              </a>
+              <a th:href="|@{'/admin/imageOrderModify/' + ${responseDTO.shopItemId}}|" class="text-decoration-none">
+                <button type="button" class="btn btn-warning">이미지 순서 수정</button>
+              </a>
+            </div>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+
+        <!-- 상품 메인 이미지 -->
+        <div class="row mt-3">
+          <div class="col">
+            <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
+              <div class="card col-4">
+                <div class="card-header d-flex justify-content-center">
+                  (메인 이미지) &nbsp; [[${responseDTO.mainImage.fileName}]]
+                </div>
+                <div class="card-body">
+                  <img th:src="|/view/${responseDTO.mainImage.uuid}_${responseDTO.mainImage.fileName}|" th:width="200px"
+                       th:data-src="${responseDTO.mainImage.uuid}" onclick="window.open(this.src)">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 상품 이미지 리스트-->
+        <div class="row mt-3">
+          <div class="col">
+            <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
+              <th:block th:each="fileName:${responseDTO.getListExceptMainImage()}">
+                <div class="card col-4">
+                  <div class="card-header d-flex justify-content-center">
+                    [[${fileName.fileName}]] &nbsp; (order: [[${fileName.imageOrder}]])
+                  </div>
+                  <div class="card-body">
+                    <img th:src="|/view/${fileName.uuid}_${fileName.fileName}|" th:width="200px"
+                         th:data-src="${fileName.uuid}" onclick="window.open(this.src)">
+                  </div>
+                </div>
+              </th:block>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  <!--    axios 라이브러리 추가-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  // 최초 페이지 로딩
+  pageInit()
+
+</script>

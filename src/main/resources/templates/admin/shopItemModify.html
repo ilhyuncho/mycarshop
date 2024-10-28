@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+
+<head>
+  <title>Item Detail Modify</title>
+</head>
+
+<div layout:fragment="content">
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          상품 수정
+        </div>
+        <div class="card-body">
+
+          <form id="formShop">
+            <div class="input-group mb-3">
+              <span class="input-group-text">ShopItemId</span>
+              <label>
+                <input type="text" class="form-control shopItemId"
+                       th:value="${responseDTO.shopItemId}" name="shopItemId" readonly>
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">ItemName</span>
+              <label>
+                <input type="text" class="form-control itemName" th:value="${responseDTO.itemName}">
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">originalPrice</span>
+              <label>
+                <input type="text" class="form-control originalPrice" th:value="${responseDTO.originalPrice}">
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">StockCount</span>
+              <label>
+                <input type="text" class="form-control stockCount" th:value="${responseDTO.stockCount}">
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">OptionType1</span>
+              <label>
+                <select name="itemOptionType1" class= "itemOptionType1" id="itemOptionTypeSelect1">
+                  <option th:each="i, stat: ${ItemOptionTypeList}"
+                          th:selected="${i.getName() == responseDTO.getListOptionType().get(0).getOptionType()}"
+                          th:value="${i.getType()}">[[${i.getName}]]</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">OptionValue1</span>
+              <label>
+                <input type="text" class="form-control itemOptionValue1"
+                       th:value="${responseDTO.getOptionType(0).optionValueForView}">
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">OptionType2</span>
+              <label>
+                <select name="itemOptionType2" class= "itemOptionType2" >
+                  <option th:each="i, stat: ${ItemOptionTypeList}" th:value="${i.getType()}"
+                          th:selected="${i.getName() == ((responseDTO.getListOptionType().size() > 1)
+                                      ? responseDTO.getListOptionType().get(1).getOptionType() : -1) }">[[${i.getName}]] </option>
+                </select>
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">OptionValue2</span>
+              <label>
+                <input type="text" class="form-control itemOptionValue2"
+                       th:value="${(responseDTO.getListOptionType().size() > 1)
+                        ? responseDTO.getOptionType(1).optionValueForView : ''}">
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">MembershipPercent</span>
+              <label>
+                <input type="text" class="form-control membershipPercent" th:value="${responseDTO.membershipPercent}">
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text isEventTarget">이벤트 할인 적용 유무</span>
+              <label>
+                <input type="radio" name="isEventTarget" th:checked="${responseDTO.isEventTarget eq true}" value=true>적용</input>
+                <input type="radio" name="isEventTarget" th:checked="${responseDTO.isEventTarget eq false}" value=false>미적용</input>
+              </label>
+            </div>
+
+            <!-- 첨부 파일 새로 등록-->
+            <div class="input-group mb-3">
+              <span class="input-group-text">Images</span>
+              <div class="float-end uploadHidden">
+                <button type="button" class="btn btn-primary uploadFileBtn">ADD Files</button>
+              </div>
+            </div>
+
+            <div class="my-4">
+              <div class="float-end">
+                <a th:href="|@{/admin/shopItem}|" class="text-decoration-none">
+                  <button type="button" class="btn btn-primary">List</button>
+                </a>
+                <button type="button" class="btn btn-secondary updateItemInfoBtn">수정 완료</button>
+                <button type="button" class="btn btn-danger removeBtn">삭제</button>
+              </div>
+            </div>
+
+          </form>
+        </div><!-- <div class="card-body">-->
+
+        <!--  첨부파일 섬네일을 보여줄 부분-->
+        <div class="row mt-3">
+          <div class="col">
+            <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
+              <th:block th:each="fileName:${responseDTO.getListAllImage()}">
+                <div class="card col-3">
+                  <div class="card-header d-flex">
+                    <input type="radio" name="isMainImage" th:value="${fileName.fileName}"
+                           th:checked="${fileName.fileName == responseDTO.mainImage.fileName}">메인
+                    </input>
+                    &nbsp;&nbsp;
+                    [[${fileName.fileName}]]
+                    <button class="btn-sm btn-danger" th:onclick="removeFileData([[${fileName.uuid}]], [[${fileName.fileName}]], false, true, this)">X</button>
+                  </div>
+                  <div class="card-body">
+                    <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="|${fileName.uuid}_${fileName.fileName}|" >
+                  </div>
+                </div>
+              </th:block>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <!--첨부파일 추가를 위한 모달창-->
+  <div class="modal uploadModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Upload File</h5>
+          <button type="button" class="btn-close closeUploadBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <input type="file" name="files" class="form-control" multiple>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary uploadBtn">Upload</button>
+          <button type="button" class="btn btn-outline-dark closeUploadBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>  <!--  <div class="modal uploadModal" tabindex="-1">-->
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/upload.js"></script>
+  <script src="/js/admin.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
+  <script src="/js/utilEventHandler.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
+  const formShop = document.querySelector("#formShop")
+  const uploadResult = document.querySelector(".uploadResult")
+
+  const shopItemId = document.querySelector('.shopItemId');
+  const membershipPercent = document.querySelector('.membershipPercent');
+  const itemName = document.querySelector('.itemName');
+  const originalPrice = document.querySelector('.originalPrice');
+  const stockCount = document.querySelector('.stockCount');
+  const itemOptionType1 = document.querySelector('.itemOptionType1');
+  const itemOptionValue1 = document.querySelector('.itemOptionValue1');
+  const itemOptionType2 = document.querySelector('.itemOptionType2');
+  const itemOptionValue2 = document.querySelector('.itemOptionValue2');
+
+  //첨부 파일 삭제 임시 저장
+  const removeFileList = []
+
+  // 최초 페이지 로딩
+  pageInit()
+
+  // 모달창의 파일 업로드 처리
+  document.querySelector(".uploadBtn").addEventListener("click", function(e){
+    const formObj = new FormData();
+
+    const fileInput = document.querySelector("input[name='files']")
+    const files = fileInput.files
+
+    for(let i = 0; i < files.length;i++){
+      formObj.append("files", files[i]);
+    }
+
+    uploadToServer(formObj).then(result => {
+
+      for(const uploadResult of result){
+        showUploadFile(uploadResult, false)
+      }
+
+      uploadModal.hide()
+    }).catch(e => {
+      uploadModal.hide()
+    })
+  }, false)
+
+  // Item 수정 요청
+  document.querySelector(".updateItemInfoBtn").addEventListener("click", function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if(isNaN(membershipPercent.value)){
+      alert("숫자만 입력 가능합니다")
+      return;
+    }
+
+    // 업로드될 파일 이름 리스트 가져오기
+    const fileNameList = getUploadFileNames()
+    if(fileNameList.length === 0){
+      alert('상품의 이미지를 추가해야 합니다!!')
+      return;
+    }
+
+    // 삭제대상 파일들을 삭제
+    callRemoveFiles().then(result =>{
+      if(result.length > 0){
+        alert('remove files fail!!!')
+      }
+    })
+
+    ////////////////////////////////////////////////////
+    const eventTargetValue = document.querySelector('input[name="isEventTarget"]:checked').value;
+
+    const itemOptionList = []
+    if(itemOptionType1.value > 0 && itemOptionValue1.value.length > 0){
+      itemOptionList.push({typePriority:1, optionType:itemOptionType1.value, optionValue:itemOptionValue1.value})
+    }
+    if(itemOptionType2.value > 0 && itemOptionValue2.value.length > 0){
+      itemOptionList.push({typePriority:2, optionType:itemOptionType2.value, optionValue:itemOptionValue2.value})
+    }
+
+    const formObj = {
+      shopItemId:shopItemId.value,
+      itemName:itemName.value,
+      originalPrice:originalPrice.value,
+      stockCount:stockCount.value,
+      membershipPercent:membershipPercent.value,
+      isEventTarget:eventTargetValue,
+      itemOptionList:itemOptionList,
+      fileNames:fileNameList,
+      mainImageFileName:getMainImageFileName()
+    }
+
+    modifyShopItem(formObj).then(result => {
+      console.log(result)
+
+      // 화면 재 갱신
+      self.location = '/admin/shopItemDetail/' + shopItemId.value
+
+    }).catch(e => { // HttpStatus.OK 가 아니면.. catch 구문을 탐
+      console.log(e.response.data.message)
+      alert('catch: ' + e.response.data.message)
+
+      // 화면 재 갱신
+      self.location = '/admin/shopItemDetail/' + shopItemId.value
+    })
+
+  }, false)
+
+  // 등록 Item 삭제 요청
+  document.querySelector(".removeBtn").addEventListener("click", function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    // 화면에 보이는 파일들을 form태그에 추가
+    appendFileData()
+
+    // 화면에서 안 보이도록 처리된 파일들을 form 태그에 추가
+    appendNotShownData()
+
+    formShop.action = `/admin/shopItemDelete`
+    formShop.method = 'post'
+    formShop.submit()
+
+  }, false)
+
+</script>

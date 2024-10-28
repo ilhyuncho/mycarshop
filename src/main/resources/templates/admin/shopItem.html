@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <title>Shop Item Register</title>
+</head>
+
+<div layout:fragment="content">
+
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    상품 등록
+                </div>
+                <div class="card-body">
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">상품 명</span>
+                        <label><input type="text" class="form-control itemName" placeholder="예) 미지정 -> 자동 생성"></label>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">상품 타이틀 명</span>
+                        <label><input type="text" class="form-control itemTitle" th:value="|Item Title!!|"></label>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">상품 설명</span>
+                        <label><input type="text" class="form-control itemDesc" th:value="|Item Desc fsdfsdf|"></label>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">원가 금액</span>
+                        <label><input type="text" class="form-control originalPrice" th:value="10000" placeholder="상품 기본 가격"></label>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">재고 수량</span>
+                        <label><input type="text" class="form-control stockCount" th:value="100"></label>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">멤버쉽 할인율</span>
+                        <label><input type="text" class="form-control membershipPercent" th:value="10"></label>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text isEventTarget">이벤트 할인 적용 유무</span>
+                        <label>
+                            <input type="radio" name="isEventTarget" checked value=true>적용</input>
+                            <input type="radio" name="isEventTarget" value=false>미적용</input>
+                        </label>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">옵션1 타입</span>
+                        <label>
+                            <select class= "itemOptionType1">
+                                <option th:each="i, stat: ${ItemOptionTypeList}" th:selected="${i.getType() == 1}"
+                                        th:value="${i.getType()}">[[${i.getName}]]</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">옵션1 값</span>
+                        <label><input type="text" class="form-control itemOptionValue1" value="노랑색, 파랑색, 하늘색"></label>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">옵션2 타입</span>
+                        <label>
+                            <select class= "itemOptionType2">
+                                <option th:each="i, stat: ${ItemOptionTypeList}" th:selected="${i.getType() == 2}"
+                                        th:value="${i.getType()}">[[${i.getName}]]</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">옵션2 값</span>
+                        <label><input type="text" class="form-control itemOptionValue2" value="소,중,대"></label>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">상품 이미지</span>
+                        <div class="float-end uploadHidden">
+                            <button type="button" class="btn btn-primary uploadFileBtn">ADD Files</button>
+                        </div>
+                    </div>
+
+                    <div class="my-4">
+                        <div class="float-end">
+                            <button type="submit" class="btn btn-primary registerItemBtn">아이템 등록</button>
+                            <button type="reset" class="btn btn-secondary resetBtn">입력 초기화</button>
+                        </div>
+                    </div>
+
+                </div><!-- <div class="card-body">-->
+
+            </div>
+        </div>
+    </div>
+
+    <!--    첨부파일 썸네일 보여줄 부분-->
+    <div class="row mt-3">
+        <div class="col">
+            <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap;">
+
+            </div>
+        </div>
+    </div>
+
+    <!--    상품 리스트 보여줄 부분-->
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    상품 리스트
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">shopItemId</th>
+                            <th scope="col">상품 명</th>
+                            <th scope="col">원가 금액</th>
+                            <th scope="col">재고 수량</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="dto:${itemList}">
+                            <th scope="row">
+                                <div class="text-decoration-none"> [[${dto.shopItemId}]]</div>
+                                <img th:src="|/view/${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|" th:width="200px"
+                                     th:data-src="${dto.getMainImage().uuid}" onclick="window.open(this.src)">
+                            </th>
+                            <td>
+                                <a th:href="|@{'/admin/shopItemDetail/' + ${dto.shopItemId}}|"
+                                   class="text-decoration-none"> [[${dto.itemName}]]</a>
+                            </td>
+                            <td>[[${dto.originalPrice}]]</td>
+                            <td>[[${dto.stockCount}]]</td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div><!-- <div class="card-body">-->
+
+            </div>
+        </div>
+    </div>
+
+    <!--    첨부파일 추가를 위한 모달창-->
+    <div class="modal uploadModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload File</h5>
+                    <button type="button" class="btn-close closeUploadBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input type="file" name="files" class="form-control" multiple>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary uploadBtn">Upload</button>
+                    <button type="button" class="btn btn-outline-dark closeUploadBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>  <!--    uploadModal-->
+
+    <!--    axios 라이브러리 추가-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/upload.js"></script>
+    <script src="/js/admin.js"></script>
+    <script src="/js/myInfo.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/utilViewHtml.js"></script>
+    <script src="/js/utilEventHandler.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+    // 이미지 업로드 모달
+    const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
+    // 이미지 파일 업로드 결과 화면
+    const uploadResult = document.querySelector(".uploadResult")
+
+    const itemName = document.querySelector('.itemName');
+    const itemTitle = document.querySelector('.itemTitle');
+    const itemDesc = document.querySelector('.itemDesc');
+    const originalPrice = document.querySelector('.originalPrice');
+    const stockCount = document.querySelector('.stockCount');
+    const membershipPercent = document.querySelector('.membershipPercent');
+    const itemOptionType1 = document.querySelector('.itemOptionType1');
+    const itemOptionValue1 = document.querySelector('.itemOptionValue1');
+    const itemOptionType2 = document.querySelector('.itemOptionType2');
+    const itemOptionValue2 = document.querySelector('.itemOptionValue2');
+
+
+    // 에러 처리 부분 begin ----------------------------
+    const errors = [[${errors}]]
+    console.log('errors : ' + errors)
+
+    let errorMsg = ''
+    if (errors) {
+        for (let i = 0; i < errors.length; i++) {
+            console.log(errors[i])
+
+            errorMsg += `${errors[i].field}은 ${errors[i].code} \n` + `, ${errors[i].defaultMessage}`
+        }
+
+        // param ( 1: 바뀐 주소와 함께 저장할 객체, 2: 바꿀 제목, 3: 바꿀 주소 )
+        // https://www.zerocho.com/category/HTML&DOM/post/599d2fb635814200189fe1a7
+        history.replaceState({}, null, null)
+        alert('에러 처리 : ' + errorMsg)
+    }
+    // 에러 처리 부분 end ----------------------------
+
+
+    // 최초 페이지 로딩
+    pageInit()
+
+
+
+    // 모달창의 파일 업로드 처리
+    document.querySelector(".uploadBtn").addEventListener("click", function(e){
+        const formObj = new FormData();
+
+        const fileInput = document.querySelector("input[name='files']")
+        const files = fileInput.files
+
+        for(let i = 0; i < files.length;i++){
+            formObj.append("files", files[i]);
+        }
+        //formObj.append("isResize", true);
+
+        uploadToServer(formObj).then(result => {
+
+            const uploadFiles = uploadResult.querySelectorAll("img")
+
+            let temp = uploadFiles.length
+            for(const uploadResult of result){
+                showUploadFile(uploadResult, true, temp++ )
+            }
+
+            uploadModal.hide()
+        }).catch(e => {
+            uploadModal.hide()
+        })
+    }, false)
+
+    // [상품 등록] 버튼 클릭
+    document.querySelector(".registerItemBtn").addEventListener("click", function(e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        if(isNaN(membershipPercent.value)){
+            alert("숫자만 입력 가능합니다")
+            return;
+        }
+
+        // 업로드될 파일 이름 리스트 가져오기
+        const fileNameList = getUploadFileNames()
+        if(fileNameList.length === 0){
+            alert('상품의 이미지를 추가해야 합니다!!')
+            return;
+        }
+
+        ////////////////////////////////////////////////////
+        const eventTargetValue = document.querySelector('input[name="isEventTarget"]:checked').value;
+
+        const itemOptionList = []
+        if(itemOptionType1.value > 0 && itemOptionValue1.value.length > 0){
+            itemOptionList.push({typePriority:1, optionType:itemOptionType1.value, optionValue:itemOptionValue1.value})
+        }
+        if(itemOptionType2.value > 0 && itemOptionValue2.value.length > 0){
+            itemOptionList.push({typePriority:2, optionType:itemOptionType2.value, optionValue:itemOptionValue2.value})
+        }
+
+        // 상품 이름 null 체크해서 임의로 이름 생성
+        let shopItemName = itemName.value
+        if(shopItemName  === '' || shopItemName.length === 0){
+            shopItemName = 'item' + getRandomInt(1000)
+        }
+
+        const formObj = {
+            itemName:shopItemName,
+            itemTitle:itemTitle.value,
+            itemDesc:itemDesc.value,
+            originalPrice:originalPrice.value,
+            stockCount:stockCount.value,
+            membershipPercent:membershipPercent.value,
+            isEventTarget:eventTargetValue,
+            itemOptionList:itemOptionList,
+            fileNames:fileNameList,
+            mainImageFileName:getMainImageFileName()
+        }
+
+        registerShopItem(formObj).then(result => {
+
+            if(result.result === 'success'){
+                if(result.ItemId > 0){
+                    // 화면 재 갱신
+                    self.location = '/admin/shopItem'
+                }
+            }
+            else if(result.result === 'fail'){
+                alert("(result.result === 'fail')  : " + result.message)
+            }
+
+        }).catch(e => { // HttpStatus.OK 가 아니면.. catch 구문을 탐
+            console.log(e.response.data.message)
+            alert('catch: ' + e.response.data.message)
+            // 화면 재 갱신
+            self.location = '/admin/shopItem'
+        })
+
+    }, false)
+
+    // [입력 초기화] 버튼 클릭시
+    document.querySelector(".resetBtn").addEventListener("click", function(e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        itemName.value = ''
+        itemTitle.value = 'item Title'
+        itemDesc.value = 'item Desc ~~~~'
+        originalPrice.value = '100000'
+        membershipPercent.value = '10'
+
+        itemOptionType1.options[1].selected = true
+        itemOptionValue1.value = '노랑색, 파랑색, 하늘색'
+        itemOptionType2.options[2].selected = true
+        itemOptionValue2.value = '소,중,대'
+
+        const uploadFiles = uploadResult.querySelectorAll("img") // uploadResult : 업로드 미리 보기
+
+        for(let i = 0 ; i < uploadFiles.length;i++){
+            const uploadFile = uploadFiles[i]
+            const imgLink = uploadFile.getAttribute("data-src")
+            const ArrayFileName = imgLink.split('_')    // uuid, fileName 으로 분리
+
+            removeFileData(ArrayFileName[0], ArrayFileName[1], true, false, uploadFile)
+        }
+
+    }, false)
+
+</script>
+</html>
