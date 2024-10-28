@@ -5,6 +5,7 @@ import com.carshop.mycarshop.domain.member.MemberRepository;
 import com.carshop.mycarshop.domain.member.MemberRole;
 import com.carshop.mycarshop.domain.test.Book;
 import com.carshop.mycarshop.domain.test.BookRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @Component
+@Log4j2
 @Profile("default")    // 이 클래스는 testdata 프로파일이 활성화될 때만 로드 된다.
 public class MemberDataLoader {
     private final MemberRepository memberRepository;
@@ -29,8 +31,9 @@ public class MemberDataLoader {
     }
 
     @EventListener(ApplicationReadyEvent.class) // 애플리케이션 시작 단계가 완료되면 발생한다.
-    public void loadBookTestData(){
+    public void loadMemberTestData(){
 
+        log.error("loadMemberTestData()!!!!!!!!!!!!!!");
         memberRepository.deleteAll();
 
         // member 생성
