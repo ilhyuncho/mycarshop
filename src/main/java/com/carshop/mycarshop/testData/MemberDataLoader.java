@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 
 @Component
 @Log4j2
-@Profile("default")    // 이 클래스는 testdata 프로파일이 활성화될 때만 로드 된다.
+@Profile("aws")    // 이 클래스는 testdata 프로파일이 활성화될 때만 로드 된다.
 public class MemberDataLoader {
     private final MemberRepository memberRepository;
 
