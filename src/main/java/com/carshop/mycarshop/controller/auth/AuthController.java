@@ -22,6 +22,7 @@ public class AuthController {
         if( logout != null){
             log.error("user logout======================");
         }
+
     }
     @GetMapping("/register")
     public void register(){
