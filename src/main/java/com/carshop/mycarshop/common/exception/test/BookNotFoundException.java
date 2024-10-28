@@ -1,4 +1,4 @@
-package com.carshop.mycarshop.common.exception;
+package com.carshop.mycarshop.common.exception.test;
 
 public class BookNotFoundException extends RuntimeException{
     public BookNotFoundException(String bookNumber) {

@@ -1,6 +1,6 @@
 package com.carshop.mycarshop.service.test;
 
-import com.carshop.mycarshop.common.exception.BookNotFoundException;
+import com.carshop.mycarshop.common.exception.test.BookNotFoundException;
 import com.carshop.mycarshop.domain.test.Book;
 import com.carshop.mycarshop.domain.test.BookRepository;
 import lombok.RequiredArgsConstructor;

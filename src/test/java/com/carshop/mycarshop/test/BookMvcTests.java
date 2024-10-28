@@ -1,6 +1,6 @@
 package com.carshop.mycarshop.test;
 
-import com.carshop.mycarshop.common.exception.BookNotFoundException;
+import com.carshop.mycarshop.common.exception.test.BookNotFoundException;
 import com.carshop.mycarshop.controller.test.BookController;
 import com.carshop.mycarshop.service.test.BookService;
 import org.junit.jupiter.api.Test;

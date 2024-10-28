@@ -1,4 +1,4 @@
-package com.carshop.mycarshop.common.exception;
+package com.carshop.mycarshop.common.exception.test;
 
 public class BookAlreadyExistsException extends RuntimeException{
     public BookAlreadyExistsException(String bookNumber) {
