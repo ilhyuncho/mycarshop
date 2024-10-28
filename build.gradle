@@ -121,6 +121,9 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.projectlombok:lombok'
 
+    // 타임리프에서 인증 정보 활용 ( 24.10.28 )
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+
 }
 
 // 스프링 클라우드 컨피그 클라이언트 의존성 추가 ( 24.10.18 )
