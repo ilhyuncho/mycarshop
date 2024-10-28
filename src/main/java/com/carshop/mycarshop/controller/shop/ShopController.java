@@ -42,7 +42,7 @@ public class ShopController {
         for (ShopItemResDTO shopItemResDTO : listDTO) {
             log.error(shopItemResDTO);
         }
-        return "/shop/main";
+        return "shop/main";
     }
 
     @ApiOperation(value = "악세서리 샵 아이템 선택시", notes = "회원, 비회원 접근 가능")
@@ -60,7 +60,7 @@ public class ShopController {
 
         model.addAttribute("responseDTO", itemDTO);
 
-        return "/shop/itemDetail";
+        return "shop/itemDetail";
     }
 
 }
