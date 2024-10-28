@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>악세서리 샵</title>
+</head>
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+    <th:block th:each="item:${itemList}">
+      <div class="col-md-3 margin">
+        <div class="card">
+          <a th:href="|@{'/shop/itemDetail/' + ${item.shopItemId}}|" class="text-decoration-none">
+            <img th:src="|/view/${item.mainImage.uuid}_${item.mainImage.fileName}|" th:width="180"
+                 th:data-src="${item.mainImage.uuid}">
+
+            <div class="card-body">
+              <h4 class="card-title">[[${item.itemTitle}]]</h4>
+              <h3 class="card-title text-danger">[[${#numbers.formatInteger(item.originalPrice,3,'COMMA')}]]원</h3>
+              <h6 class="card-title text-black">구매 [[${item.purchaseCount}]]</h6>
+              <h6 class="card-title text-black" th:if="${item.isFreeDelivery}">무료배송</h6>
+            </div>
+          </a>
+        </div>
+      </div>
+    </th:block>
+  </div>
+
+
+  <!--    axios 라이브러리 추가-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  // 에러 처리 부분 begin ----------------------------
+  const errors = [[${errors}]]
+  console.log(errors)
+
+  let errorMsg = ''
+  if (errors) {
+    for (let i = 0; i < errors.length; i++) {
+      errorMsg += `${errors[i].field}은 ${errors[i].code} \n`
+    }
+
+    // param ( 1: 바뀐 주소와 함께 저장할 객체, 2: 바꿀 제목, 3: 바꿀 주소 )
+    // https://www.zerocho.com/category/HTML&DOM/post/599d2fb635814200189fe1a7
+    history.replaceState({}, null, null)
+    alert(errorMsg)
+  }
+  // 에러 처리 부분 end ----------------------------
+
+  // 최초 페이지 로딩
+  pageInit()
+
+
+
+</script>
