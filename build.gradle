@@ -1,3 +1,9 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'java'
 //    id 'org.springframework.boot' version '3.3.4'
@@ -123,6 +129,18 @@ dependencies {
 
     // 타임리프에서 인증 정보 활용 ( 24.10.28 )
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+
+    // JPA-querydql start ( 24.10.28 )
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+
+    annotationProcessor(
+
+            "javax.persistence:javax.persistence-api",
+
+            "javax.annotation:javax.annotation-api",
+
+            "com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
+    // JPA-querydql end
 
 }
 
