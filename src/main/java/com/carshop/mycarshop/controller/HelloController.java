@@ -40,7 +40,7 @@ public class HelloController {
         HttpSession session = request.getSession();
         session.setAttribute("greeting", "환영합니다");
 
-        return "/index";
+        return "index";
     }
     @GetMapping("/hello")
     public void hello(Model model){
