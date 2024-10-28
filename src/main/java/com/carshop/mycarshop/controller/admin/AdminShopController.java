@@ -61,7 +61,8 @@ public class AdminShopController {
         log.error(shopItem);
 
         String requestURI = request.getRequestURI();
-        return request.getRequestURI().substring(0, requestURI.lastIndexOf("/"));
+
+        return request.getRequestURI().substring(1, requestURI.lastIndexOf("/"));
     }
 
     @PostMapping("/shopItemDelete")
