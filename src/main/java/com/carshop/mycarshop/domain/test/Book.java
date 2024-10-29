@@ -1,6 +1,6 @@
 package com.carshop.mycarshop.domain.test;
 
-import com.carshop.mycarshop.domain.BaseEntity;
+import com.carshop.mycarshop.domain.common.BaseEntity;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 

@@ -1,6 +1,6 @@
 package com.carshop.mycarshop.domain.shop;
 
-import com.carshop.mycarshop.domain.BaseEntity;
+import com.carshop.mycarshop.domain.common.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

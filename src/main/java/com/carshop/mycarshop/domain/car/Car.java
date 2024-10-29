@@ -2,7 +2,7 @@ package com.carshop.mycarshop.domain.car;
 
 
 import com.carshop.mycarshop.common.validator.CarSizeConverter;
-import com.carshop.mycarshop.domain.BaseEntity;
+import com.carshop.mycarshop.domain.common.BaseEntity;
 import com.carshop.mycarshop.domain.sellingCar.SellType;
 import com.carshop.mycarshop.domain.sellingCar.SellingCar;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarStatus;

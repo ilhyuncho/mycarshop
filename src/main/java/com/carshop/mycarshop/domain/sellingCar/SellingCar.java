@@ -1,8 +1,8 @@
 package com.carshop.mycarshop.domain.sellingCar;
 
-import com.carshop.mycarshop.domain.BaseEntity;
 import com.carshop.mycarshop.domain.buyingCar.BuyingCar;
 import com.carshop.mycarshop.domain.car.Car;
+import com.carshop.mycarshop.domain.common.BaseEntity;
 import com.carshop.mycarshop.domain.user.User;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;

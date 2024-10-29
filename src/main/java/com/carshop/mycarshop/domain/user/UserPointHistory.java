@@ -1,6 +1,6 @@
 package com.carshop.mycarshop.domain.user;
 
-import com.carshop.mycarshop.domain.BaseEntity;
+import com.carshop.mycarshop.domain.common.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;

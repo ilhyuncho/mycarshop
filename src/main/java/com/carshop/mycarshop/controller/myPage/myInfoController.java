@@ -1,7 +1,13 @@
 package com.carshop.mycarshop.controller.myPage;
 
 
+import com.carshop.mycarshop.domain.user.User;
 import com.carshop.mycarshop.dto.PageRequestDTO;
+import com.carshop.mycarshop.dto.user.UserAddressBookResDTO;
+import com.carshop.mycarshop.dto.user.UserDTO;
+import com.carshop.mycarshop.service.user.UserAddressBookService;
+import com.carshop.mycarshop.service.user.UserService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,6 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
+import java.util.List;
+
 @Controller
 @RequestMapping("/myInfo")
 @RequiredArgsConstructor
@@ -18,23 +27,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @PreAuthorize("hasRole('USER')")
 public class myInfoController {
 
-    @GetMapping("/info")
-    public String getMyInfo(){
+    private final UserService userService;
+    private final UserAddressBookService userAddressBookService;
 
-        log.error("myinfo/info - call");
+    @ApiOperation(value = "[나의 정보] 조회", notes = "")
+    @GetMapping("/info")
+    //@PreAuthorize("principal.username != #userName")
+    public String getMyInfo(String memberId, Model model){
+
+        UserDTO userDTO = userService.findUserDTO(memberId);
+
+        model.addAttribute("userDTO", userDTO);
+
         return "myPage/myInfo";
     }
 
-    @GetMapping("/carDetail")
-    public String getcarDetail(){
-
-        return "myPage/carDetail";
+    @ApiOperation(value = "[나의 포인트 정보] 페이지 이동", notes = "")
+    @GetMapping("/myPoint")
+    public String getMyPoint(Principal principal){
+        return "myPage/myPoint";
     }
-    @GetMapping("/carList")
-    public String list(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO, Model model){
 
-        log.error("myinfo/carList - call");
+    @ApiOperation(value = "[배송 주소록 관리] 페이지 이동", notes = "")
+    @GetMapping("/deliveryAddress")
+    //@PreAuthorize("principal.username != #userName")
+    public String getDeliveryAddress(String memberId, Model model){
 
-        return "myPage/carDetail";
+        User user = userService.findUser(memberId);
+
+        List<UserAddressBookResDTO> listUserAddressBook = userAddressBookService.getAllUserAddressBookInfo(user);
+
+        model.addAttribute("responseDTO", listUserAddressBook);
+
+        return "myPage/deliveryAddress";
     }
+
+
 }

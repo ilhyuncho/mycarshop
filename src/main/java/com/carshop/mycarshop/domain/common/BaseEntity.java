@@ -1,4 +1,4 @@
-package com.carshop.mycarshop.domain;
+package com.carshop.mycarshop.domain.common;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
