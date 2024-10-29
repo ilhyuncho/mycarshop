@@ -45,7 +45,7 @@ public class SellingCarController {
 
         model.addAttribute("responseDTO", listSellingCar);
 
-        return "/sellingCar/sellingCarList";
+        return "sellingCar/sellingCarList";
     }
 
     @ApiOperation(value = "[판매 차량 정보 요청]", notes = "[차량 주문]-[조회] 시 호출, 내 차가 아님")
@@ -76,7 +76,7 @@ public class SellingCarController {
             // 에러 처리
             return "redirect:/myPage/carOrderList";
         }
-        return "/sellingCar/" + urlPage;
+        return "sellingCar/" + urlPage;
     }
     @ApiOperation(value = "[판매 차량 정보 요청]", notes = "판매 차량 정보만 전달")
     @GetMapping("/view/{sellingCarId}")
@@ -94,7 +94,7 @@ public class SellingCarController {
 
         log.error(sellingCarResDTO);
 
-        return "/sellingCar/sellingCarView";
+        return "sellingCar/sellingCarView";
     }
 
 }

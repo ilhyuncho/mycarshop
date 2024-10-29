@@ -24,7 +24,7 @@ public class NotificationController {
 
         // html 파일에서 @PathVariable("targetId") 로 파악함
         //model.addAttribute("targetId", targetId);
-        return "/notification/noti";
+        return "notification/noti";
     }
 
     @ApiOperation(value = "뉴스&이벤트 상세 페이지로 이동", notes = "고객 접근")
@@ -38,7 +38,7 @@ public class NotificationController {
         model.addAttribute("responseDTO", eventInfo);
         model.addAttribute("targetId", pathName);
 
-        return "/notification/notiDetail";
+        return "notification/notiDetail";
     }
 
 }

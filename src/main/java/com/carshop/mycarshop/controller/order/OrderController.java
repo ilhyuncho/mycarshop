@@ -48,7 +48,7 @@ public class OrderController {
 
         log.error(orderAll);
 
-        return "/order/orderList";
+        return "order/orderList";
     }
 
     @ApiOperation(value = "주문서 페이지 이동", notes = "아이템 즉시 구매시")
@@ -62,7 +62,7 @@ public class OrderController {
         OrderTemporaryResDTO orderTemporaryResDTO = orderService.getOrderTemporary(orderTemporaryId);
         if(orderTemporaryResDTO == null){
             // 유효 기간 만료
-            return "redirect:/shop/main/";
+            return "redirect:shop/main/";
         }
 
         UserAddressBookResDTO mainAddressInfo = userAddressBookService.getMainAddressInfo(user);
@@ -71,7 +71,7 @@ public class OrderController {
         model.addAttribute("mainAddressInfo", mainAddressInfo);
         model.addAttribute("mPoint", user.getMPoint());
 
-        return "/order/orderPage";
+        return "order/orderPage";
     }
 
     @ApiOperation(value = "주문 내역 상세 조회", notes = "주문 내역을 자세히")
@@ -84,7 +84,7 @@ public class OrderController {
         List<OrderItemResDTO> listOrderItemResDTO = orderService.getOrderDetail(user, orderId);
 
         model.addAttribute("responseDTO", listOrderItemResDTO);
-        return "/order/orderDetail";
+        return "order/orderDetail";
     }
 
 }

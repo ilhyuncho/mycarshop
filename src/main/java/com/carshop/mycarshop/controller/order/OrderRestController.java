@@ -33,7 +33,7 @@ public class OrderRestController {
         User user = userService.findUser(principal.getName());
 
         orderService.createOrder(user, orderReqDTO);
-        return "/shop/main";
+        return "shop/main";
     }
 
     @ApiOperation(value = "상품 구매 취소", notes = "")
