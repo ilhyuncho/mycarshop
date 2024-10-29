@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>SellingCar Info</title>
+</head>
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          판매 차량 리스트
+        </div>
+
+        <div class="card-body">
+
+          <form action="/sellingCar/list" method="get" id="f2">
+
+            <!-- 검색 화면 추가 start-->
+            <div  class="row mt-3">
+
+              <div class="col">
+                <input type="hidden" name="size" th:value="${pageRequestDto.size}">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <select class="form-select" name="typeExt">
+                      <option value="">-----</option>
+                      <option value="a" th:selected="${pageRequestDto.typeExt == 'a'}">경매</option>
+                      <option value="c" th:selected="${pageRequestDto.typeExt == 'c'}">상담</option>
+                      <option value="ac" th:selected="${pageRequestDto.typeExt == 'ac'}">경매,상담</option>
+                    </select>
+                  </div>
+                  <div class="input-group-prepend">
+                    <select class="form-select" name="type">
+                      <option value="">-----</option>
+                      <option value="m" th:selected="${pageRequestDto.type == 'm'}">모델명</option>
+                      <option value="y" th:selected="${pageRequestDto.type == 'y'}">연식</option>
+                      <option value="my" th:selected="${pageRequestDto.type == 'my'}">모델명,연식</option>
+                    </select>
+                  </div>
+                  <input type="text" class="form-control" name="keyword" th:value="${pageRequestDto.keyword}">
+
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary searchBtn" type="submit">Search</button>
+                    <button class="btn btn-outline-secondary clearBtn" type="button">Clear</button>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+            <!-- 검색 화면 추가 end-->
+
+
+            <table class="table">
+              <thead>
+              <tr>
+                <th scope="col">차량 항목</th>
+                <th scope="col">모델명</th>
+                <th scope="col">연식</th>
+                <th scope="col">희망 가격</th>
+                <th scope="col">판매 종료 시간</th>
+              </tr>
+              </thead>
+
+              <tbody>
+              <tr th:each="dto:${responseDTO.dtoList}">
+                <th scope="row">
+                  <a th:href="|@{'/sellingCar/view/' + ${dto.sellingCarId}}|"
+                     class="text-decoration-none">[[${dto.carNumber}]]
+                    <span class="badge progress-bar-success"
+                          style="background-color: #0a53be">[[${dto.sellingCarStatus}]]</span>
+
+                    <span class="badge progress-bar-success" th:if="${#strings.equals(dto.sellType, 'SELL_AUCTION')}"
+                          style="background-color: #611adb">[[${dto.sellType.typeName}]]</span>
+                    <span class="badge progress-bar-success" th:if="${#strings.equals(dto.sellType, 'SELL_CONSULT')}"
+                          style="background-color: #0dd52e">[[${dto.sellType.typeName}]]</span>
+
+                  </a>
+                  <div>
+                    <img th:src="|/view/${dto.mainImage.uuid}_${dto.mainImage.fileName}|" th:width="150"
+                         th:data-src="${dto.mainImage.uuid}" onclick="window.open(this.src)">
+                  </div>
+                </th>
+                <td>[[${dto.carModel}]]</td>
+                <td>[[${dto.carYears}]]년형</td>
+                <td>[[${#numbers.formatInteger(dto.requiredPrice,3,'COMMA')}]]원</td>
+                <td>[[${#temporals.format(dto.expiredDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+              </tr>
+              </tbody>
+            </table>
+          </form>
+          <div class="float-end">
+            <ul class="pagination flex-wrap">
+
+              <li class="page-item" th:if="${responseDTO.prev}">
+                <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+              </li>
+
+              <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item' ">
+                  <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                </li>
+              </th:block>
+
+              <li class="page-item" th:if="${responseDTO.next}">
+                <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+              </li>
+
+            </ul>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div>
+  </div>
+
+  <!--    axios 라이브러리 추가-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+
+  // 최초 페이지 로딩
+  pageInit()
+
+  document.querySelector(".pagination").addEventListener("click", function(e){
+    e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
+    e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
+
+    const target = e.target   // a 태그
+    if(target.tagName !== 'A'){
+      return
+    }
+
+    const num = target.getAttribute("data-num")
+    const formObj = document.querySelector("#f2")
+
+    formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
+    formObj.submit();
+
+  }, false)
+
+  document.querySelector(".clearBtn").addEventListener("click", function(e){
+    e.preventDefault()
+    e.stopPropagation()
+
+    self.location = '/sellingCar/list' // 자바스크립트로 다른 url 호출
+
+  },false)
+
+
+</script>

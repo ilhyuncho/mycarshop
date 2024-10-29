@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>판매 차량 정보</title>
+</head>
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          경매 차량 정보
+        </div>
+        <div class="card-body">
+          <input type="hidden" name="sellingCarId" th:value="${carViewDTO.sellingCarId}">
+
+          <!--            dto 값 출력 부분-->
+          <div class="input-group mb-3">
+            <span class="input-group-text">CarNumber</span>
+            <label><input type="text" class="form-control" th:value="${carViewDTO.carNumber}" readonly></label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">carGrade</span>
+            <label><input type="text" class="form-control" th:value="${carViewDTO.carGrade}" readonly></label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">userName(확인용)</span>
+            <label><input type="text" class="form-control" th:value="${carViewDTO.userName}" readonly></label>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col">
+              <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
+                <th:block th:each="fileName:${carViewDTO.fileNames}">
+                  <div class="card col-4">
+                    <div class="card-header d-flex justify-content-center">
+                      [[${fileName.fileName}]]
+                    </div>
+                    <div class="card-body">
+                      <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="${fileName.uuid}" >
+                    </div>
+                  </div>
+                </th:block>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div>
+  </div>  <!--  <div class="row mt-3">-->
+
+  <div class="row mt-3">
+
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          경매 현황
+        </div>
+        <div class="card-body">
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">현재 최고 응찰 가격</span>
+            <label> <input type="text" class="form-control highProposalPrice" readonly></label>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">고객님 응찰 가격</span>
+            <label><input type="text" class="form-control userProposalPrice" th:value="0원" readonly></label>
+          </div>
+
+          <div class="row mt-3" th:if="${#authentication.principal != null}"
+               th:with="user=${#authentication.principal}">
+            <div class="float-end">
+              <!--              <a th:if="${user != null && user.username == carViewDTO.userName}">-->
+              <button type="button" class="btn btn-primary purchaseOfferBtn" th:btn-type="new">가격 제안</button>
+              <!--              </a>-->
+            </div>
+          </div>
+
+          <div class="row mt-5">
+            <h5 class="card-title">응찰 List</h5>
+            <ul class="list-group buyingCarList">
+              <!-- 리스트 영역-->
+            </ul>
+            <div class="pagination mt-3 buyingCarListPaging">
+              <!-- 페이징 처리-->
+            </div>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div>
+  </div>  <!--  <div class="row mt-3">-->
+
+  <!--    구매 요청을 위한 모달창-->
+  <div class="modal purchaseOfferModal" tabindex="-1">
+    <div class="modal-dialog" th:data-num="purchaseCloseBtn">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">경매 응찰 진행</h5>
+          <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">응찰 가격</span>
+            <input type="text" class="form-control requestPrice" th:value="${#numbers.formatInteger(100000,3,'COMMA')}"
+                   th:oninput="|transComma(this);|"
+            >
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary sendRegisterBtn" data-bs-target="auctionRequest">Register</button>
+          <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>  <!--    purchaseOfferModal-->
+
+  <!--    가격 수정 요청을 위한 모달창-->
+  <div class="modal modifyOfferModal" tabindex="-1">
+    <div class="modal-dialog" th:data-num="modifyCloseBtn">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">가격 수정 요청</h5>
+          <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">기존 응찰 가격</span>
+            <input type="text" class="form-control userCurrentPrice" readonly>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">새로운 응찰 가격</span>
+            <input type="text" class="form-control modifyPrice" step='100000' th:value="1000000"
+                   th:oninput="|transComma(this);|">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary sendModifyBtn" data-bs-target="proposeChangePrice">가격 수정</button>
+          <button type="button" class="btn btn-danger cancelBtn" data-bs-target="auctionCancel">경매 응찰 취소</button>
+          <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>  <!--    modifyOfferModal-->
+
+  <!--    axios 라이브러리 추가-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/buyingCar.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
+  <script src="/js/utilEventHandler.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+
+<script layout:fragment="script" th:inline="javascript">
+
+  const carId = [[${carViewDTO.carId}]]
+  const carOwner = [[${carViewDTO.memberId}]]
+  const sellingCarId = [[${carViewDTO.sellingCarId}]]
+  const currentUser = [[${#authentication.principal.username}]]
+
+  const purchaseOfferModal = new bootstrap.Modal(document.querySelector(".purchaseOfferModal"))
+  const modifyOfferModal = new bootstrap.Modal(document.querySelector(".modifyOfferModal"))
+
+  const requestPrice = document.querySelector(".requestPrice")
+  const modifyPrice = document.querySelector(".modifyPrice")
+  const buyingCarList = document.querySelector('.buyingCarList')          // 구매 희망 목록 DOM
+  const buyingCarListPaging = document.querySelector('.buyingCarListPaging')  // 페이지 목록 DOM
+
+  const userProposalPrice = document.querySelector('.userProposalPrice')  // 접속한 고객이 제안한 가격 DOM
+  const highProposalPrice = document.querySelector('.highProposalPrice')  // 가격 제안 중 최고 가격
+  const userCurrentPrice = document.querySelector('.userCurrentPrice')    // 접속한 고객이 현재 제안한 가격 DOM
+  const purchaseOfferBtn = document.querySelector('.purchaseOfferBtn')
+
+  // 페이지 번호 클릭
+  let page = 1
+  let size = 5
+
+
+  // 최초 페이지 로딩
+  pageInit()
+
+  // 경매 현황 가져오기
+  getListAuctionBuyingCar(page,size)
+
+
+  // [모달창] 선택해서 보여주기
+  document.querySelector(".purchaseOfferBtn").addEventListener("click", function (e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    const target = e.target
+    const offerType = target.getAttribute("btn-type")
+
+    if(offerType === "new"){
+      purchaseOfferModal.show()
+    }
+    else{
+      userCurrentPrice.value = userProposalPrice.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      modifyPrice.value = userCurrentPrice.value
+
+      modifyOfferModal.show()
+    }
+  }, false)
+
+
+  function makeFormAndSendToServer(offerType){
+
+    console.log('makeFormAndSendToServer : ' + offerType)
+
+    const formObj = {
+      offerType: offerType
+    }
+
+    if (offerType === "auctionCancel") {
+      Object.assign(formObj, {requestPrice: 0})
+    }
+    else if(offerType === "auctionRequest"){
+      Object.assign(formObj, {requestPrice: requestPrice.value.replaceAll(",","")})
+    }
+    else if(offerType === "proposeChangePrice"){
+      if(modifyPrice.value.replaceAll("원","") === userCurrentPrice.value.replaceAll("원","")){
+        alert('기존 가격과 같습니다')
+        return
+      }
+
+      Object.assign(formObj, {requestPrice: modifyPrice.value.replaceAll(",","")})
+    }
+
+    sendRequestToServer(formObj)
+  }
+
+
+  // 서버로 요청 전송
+  function sendRequestToServer(addFormObj) {
+    const formObj = {
+      carId:carId,
+      sellingCarId:sellingCarId,
+    }
+    // 객체 merge
+    Object.assign(formObj, addFormObj)
+    // 고객 요청 전송
+    requestBuyingCar(formObj).then(result => {  // axios 호출
+      // 경매 현황 가져오기
+      getListAuctionBuyingCar(1, 10)
+
+    }).catch(e => {
+      errorResponse(e)
+    }).finally(e =>{
+
+      initModalDisplay(formObj)
+    })
+  }
+
+  // 모달창 및 input value 초기화
+  function initModalDisplay(formObj) {
+
+    if(formObj.offerType === 'auctionRequest'){
+      requestPrice.value= ''
+      purchaseOfferModal.hide()
+    }
+    else if(formObj.offerType === 'proposeChangePrice'){
+      modifyPrice.value= ''
+      modifyOfferModal.hide()
+    }
+    else if(formObj.offerType === 'auctionCancel'){
+      userCurrentPrice.value= ''
+      userProposalPrice.value=''
+
+
+      initOfferBtn('new')
+      modifyOfferModal.hide()
+    }
+  }
+
+  function initOfferBtn(data) {
+
+    console.log('initOfferBtn : ' + data)
+
+    if(data === 'hidden'){
+      purchaseOfferBtn.setAttribute("hidden", true)
+    }
+    else if(data === 'new'){
+      console.log('btn-> new')
+      purchaseOfferBtn.innerHTML = '가격 제안'
+      purchaseOfferBtn.setAttribute("btn-type", "new")
+    }
+    else{
+      console.log('btn-> modify')
+      purchaseOfferBtn.innerHTML = '가격 수정'
+      purchaseOfferBtn.setAttribute("btn-type", "modify")
+    }
+  }
+
+
+  buyingCarListPaging.addEventListener("click", function(e){
+    e.preventDefault()
+    e.stopPropagation()
+
+    const target = e.target
+    if(!target || target.tagName !== 'A'){
+      return
+    }
+    page = target.getAttribute("data-page")
+
+    // 경매 현황 가져오기
+    getListAuctionBuyingCar(page,size)
+
+  },false)
+
+  // 경매 현황 가져오기
+  function getListAuctionBuyingCar(page,size){
+    getListBuyingCar({sellingCarId, page, size}).then(data=> {
+      printListAuction(data.dtoList) // 목록 처리
+      printPages(data, buyingCarListPaging)        // 페이지 처리
+
+      // 현재 최고 응찰 가격 지정
+      highProposalPrice.value = makePriceCurrency(data.highProposalPrice)
+
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
+
+  // 경매 현황 출력
+  function printListAuction(dtoList){
+    // 임시
+    // if(carOwner === currentUser){ // 해당 차 소유자 일 경우
+    //   btnType = 'hidden'
+    // }
+
+    let str = '';
+    let btnType = 'new'
+
+    if(dtoList && dtoList.length > 0){
+      for(const dto of dtoList){
+
+        let proposalPrice = makePriceCurrency(dto.proposalPrice)
+        let registerTime = stringToDateFormat(dto.registerTime)
+
+        // 해당 차에 가격 제안을 했다면
+        if(Object.is(dto.memberId, currentUser)){
+          userProposalPrice.value = proposalPrice
+
+          btnType = 'modify'
+        }
+
+        str += `<li class="list-group-item d-flex carItem">
+                    <span class="col-1">${maskingName(dto.userName)}</span>
+                    <span class="col-2">${proposalPrice}</span>
+                    <span class="col-4" data-rno="${dto.userName}">${registerTime}</span>
+               </li>`
+      }
+    }
+
+    initOfferBtn(btnType)
+
+    buyingCarList.innerHTML = str
+  }
+
+  // 모달 창 값 초기화
+  function initModalData(obj){
+    console.log('auction.html - initModalData()!!!!')
+
+    const target = obj.target
+    const dialog = target.closest(".modal-dialog")
+
+    if(dialog.getAttribute("data-num") === 'modifyCloseBtn'){
+      modifyOfferModal.hide()
+    }
+    else if(dialog.getAttribute("data-num") === 'purchaseCloseBtn'){
+      purchaseOfferModal.hide()
+    }
+  }
+
+
+</script>

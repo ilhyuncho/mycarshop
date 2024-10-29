@@ -23,12 +23,12 @@ public class ReturnValueLoggingAspect {
 //    }
 
     // RestController 에서 리턴시 적용
-    @AfterReturning(pointcut = "execution(* com.example.cih.controller..*.*(..))", returning = "retVals")
+    @AfterReturning(pointcut = "execution(* com.carshop.mycarshop.controller..*.*(..))", returning = "retVals")
     public void printControllerReturnObject(JoinPoint joinPoint, PageResponseDTO<?> retVals) throws Throwable{
         log.error( "3.Controller ReturnObject : " + retVals.toString());
     }
 
-    @AfterThrowing(pointcut = "execution(* com.example.cih.controller..*.*(..))", throwing="th")
+    @AfterThrowing(pointcut = "execution(* com.carshop.mycarshop.controller..*.*(..))", throwing="th")
     public void printControllerThrowable(JoinPoint joinPoint, Throwable th) throws Throwable {
         log.error("3.Controller Error message: {}", th.getMessage());
     }

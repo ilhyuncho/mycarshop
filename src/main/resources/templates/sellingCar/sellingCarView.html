@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>차량 내용</title>
+</head>
+
+<th:block layout:fragment="css">
+  <style>
+    .tr {
+      text-align: center;
+    }
+
+    .mgt-30{
+      margin-top:30px;
+    }
+  </style>
+</th:block>
+
+<div layout:fragment="content" style="margin-top:50px;margin-right:25%">
+
+  <div class="d-flex">
+    <div class="itemMainImgDiv">
+      <img th:src="|/view/${responseDTO.getMainImage().uuid}_${responseDTO.getMainImage().fileName}|"
+           style="width:400px; margin-right: 5rem" class="rounded itemMainImg" th:alt="${responseDTO.carModel}">
+    </div>
+    <div class="wd50">
+      <div class="h4" th:text="|(${responseDTO.carNumber}) ${responseDTO.carModel}|"></div>
+      <hr class="my-4">
+      <div class="my-4">
+        <!--       뷰 횟수-->
+        <span><i class="fa-solid fa-eye"></i>[[${responseDTO.viewCount}]]</span>
+        &nbsp;
+        <!--      하트 표시-->
+        <span id="checkSolid" style="display: inline">
+          <i class="fa-solid fa-heart" style="cursor:pointer"
+             th:onclick="javascript:sellingCarLike(false)" th:data-num="${responseDTO.carModel}"></i>
+        </span>
+        <span id="checkRegular" style="display: none">
+          <i class="fa-regular fa-heart" style="cursor:pointer"
+             th:onclick="javascript:sellingCarLike(true)" th:data-num="${responseDTO.sellingCarId}"></i>
+        </span>
+      </div>
+
+      <div class="my-4" th:if="${#strings.equals(responseDTO.sellingCarStatus, 'PROCESSING')}"
+           th:with="buyCarStatus = ${responseDTO.buyCarStatus}">
+        <hr class="my-4">
+        <div class="h3 text-primary" >
+          <span th:text="${#strings.equals(responseDTO.sellType, 'SELL_CONSULT')} ? '판매 가격:' : '경매 가격:' "></span>
+          <span th:text="|${#numbers.formatInteger(responseDTO.requiredPrice, 3, 'COMMA')}원|"></span>
+
+        </div>
+        <hr class="my-4">
+
+        <!--        상담 -->
+        <div th:if="${#strings.equals(responseDTO.sellType, 'SELL_CONSULT')}">
+          <button type="submit" th:if="${#strings.equals(buyCarStatus, 'CONSULT_REQUEST')}" class="btn btn-primary"
+                  th:text="|상담 요청 취소|" data-bs-target="consultCancel" th:onclick="requestSellingCar(this)"></button>
+          <button type="submit" th:unless="${#strings.equals(buyCarStatus, 'CONSULT_REQUEST')}" class="btn btn-primary"
+                  th:text="|상담 요청|" data-bs-target="modalConsultRequest" th:onclick="requestSellingCar(this)"></button>
+        </div>
+
+        <!--        경매 -->
+        <div th:if="${#strings.equals(responseDTO.sellType, 'SELL_AUCTION')}">
+          <div class="h6 text-primary" >
+            <span th:text="|경매 마감 시간 : ${#temporals.format(responseDTO.expiredDate, 'yyyy-MM-dd HH:mm:ss')}|"></span>
+          </div>
+
+          <hr class="my-4">
+          <div class="h3 text-primary" >
+            <button type="submit" class="btn btn-primary"
+                    th:text="|경매 현황 바로가기|" th:onclick="showAuctionDoing(this)"></button>
+          </div>
+          <hr class="my-4">
+          <!--         경매 참여를 한 상태-->
+          <div th:if="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')}
+                                        or ${#strings.equals(buyCarStatus, 'PROPOSE_CHANGE_PRICE')}">
+
+            <div class="h4 text-warning" >
+              <input type="hidden" class="form-control userProposalPrice" th:value="${responseDTO.proposalPrice}">
+              <span th:text="|당신의 응찰가 : ${#numbers.formatInteger(responseDTO.proposalPrice, 3, 'COMMA')}원|"></span>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">새로운 응찰 가격</span>
+              <label>
+                <input type="text" class="form-control newProposalPrice" step="10000" th:onkeyup="newPriceKepUp(this)">
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" th:text="|다시 응찰|" data-bs-target="proposeChangePrice"
+                    th:onclick="requestSellingCar(this)">
+            </button>
+            <button type="submit" class="btn btn-primary"
+                    th:text="|경매 참여 취소|" data-bs-target="auctionCancel" th:onclick="requestSellingCar(this)">
+            </button>
+
+          </div>
+          <!--         경매 참여를 하지 않은 상태-->
+          <div th:unless="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')}
+                                           or ${#strings.equals(buyCarStatus, 'PROPOSE_CHANGE_PRICE')}">
+
+            <button type="submit"
+                    class="btn btn-primary"
+                    th:text="|경매 참여|" data-bs-target="modalAuctionRequest" th:onclick="requestSellingCar(this)">
+            </button>
+
+          </div>
+
+        </div><!--      <div th:if="${#strings.equals(responseDTO.sellType, 'SELL_AUCTION')}">-->
+
+      </div>
+
+    </div>
+  </div><!-- <div class="d-flex">-->
+
+  <div class="wd50">
+    <hr class="my-4">
+    <hr class="my-4">
+    <h4 class="display-5">상세 설명</h4>
+    <hr class="my-4">
+    <hr class="my-4">
+    <hr class="my-4">
+
+    <div th:each="fileName : ${responseDTO.getListExceptMainImage()}" class="text-center">
+      <img th:if="${not #strings.isEmpty(fileName.fileName)}"
+           th:src="|/view/${fileName.uuid}_${fileName.fileName}|" class="rounded mgb-15" width="800">
+    </div>
+
+  </div>
+
+
+  <!-- 상담 요청 모달창-->
+  <div class="modal requestConsultModal" tabindex="-1">
+    <div class="modal-dialog" th:data-num="consultCloseBtn">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">상담 신청</h5>
+          <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">휴대 전화</span>
+            <input type="text" class="form-control phoneNumber" placeholder="연락처를 입력하세요" value="01012345678">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">상담 내용</span>
+            <label>
+              <textarea cols="50" rows="3" class="form-control modalConsultText"></textarea>
+            </label>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger sendConsultRequestBtn" data-bs-target="consultRequest">신청</button>
+          <button type="button" class="btn btn-outline-dark closeModalBtn">취소</button>
+        </div>
+      </div>
+    </div>
+  </div>  <!-- 상담 요청 모달창-->
+
+  <!-- 경매 참여 모달창-->
+  <div class="modal requestAuctionModal" tabindex="-1">
+    <div class="modal-dialog" th:data-num="auctionCloseBtn">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">경매 참여</h5>
+          <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">희망 가격</span>
+            <input type="text" class="form-control auctionProposePrice" placeholder="경매 희망 가격을 기입하세요"
+                   th:onkeyup="newPriceKepUp(this)">
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger sendAuctionRequestBtn" data-bs-target="auctionRequest">신청</button>
+          <button type="button" class="btn btn-outline-dark closeModalBtn">취소</button>
+        </div>
+      </div>
+    </div>
+  </div>  <!-- 상담 요청 모달창-->
+
+  <!--    axios 라이브러리 추가-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/sellingCar.js"></script>
+  <script src="/js/buyingCar.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
+  <script src="/js/utilEventHandler.js"></script>
+
+
+</div> <!--<div layout:fragment="content">-->
+
+
+<script layout:fragment="script" th:inline="javascript">
+
+  const requestConsultModal = new bootstrap.Modal(document.querySelector(".requestConsultModal"))
+  const requestAuctionModal = new bootstrap.Modal(document.querySelector(".requestAuctionModal"))
+
+  const carId = [[${responseDTO.carId}]]
+  const sellingCarId = [[${responseDTO.sellingCarId}]]
+  const requiredPrice = [[${responseDTO.requiredPrice}]]    // 경매 시작가
+
+  const phoneNumber = document.querySelector(".phoneNumber")
+  const auctionProposePrice = document.querySelector(".auctionProposePrice")
+  const newProposalPrice = document.querySelector(".newProposalPrice")
+  const userProposalPrice = document.querySelector(".userProposalPrice")
+
+  const modalConsultText = document.querySelector(".modalConsultText")
+
+  const checkSolid = document.getElementById("checkSolid");
+  const checkRegular = document.getElementById("checkRegular");
+
+  // 최초 페이지 로딩
+  pageInit()
+
+  // 좋아요 표시 결정
+  viewCarLike([[${responseDTO.isLike}]])
+
+
+
+  function showAuctionDoing(){
+    // 화면 재 갱신
+    self.location = '/sellingCar/' +  carId
+  }
+
+  // 모달창 오픈 요청
+  function requestSellingCar(obj){
+    const offerType = obj.getAttribute("data-bs-target")
+
+    if(offerType === 'modalConsultRequest'){
+      requestConsultModal.show()
+    }
+    else if(offerType === 'modalAuctionRequest'){
+      requestAuctionModal.show()
+    }
+    else{
+      makeFormAndSendToServer(offerType)
+    }
+  }
+
+  function makeFormAndSendToServer(offerType){
+
+    const formObj = {
+      offerType: offerType
+    }
+
+    if (offerType === "auctionRequest") {
+      const userPrice = auctionProposePrice.value.replaceAll(",","")
+      if(requiredPrice > userPrice){
+        alert('경매 시작가 보다 높은 가격을 응찰해야 합니다')
+        return
+      }
+
+      Object.assign(formObj, {requestPrice: auctionProposePrice.value.replaceAll(",", "")})
+    }
+    else if (offerType === "consultRequest") {
+      Object.assign(formObj, {phoneNumber: phoneNumber.value, consultText: modalConsultText.value})
+    }
+    else if(offerType === 'proposeChangePrice'){
+      const originPrice = userProposalPrice.value
+      const newPrice = newProposalPrice.value.replaceAll(",","")
+
+      if(originPrice >= newPrice){
+        alert('기존 가격보다 높은 가격을 응찰해야 합니다')
+        return
+      }
+
+      Object.assign(formObj, {requestPrice:newProposalPrice.value.replaceAll(",","")})
+    }
+    else if(offerType === 'auctionCancel' || offerType === 'consultCancel' ){
+      if(!confirm("정말로 취소 하겠습니까?")){
+        return
+      }
+    }
+    else{
+      alert('서버 오류 입니다~!')
+      return
+    }
+
+    sendRequestToServer(formObj)
+  }
+
+  // 서버로 요청 전송
+  function sendRequestToServer(addFormObj){
+    const formObj = {
+      carId:carId,
+      sellingCarId:sellingCarId,
+    }
+    // 객체 merge
+    Object.assign(formObj, addFormObj)
+    // 고객 요청 전송
+    requestBuyingCar(formObj).then(result => {  // axios 호출
+      // 화면 재 갱신
+      self.location = '/sellingCar/view/' +  sellingCarId
+    }).catch(e => {
+      errorResponse(e)
+    }).finally(e => {
+
+      initModalDisplay(formObj)
+    })
+  }
+
+  // 모달창 및 input value 초기화
+  function initModalDisplay(formObj) {
+    if(formObj.offerType === 'auctionRequest'){
+      requestAuctionModal.hide()
+    }
+    else if(formObj.offerType === 'consultRequest'){
+      requestConsultModal.hide()
+    }
+  }
+
+  // 모달 창 값 초기화
+  function initModalData(obj){
+    console.log('deliveryAddress.html - initModalData()!!!!')
+
+    const target = obj.target
+    const dialog = target.closest(".modal-dialog")
+
+    if(dialog.getAttribute("data-num") === 'auctionCloseBtn'){
+      requestAuctionModal.hide()
+    }
+    else if(dialog.getAttribute("data-num") === 'consultCloseBtn'){
+      requestConsultModal.hide()
+    }
+  }
+
+</script>
