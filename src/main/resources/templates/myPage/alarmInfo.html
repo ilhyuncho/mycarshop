@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>alarms</title>
+</head>
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+
+    <div class="col-8">  <!-- 컬럼 너비 지정-->
+      <div class="card">
+        <div class="card-header">
+          알림함
+        </div>
+        <div class="card-body">
+
+          <div class="row mt-3">
+            <table id="tableAlarmsId">
+              <thead>
+              <tr>
+                <th scope="col">번호</th>
+                <th scope="col">제목</th>
+                <th scope="col">등록 날짜</th>
+              </tr>
+              </thead>
+              <tbody id="tableAlarms">
+              </tbody>
+            </table>
+
+            <div class="pagination mt-3 alarmsListPaging">
+              <!-- 페이징 처리-->
+            </div>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div>
+  </div>
+
+  <!-- 상세 알림 내용 모달창-->
+  <div class="modal alarmDetailModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">알림</h5>
+          <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="h5" id="modalAlarmTitle" style="font-weight: bolder"></div>
+          <hr class="my-4">
+          <div id="modalAlarmContent"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div> <!-- 상세 알림 내용 모달창-->
+
+
+
+
+  <!--    axios 라이브러리 추가-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
+  <script src="/js/utilEventHandler.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  const alarmDetailModal = new bootstrap.Modal(document.querySelector(".alarmDetailModal"))
+
+  const tableAlarms = document.getElementById("tableAlarms");
+  const alarmsListPaging = document.querySelector('.alarmsListPaging')  // 페이지 목록 DOM
+
+  const modalAlarmTitle = document.getElementById("modalAlarmTitle");
+  const modalAlarmContent = document.getElementById("modalAlarmContent");
+
+  // 페이지 번호 클릭
+  let page = 1
+  let size = 5
+
+  // 최초 페이지 로딩
+  pageInit()
+
+  getListAlarms(page, size)
+
+
+  function getListAlarms(page, size){
+
+    getAlarmList({page, size}).then(data => {
+
+      printAlarmList(data.dtoList, tableAlarms) // 목록 처리
+      printPages(data, alarmsListPaging)
+
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
+
+  function makeAlarmData(arr, dtoData){
+    arr[0] = dtoData.userAlarmID
+    arr[1] = dtoData.alarmTitle
+    arr[2] = stringToDateFormat(dtoData.regDate)
+  }
+
+  function showAlarmDetailModal(alarmId){
+
+    getAlarmDetail({alarmId}).then(data => {
+
+      modalAlarmTitle.innerHTML = data.alarmTitle
+      modalAlarmContent.innerHTML = data.alarmContent.replace(/(?:\r\n|\r|\n)/g, '<br />');   // 문장 개행 처리
+
+      // 알림 제목 읽음으로 표시
+      const selectedAlarm = document.getElementById("alarm" + alarmId);
+      selectedAlarm.setAttribute("style","cursor:pointer")
+
+      alarmDetailModal.show()
+
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
+  function printAlarmList(dtoList, tableRef) {    // 목록 출력
+    // 기존 행 삭제
+    while (tableRef.firstChild) {
+      tableRef.removeChild(tableRef.firstChild);
+    }
+
+    if(dtoList && dtoList.length > 0) {
+      dtoList.forEach(function (e, i) {
+
+        const arr = []
+
+        makeAlarmData(arr, e)
+
+        let newRow = tableRef.insertRow(-1);
+
+        for (let j = 0, k = 0; j < arr.length; j++){
+          if(arr[j] !== ''){
+
+            let newCell = newRow.insertCell(k);
+            let newText = document.createTextNode(arr[j]);
+
+            if( j === 1 ){
+              //const url="/notification/show/" + "/" + arr[0];
+              //link.setAttribute("href",url);
+              const link = document.createElement("a");
+
+              link.setAttribute("id", "alarm" + arr[0])
+              if(e.alarmCheck === true){
+                link.setAttribute("style","cursor:pointer")
+
+              }else{
+                link.setAttribute("style","cursor:pointer; font-weight:bolder")
+              }
+
+              link.addEventListener("click", function () {    // 함수에 arg 전달
+                showAlarmDetailModal(arr[0]);
+              });
+
+              link.appendChild(newText);
+              newCell.appendChild(link);
+            }
+            else{
+              newCell.appendChild(newText);
+            }
+            k++;
+          }
+        }
+      })
+    }
+  }
+
+  alarmsListPaging.addEventListener("click", function(e){
+    e.preventDefault()
+    e.stopPropagation()
+
+    const target = e.target
+    if(!target || target.tagName !== 'A'){
+      return
+    }
+    page = target.getAttribute("data-page")
+
+    // 알림 현황 가져오기
+    getListAlarms(page,size)
+
+  },false)
+
+  // 모달 창 값 초기화
+  function initModalData(obj){
+
+    alarmDetailModal.hide()
+    // 새로운 알림 정보 있는지 요청
+    checkNewAlarm(false)
+  }
+
+</script>

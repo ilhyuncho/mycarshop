@@ -52,7 +52,7 @@ public class AdminNotiController {
         model.addAttribute("eventTypeList", EventType.getAllTypes());
 
         String requestURI = request.getRequestURI();
-        return requestURI.substring(0, requestURI.lastIndexOf("/"));
+        return requestURI.substring(1, requestURI.lastIndexOf("/"));
     }
 
     @ApiOperation(value = "[이벤트] 신규 등록", notes = "관리자 접근")
@@ -118,7 +118,7 @@ public class AdminNotiController {
         model.addAttribute("responseDTO", newsInfo);
 
         String requestURI = request.getRequestURI();
-        return requestURI.substring(0, requestURI.lastIndexOf("/"));
+        return requestURI.substring(1, requestURI.lastIndexOf("/"));
     }
     @ApiOperation(value = "[뉴스] 신규 등록", notes = "관리자 접근")
     @PostMapping("/newsRegister")
