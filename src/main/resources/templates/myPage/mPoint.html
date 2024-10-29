@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>My Point</title>
+</head>
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          나의 포인트 정보
+        </div>
+        <div class="card-body">
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">나의 포인트</span>
+            <span>
+              <input type="text" class="form-control myMPoint" readonly>
+            </span>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          나의 포인트 내역
+        </div>
+        <div class="card-body">
+
+          <div class="row mt-3">
+            <div class="col">
+              <div class="opt-box">
+                <div>
+                  <strong class="opt-tit">타입</strong>
+                  <select class="sel-tp01" id="searchType" style="width:100px;">
+                    <option value="gc" selected>All</option>
+                    <option value="g">획득</option>
+                    <option value="c">소비</option>
+                  </select>
+                </div>
+                <div>
+                  <select class="sel-tp01" id="searchPeriod" onchange="changePeriodSelect()" style="width:100px;">
+                    <option value="7">7일</option>
+                    <option value="30">30일</option>
+                    <option value="90" selected>90일</option>
+                  </select>
+
+                  <span class="inp-t inp-date" style="width: 150px;">
+                      <input type="date" title="날짜" id="fromDay" >
+                  </span>
+                  <span class="form-t">~</span>
+                  <span class="inp-t inp-date" style="width: 150px;">
+                      <input type="date" title="날짜" id="toDay">
+                  </span>
+                  <button type="button" class="btn btn-primary searchBtn" id="btnSearch" style="width: 80px;"><span>조회</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <table id="tableMyPoint_temp">
+              <thead>
+              <tr>
+                <th scope="col">항목</th>
+                <th scope="col">포인트</th>
+                <th scope="col">적용날짜</th>
+              </tr>
+              </thead>
+              <tbody id="tableMyPoint">
+              </tbody>
+            </table>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  const fromDay = document.querySelector('#fromDay');
+  const toDay = document.querySelector('#toDay');
+  const searchPeriod = document.querySelector('#searchPeriod');
+  const searchType = document.querySelector('#searchType');
+  const tableMyPoint = document.getElementById("tableMyPoint");
+  const myMPoint = document.querySelector('.myMPoint');
+
+
+  // 최초 페이지 로딩
+  pageInit()
+
+  // 조회 기간 셋팅 (기본 현재 날짜 기준 90일 전 부터 조회)
+  changePeriodSelect()
+
+  // 조회 요청
+  getMyPointInfo()
+
+  function changePeriodSelect(){
+    const beforeDay = searchPeriod.value;  // 페이지 이동시 기본 현재 날짜 기준 90일 전 부터 조회
+    const nowDate = new Date();
+    // const startDate = new Date(nowDate.getTime() - (beforeDay*24*60*60*1000)).toISOString().substring(0, 10)
+    const startDate = new Date(nowDate.getTime() - ((beforeDay-1) *24*60*60*1000)).toLocaleDateString('en-CA')
+
+    // const d = new Date();
+    // const day = d.getDate();
+    // console.log(new Date(new Date().setDate(day - 7)));   // 7일전 날짜 구하기 다른 방법
+    // console.log(new Date(nowDate.getTime() - (beforeDay*24*60*60*1000)))
+
+    const endDate = new Date().toLocaleDateString('en-CA')
+
+    // 날짜 input 값 설정
+    fromDay.value = startDate
+    toDay.value = endDate
+  }
+
+  // 포인트 조회 요청 처리
+  document.querySelector(".searchBtn").addEventListener("click", function(e){
+    getMyPointInfo()
+
+  }, false)
+  function getMyPointInfo(){
+
+    const formObj = {
+      type:searchType.value,
+      fromDay:fromDay.value,
+      toDay:toDay.value
+    }
+
+    getMyPoint(formObj).then(data => {
+      // 유저의 총 포인트 set
+      myMPoint.value = data.totalMPoint
+
+      printMyPoint(data.dtoList) // 목록 처리
+
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
+  function printMyPoint(dtoList ) {    // 목록 출력
+    // 기존 행 삭제
+    while (tableMyPoint.firstChild) {
+      tableMyPoint.removeChild(tableMyPoint.firstChild);
+    }
+
+    if(dtoList && dtoList.length > 0) {
+      dtoList.forEach(function (e, i) {
+        const arr = []
+        makePointData(arr, e)
+
+        let newRow = tableMyPoint.insertRow(-1);
+
+        for (let j = 0, k = 0; j < arr.length; j++){
+          let newCell = newRow.insertCell(j);
+          let newText = document.createTextNode(arr[j]);
+          newCell.appendChild(newText);
+        }
+
+      })
+    }
+  }
+  function makePointData(arr, dtoData){
+    arr[0] = dtoData.situationName
+    arr[1] = dtoData.pointValue
+    arr[2] = dtoData.regDate
+  }
+
+</script>

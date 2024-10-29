@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<!--<th:block layout:fragment="css">-->
+<!--    <style>-->
+<!--        .modal-fullsize {-->
+<!--            width: 100%;-->
+<!--            height: 100%;-->
+<!--            margin: 0;-->
+<!--            padding: 0;-->
+<!--        }-->
+<!--    </style>-->
+<!--</th:block>-->
+
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    주문 상세
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">주문 날짜</th>
+                            <th scope="col">상품 이름</th>
+                            <th scope="col">옵션</th>
+                            <th scope="col">주문 갯수</th>
+                            <th scope="col">주문 가격</th>
+                            <th scope="col">총 주문 가격</th>
+                            <th scope="col">리뷰</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="dto:${responseDTO}">
+                            <th scope="row">[[${dto.orderDate}]]</th>
+                            <td>
+                                <a th:href="|@{'/shop/itemDetail/' + ${dto.shopItemId}}|"
+                                   class="text-decoration-none"> [[${dto.itemName}]]</a>
+                                <div>
+                                    <img th:src="|/view/s_${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|"
+                                         class="rounded itemMainImg" style="width:100px">
+                                </div>
+                            </td>
+
+                            <td>[[${dto.getOptionDesc()}]]</td>
+                            <td>[[${dto.orderCount}]]</td>
+                            <td>[[${#numbers.formatInteger(dto.orderPrice,3,'COMMA')}]]원</td>
+                            <td>[[${#numbers.formatInteger(dto.orderPrice * dto.orderCount,3,'COMMA')}]]원</td>
+                            <td>
+                                <div th:if="${dto.isReviewWrite == false}">
+                                    <button type="button" class="btn btn-primary"
+                                     th:onclick="writeReview([[${dto.orderId}]],[[${dto.orderItemId}]],[[${dto.shopItemId}]])">리뷰 쓰기
+                                    </button>
+                                </div>
+                                <div th:unless="${dto.isReviewWrite == false}">
+                                    <button type="button" class="btn btn-primary" disabled>작성 완료
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div><!-- <div class="card-body">-->
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 리뷰 쓰기 모달창-->
+    <div class="modal writeReviewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg" >
+            <div class="modal-content">
+
+                <input type="hidden" class="form-control selectOrderId">
+                <input type="hidden" class="form-control selectOrderItemId">
+                <input type="hidden" class="form-control selectShopItemId">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">리뷰 쓰기</h5>
+                    <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">리뷰 작성</span>
+                        <label>
+                            <textarea cols="50" rows="3" class="form-control reviewText"></textarea>
+                        </label>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">만족도</span>
+
+                        <input type="hidden" id="checkCount" class="form-control" th:value="0">
+
+                        <span id="checkRegular1" style="display: inline">
+                          <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(true)"></i>
+                        </span>
+                        <span id="checkSolid1" style="display: none">
+                          <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(false)"></i>
+                        </span>
+                        <span id="checkRegular2" style="display: inline">
+                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(true)"></i>
+                        </span>
+                        <span id="checkSolid2" style="display: none">
+                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(false)"></i>
+                        </span>
+                        <span id="checkRegular3" style="display: inline">
+                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(true)"></i>
+                        </span>
+                        <span id="checkSolid3" style="display: none">
+                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(false)"></i>
+                        </span>
+                        <span id="checkRegular4" style="display: inline">
+                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(true)"></i>
+                        </span>
+                        <span id="checkSolid4" style="display: none">
+                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(false)"></i>
+                        </span>
+                        <span id="checkRegular5" style="display: inline">
+                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(true)"></i>
+                        </span>
+                        <span id="checkSolid5" style="display: none">
+                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(false)"></i>
+                        </span>
+
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">상품 이미지</span>
+                        <div class="float-end uploadHidden">
+                            <button type="button" class="btn btn-primary uploadFileBtn">ADD Files</button>
+                        </div>
+                    </div>
+
+                    <!--    첨부파일 썸네일 보여줄 부분-->
+                    <div class="row mt-3">
+                        <div class="col">
+                            <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap;">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary reviewRegisterBtn">등록</button>
+                    <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> <!-- 배송 현황 모달창-->
+
+    <!--    첨부파일 추가를 위한 모달창-->
+    <div class="modal uploadModal" tabindex="-1">
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload File</h5>
+                    <button type="button" class="btn-close closeUploadBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input type="file" name="files" class="form-control" multiple>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary uploadBtn">Upload</button>
+                    <button type="button" class="btn btn-outline-dark closeUploadBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>  <!--    uploadModal-->
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/order.js"></script>
+    <script src="/js/myInfo.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/upload.js"></script>
+    <script src="/js/utilViewHtml.js"></script>
+    <script src="/js/utilEventHandler.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+     const writeReviewModal = new bootstrap.Modal(document.querySelector(".writeReviewModal"))
+     const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
+
+     const uploadResult = document.querySelector(".uploadResult")   // 이미지 파일 업로드 결과 화면
+
+     const reviewText = document.querySelector(".reviewText")
+     const selectOrderId = document.querySelector(".selectOrderId")
+     const selectOrderItemId = document.querySelector(".selectOrderItemId")
+     const selectShopItemId = document.querySelector(".selectShopItemId")
+
+     // 리뷰 만족도 별 체크
+     const checkSolid = new Array(5)
+     checkSolid[0] = document.getElementById("checkSolid1");
+     checkSolid[1] = document.getElementById("checkSolid2");
+     checkSolid[2] = document.getElementById("checkSolid3");
+     checkSolid[3] = document.getElementById("checkSolid4");
+     checkSolid[4] = document.getElementById("checkSolid5");
+
+     const checkRegular = new Array(5)
+     checkRegular[0] = document.getElementById("checkRegular1");
+     checkRegular[1] = document.getElementById("checkRegular2");
+     checkRegular[2] = document.getElementById("checkRegular3");
+     checkRegular[3] = document.getElementById("checkRegular4");
+     checkRegular[4] = document.getElementById("checkRegular5");
+
+     const checkCount = document.getElementById("checkCount");
+
+
+     // 최초 페이지 로딩
+     pageInit()
+
+     function selectStar(selected){
+         if(selected === true){
+             console.log('selected true')
+             if( checkRegular.length > parseInt(checkCount.value) ){
+                 checkRegular[parseInt(checkCount.value)].style.display = 'none'
+                 checkSolid[parseInt(checkCount.value)].style.display = 'inline'
+
+                 checkCount.value = parseInt(checkCount.value) + 1
+             }
+         }
+         else{
+             console.log('selected false')
+
+             if( checkCount.value > 0 ){
+                 checkCount.value = parseInt(checkCount.value) - 1
+
+                 checkSolid[parseInt(checkCount.value)].style.display = 'none'
+                 checkRegular[parseInt(checkCount.value)].style.display = 'inline'
+             }
+         }
+     }
+
+
+
+     // [파일 업로드 모달창]의 파일 업로드 처리
+     document.querySelector(".uploadBtn").addEventListener("click", function(e){
+         const formObj = new FormData();
+
+         const fileInput = document.querySelector("input[name='files']")
+         const files = fileInput.files
+
+         for(let i = 0; i < files.length;i++){
+             formObj.append("files", files[i]);
+         }
+
+         uploadToServer(formObj).then(result => {
+
+             const uploadFiles = uploadResult.querySelectorAll("img")
+
+             let temp = uploadFiles.length
+             for(const uploadResult of result){
+                 showUploadFile(uploadResult, true, temp++ )
+             }
+
+             uploadModal.hide()
+         }).catch(e => {
+             uploadModal.hide()
+         })
+     }, false)
+
+    // [리뷰 쓰기] 버튼 클릭
+    function writeReview(orderId, orderItemId, shopItemId){
+
+        selectOrderId.value = orderId
+        selectOrderItemId.value = orderItemId
+        selectShopItemId.value = shopItemId
+
+        writeReviewModal.show()
+    }
+
+    // [리뷰 작성] 전송
+    document.querySelector(".reviewRegisterBtn").addEventListener("click", function(e) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        // 업로드될 파일 이름 리스트 가져오기
+        const fileNameList = getUploadFileNames()
+        if(fileNameList.length === 0){
+            alert('상품의 이미지를 추가해야 합니다!!')
+            return;
+        }
+
+        const formObj = {
+            orderId:selectOrderId.value,
+            orderItemId:selectOrderItemId.value,
+            shopItemId:selectShopItemId.value,
+            reviewText:reviewText.value,
+            fileNames:fileNameList,
+            score:checkCount.value,
+            mainImageFileName:getMainImageFileName()
+        }
+
+        sendReview(formObj).then(result => {
+
+            if(result.result === 'fail'){
+                alert(result.message)
+                return
+            }
+
+            writeReviewModal.hide()
+
+            // 화면 재 갱신
+            self.location = '/order/orderDetail/' + selectOrderId.value
+
+        }).catch(e => {
+            errorResponse(e)
+            writeReviewModal.hide()
+        })
+
+    }, false)
+
+    // 모달 창 값 초기화
+    function initModalData(obj){
+        console.log('initModalData()!!!!')
+
+        const fileInput = document.querySelector("input[name='files']")
+        initModalFileUpload(fileInput)  // 파일 업로드 모달 창 입력 값 초기화
+
+        initUploadResult(uploadResult)
+        reviewText.value = ''
+
+        writeReviewModal.hide()
+    }
+
+</script>

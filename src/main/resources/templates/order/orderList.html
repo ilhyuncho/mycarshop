@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<div layout:fragment="content">
+
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">주문 내역</h5>
+                </div>
+                <div class="card-body">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">주문 날짜</th>
+                            <th scope="col">상품 이미지</th>
+                            <th scope="col">상품 이름's</th>
+                            <th scope="col">주문 가격</th>
+                            <th scope="col">결제 가격</th>
+                            <th scope="col">배송 상태</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="dto:${responseDTO.dtoList}">
+                                <td>[[${dto.orderDate}]]</td>
+                                <td>
+                                    <th:block th:each="fileName:${dto.fileNames}">
+                                        <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:width="50"
+                                             th:data-src="|${fileName.uuid}_${fileName.fileName}|" >
+                                    </th:block>
+                                </td>
+                                <td><a th:href="|@{'/order/orderDetail/' + ${dto.orderId}}|"
+                                       class="text-decoration-none"> [[${dto.itemName}]]</a>
+                                </td>
+                                <td>[[${#numbers.formatInteger(dto.orderPrice,3,'COMMA')}]]원</td>
+                                <td>[[${#numbers.formatInteger(dto.paymentPrice,3,'COMMA')}]]원</td>
+                                <td>
+                                    <div th:if="${dto.deliveryStatus != '주문 취소'}">
+                                        <a th:onclick="showDeliveryStatus([[${dto.orderId}]], this)" style="cursor:pointer"
+                                           class="text-decoration-none"> [[${dto.deliveryStatus}]]</a>
+                                    </div>
+                                    <div th:unless="${dto.deliveryStatus != '주문 취소'}">
+                                        [[${dto.deliveryStatus}]]
+                                    </div>
+                                </td>
+                                <td>
+                                    <a th:if="${dto.deliveryStatus == '배송 준비중'}">
+                                        <button type="button" class="btn btn-primary"
+                                                th:onclick="cancelOrder([[${dto.orderId}]], this)">구매 취소</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 페이지 번호 출력-->
+                    <div class="float-end">
+                        <ul class="pagination flex-wrap">
+
+                            <li class="page-item" th:if="${responseDTO.prev}">
+                                <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+                            </li>
+
+                            <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item' ">
+                                    <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                                </li>
+                            </th:block>
+
+                            <li class="page-item" th:if="${responseDTO.next}">
+                                <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!-- 페이지 번호 출력-->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 배송 현황 모달창-->
+    <div class="modal deliveryProcessModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">배송 현황</h5>
+                    <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">진행 상태</span>
+                        <input type="text" class="form-control modalDeliveryStatus">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">받는 사람</span>
+                        <input type="text" class="form-control modalRecipientName">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">연락처</span>
+                        <input type="text" class="form-control modalRecipientPhoneNumber">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">받는 주소</span>
+                        <input type="text" class="form-control modalFullAddress">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> <!-- 배송 현황 모달창-->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/order.js"></script>
+    <script src="/js/myInfo.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/utilViewHtml.js"></script>
+    <script src="/js/utilEventHandler.js"></script>
+
+</div>
+
+
+<script layout:fragment="script" th:inline="javascript">
+
+    const deliveryProcessModal = new bootstrap.Modal(document.querySelector(".deliveryProcessModal"))
+    const modalDeliveryStatus = document.querySelector(".modalDeliveryStatus")
+    const modalRecipientName = document.querySelector(".modalRecipientName")
+    const modalRecipientPhoneNumber = document.querySelector(".modalRecipientPhoneNumber")
+    const modalFullAddress = document.querySelector(".modalFullAddress")
+
+
+    // 최초 페이지 로딩
+    pageInit()
+
+
+
+    function cancelOrder(orderId, object){
+        if(!confirm("정말로 구매를 취소 하겠습니까?")){
+            return
+        }
+
+        sendCancelOrder(orderId).then(result=>{
+            alert('정상적으로 삭제 되었습니다.')
+
+            self.location = '/order/list' // 자바스크립트로 다른 url 호출
+
+        }).catch(e=>{
+            errorResponse(e)
+        })
+    }
+    function writeReview(orderId, object){
+        alert('리뷰 작성')
+    }
+
+
+    // 배송 현황 팝업창 보기
+    function showDeliveryStatus(orderId, object){
+        const formObj = {
+            orderId:orderId,
+        }
+
+        getOrderDeliveryProcess(formObj).then(result=>{
+
+            modalRecipientPhoneNumber.value = result.recipientPhoneNumber
+            modalDeliveryStatus.value = result.deliveryStatus
+            modalRecipientName.value = result.recipientName
+            modalFullAddress.value = result.fullAddress
+
+            deliveryProcessModal.show()
+        }).catch(e=>{
+            errorResponse(e)
+        })
+    }
+
+    // 모달 창 값 초기화
+    function initModalData(obj){
+        console.log('orderList.html - initModalData()!!!!')
+
+        deliveryProcessModal.hide()
+    }
+
+</script>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <title>News</title>
+</head>
+
+<div layout:fragment="content">
+
+    <div class="row mt-3">
+
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Today's news
+                </div>
+                <div class="card-body">
+
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="news-tab" data-bs-toggle="tab" data-bs-target="#news"
+                                    type="button" role="tab" aria-controls="news" aria-selected="true">뉴스</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="event-tab" data-bs-toggle="tab" data-bs-target="#event"
+                                    type="button" role="tab" aria-controls="event" aria-selected="false">이벤트</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="news" role="tabpanel" aria-labelledby="news-tab">
+
+                            <div class="row mt-3">
+                                <table id="tableNewsId">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">번호</th>
+                                        <th scope="col">제목</th>
+                                        <th scope="col">등록 날짜</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tableNews">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="tab-pane fade " id="event" role="tabpanel" aria-labelledby="event-tab">
+
+                            <div class="row mt-3">
+                                <table id="tableEventId">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">번호</th>
+                                        <th scope="col">제목</th>
+                                        <th scope="col">이벤트 시작</th>
+                                        <th scope="col">이벤트 종료</th>
+                                        <th scope="col">등록 날짜</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tableEvent">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div><!-- <div class="tab-content" id="myTabContent">-->
+
+                </div><!-- <div class="card-body">-->
+            </div>
+        </div>
+    </div>
+
+
+    <!--    axios 라이브러리 추가-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/myInfo.js"></script>
+    <script src="/js/event.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/utilViewHtml.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+    const tableEvent = document.getElementById("tableEvent");
+    const tableNews = document.getElementById("tableNews");
+
+    const eventTab = document.getElementById("event-tab");
+    const newsTab = document.getElementById("news-tab");
+    const eventContent = document.getElementById("event");
+    const newsContent = document.getElementById("news");
+
+    let arrElement = []
+    const eventObj = {
+        "targetId": "#event",
+        "tableId": tableEvent,
+        "pathName": "event"
+    }
+    const newsObj = {
+        "targetId": "#news",
+        "tableId": tableNews,
+        "pathName": "news"
+    }
+    arrElement.push(eventObj);
+    arrElement.push(newsObj);
+
+    if( [[${targetId}]] === 'event'){
+        console.log('news~~~~~~~~')
+
+        newsTab.classList.remove("active");
+        eventTab.classList.add("active");
+
+        newsContent.classList.remove("show", "active");
+        eventContent.classList.add("show", "active");
+    }
+
+    console.log([[${targetId}]])
+
+    // 최초 페이지 로딩
+    pageInit()
+
+    getListNoti('#' + [[${targetId}]])
+
+    const triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
+    triggerTabList.forEach(function (triggerEl) {
+        const tabTrigger = new bootstrap.Tab(triggerEl)
+
+        triggerEl.addEventListener('click', function (event) {
+            event.preventDefault()
+
+            const target = event.target
+            const targetId = target.getAttribute("data-bs-target")
+
+            getListNoti(targetId)
+
+            tabTrigger.show()
+        })
+    })
+    function getListNoti(targetId){
+
+        const formObj = {
+            targetId:targetId,
+            type:'u',       // 활성화 된 공지만 가져오기
+            pathName:arrElement.find(o => o.targetId === targetId).pathName
+        }
+
+        getNotiList(formObj).then(data => {
+
+            printNotiList(data.dtoList, arrElement.find(o => o.targetId === targetId).tableId
+                            ,arrElement.find(o => o.targetId === targetId).pathName) // 목록 처리
+
+        }).catch(e=>{
+            console.error(e)
+        })
+    }
+
+    function makeHistoryData(arr, dtoData){
+        arr[0] = dtoData.notiId
+        arr[1] = dtoData.title
+        arr[2] = dtoData.eventStartDate === undefined ? '' : stringToDateFormat(dtoData.eventStartDate)
+        arr[3] = dtoData.eventEndDate === undefined ? '' : stringToDateFormat(dtoData.eventEndDate)
+        arr[4] = dtoData.regDate
+    }
+    function printNotiList(dtoList, tableRef, pathName) {    // 목록 출력
+
+        // 기존 행 삭제
+        while (tableRef.firstChild) {
+            tableRef.removeChild(tableRef.firstChild);
+        }
+
+        if(dtoList && dtoList.length > 0) {
+            dtoList.forEach(function (e, i) {
+                const arr = []
+                makeHistoryData(arr, e)
+
+                let newRow = tableRef.insertRow(-1);
+
+                for (let j = 0, k = 0; j < arr.length; j++){
+                    if(arr[j] !== ''){
+
+                        let newCell = newRow.insertCell(k);
+                        let newText = document.createTextNode(arr[j]);
+
+                        if( j === 1 ){
+                            const url="/notification/show/" + pathName + "/" + arr[0];
+                            const link = document.createElement("a");
+                            link.setAttribute("href",url);
+                            link.appendChild(newText);
+
+                            newCell.appendChild(link);
+                        }
+                        else{
+                            newCell.appendChild(newText);
+                        }
+                        k++;
+                    }
+                }
+            })
+        }
+    }
+
+</script>

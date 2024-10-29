@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>상품 정보</title>
+</head>
+
+<th:block layout:fragment="css">
+  <style>
+    .mgb-15{
+      margin-bottom:15px;
+    }
+    .mgt-30{
+      margin-top:30px;
+    }
+    .mgt-50{
+      margin-top:50px;
+    }
+    .itemMainImgDiv{
+      margin-right:15px;
+      height:auto;
+      width:20%;
+    }
+    .wd50{
+      height:auto;
+      width:50%;
+    }
+  </style>
+</th:block>
+
+<div layout:fragment="content" style="margin-top:50px;margin-left:10%;margin-right:10%">
+
+  <div class="d-flex">
+    <div class="itemMainImgDiv">
+      <img class="rounded" style="width:200px; margin-right: 5rem" th:alt="${responseDTO.itemName}"
+           th:src="|/view/${responseDTO.getMainImage().uuid}_${responseDTO.getMainImage().fileName}|">
+    </div>
+    <div class="wd50">
+      <span style="background-color: #0a53be" class="badge badge-primary mgb-15"
+            th:if="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}">
+        판매중
+      </span>
+      <span style="background-color: red"  class="badge badge-primary mgb-15"
+            th:if="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SOLDOUT}">
+        품절
+      </span>
+
+      <div class="h4" th:text="${responseDTO.itemName}"></div>
+      <hr class="my-4">
+
+      <div class="text-right">
+        <div class="h4 text-danger text-left">
+          <input type="hidden" th:value="${responseDTO.originalPrice}" class="pOriginalPrice">
+          <span th:text="${#numbers.formatInteger(responseDTO.originalPrice,3,'COMMA')}"></span>원
+        </div>
+
+        <div class="h5 text-danger text-left">
+          <span th:text="|할인 금액 : |"></span>
+          <input type="hidden" th:value="${responseDTO.discountPrice}" class="pDiscountPrice">
+          <span th:text="${#numbers.formatInteger(responseDTO.discountPrice,3,'COMMA')}"></span>원
+        </div>
+
+        <div class="input-group w-50 mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">수량</span>
+          </div>
+          <input type="number" class="form-control pItemCount" value="1" min="1">
+        </div>
+
+        <div class="input-group mb-3" th:with="optionDTO = ${responseDTO.listOptionType.get(0)}">
+          <div class="input-group-prepend">
+            <span class="input-group-text">옵션1</span>
+          </div>
+          <select class= "form-control pItemOptionValue1" >
+            <option th:each="i, stat: ${#strings.arraySplit(optionDTO.getOptionValue() ,',')}" th:selected="${stat.index == 1}"
+                    th:value="${i.split('-')[0].trim()}">[[${i.split('-')[1].trim()}]]</option>
+          </select>
+        </div>
+
+        <div class="input-group mb-3" th:if="${responseDTO.listOptionType.size() == 2}"
+             th:with="optionDTO = ${responseDTO.listOptionType.get(1)}">
+          <div class="input-group-prepend">
+            <span class="input-group-text">옵션2</span>
+          </div>
+          <select class= "form-control pItemOptionValue2" >
+            <option th:each="i, stat: ${#strings.arraySplit(optionDTO.getOptionValue() ,',')}" th:selected="${stat.index == 1}"
+                    th:value="${i.split('-')[0].trim()}">[[${i.split('-')[1].trim()}]]</option>
+          </select>
+        </div>
+      </div>
+
+      <hr class="my-4">
+
+      <div class="text-right mgt-50">
+        <h5>결제 금액</h5>
+        <h3 name="totalPrice" id="totalPrice" class="font-weight-bold"></h3>
+      </div>
+
+      <div class="my-4">
+        <div class="float-end">
+          <div class="input-group mb-3">
+            <span class="input-group-text">상품 금액</span>
+            <label>
+              <input type="text" class="form-control pOrderPrice"  readonly>
+            </label>
+          </div>
+          <div class="input-group mb-3">
+            <input type="hidden" th:value="${responseDTO.isFreeDelivery}" class="pIsFreeDelivery">
+
+            <span class="input-group-text">배송비</span>
+            <label>
+              <input type="text" class="form-control pDeliveryFee" readonly>
+            </label>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">상품 할인</span>
+            <label>
+              <input type="text" class="form-control pTotalDiscountPrice" readonly>
+            </label>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">결제 예정 금액</span>
+            <label>
+              <input type="text" class="form-control pExpectedPrice" readonly>
+            </label>
+          </div>
+        </div>
+      </div>
+
+
+      <div th:if="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}"
+           class="text-right">
+        <button type="button" class="btn btn-primary addCartBtn">장바구니 담기</button>
+        <button type="button" class="btn border-primary orderBtn">바로 주문</button>
+      </div>
+      <div th:unless="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}"
+           class="text-right">
+        <button type="button" class="btn btn-danger btn-lg">품절</button>
+      </div>
+    </div>
+  </div><!--  <div class="d-flex">-->
+
+  <hr class="my-4">
+    <h4 class="display-5">상품 상세 설명</h4>
+  <hr class="my-4">
+    <p class="lead" th:text="${responseDTO.itemDesc}"></p>
+  <hr class="my-4">
+  <hr class="my-4">
+
+
+  <div th:each="fileName : ${responseDTO.getListExceptMainImage()}" class="text-center">
+    <img th:if="${not #strings.isEmpty(fileName.fileName)}" width="800"
+            th:src="|/view/${fileName.uuid}_${fileName.fileName}|" class="rounded mgb-15" >
+  </div>
+
+  <hr class="my-4">
+  <!------------------------------리뷰 표시--------------------------------->
+  <div class="h3 text-danger text-left">
+    <span th:text="|리뷰 목록|"></span>
+    &nbsp;
+    <span class="reviewCount" style="font-size : 17pt; color:royalblue"></span>
+    &nbsp;
+    <span class="reviewAvgScore" style="font-size : 13pt; color:blueviolet"></span>
+  </div>
+
+  <div class="row mt-3">
+    <table class="table" th:width="100px">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">리뷰</th>
+          <th scope="col">작성자</th>
+          <th scope="col">작성일자</th>
+        </tr>
+      </thead>
+      <tbody id="tableReview">
+      </tbody>
+    </table>
+
+    <!-- 페이지 번호 출력-->
+    <div class="float-start">
+      <ul class="pagination flex-wrap">
+      </ul>
+    </div>
+    <!-- 페이지 번호 출력-->
+  </div>
+
+
+  <!-- 리뷰 상세 정보 모달창-->
+  <div class="modal reviewDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">상세 리뷰</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="modalReviewScore">
+          </div>
+          <span class="modalReviewer"></span>
+          <div>
+            <span class="modalRegDate" style="display: block; text-align:right;"></span>
+          </div>
+
+          <hr class="my-4">
+          <pre class="lead modalReviewText"></pre>
+          <hr class="my-4">
+          <div class="modalReviewImg">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark modalReviewDetailCloseBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div> <!-- 리뷰 상세 정보 모달창-->
+
+
+
+
+  <!--    axios 라이브러리 추가-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/cart.js"></script>
+  <script src="/js/order.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  const reviewDetailModal = new bootstrap.Modal(document.querySelector(".reviewDetailModal"))
+
+  const shopItemId = [[${responseDTO.shopItemId}]]
+  const itemName = [[${responseDTO.itemName}]]
+  const optionCount = [[${responseDTO.listOptionType.size()}]]
+
+  const pItemCount = document.querySelector('.pItemCount')
+  const pOriginalPrice = document.querySelector('.pOriginalPrice')
+  const pDiscountPrice = document.querySelector('.pDiscountPrice')
+  const pItemOptionValue1 = document.querySelector('.pItemOptionValue1');
+  const pItemOptionValue2 = document.querySelector('.pItemOptionValue2');
+
+  const pOrderPrice = document.querySelector(".pOrderPrice")
+  const pExpectedPrice = document.querySelector(".pExpectedPrice")
+  const pTotalDiscountPrice = document.querySelector(".pTotalDiscountPrice")
+  const pDeliveryFee = document.querySelector(".pDeliveryFee")
+  const pIsFreeDelivery = document.querySelector(".pIsFreeDelivery")
+
+  const tableReview = document.getElementById("tableReview");
+  const pagination = document.querySelector(".pagination");
+  const reviewCount = document.querySelector(".reviewCount");
+  const reviewAvgScore = document.querySelector(".reviewAvgScore");
+
+  const modalReviewImg = document.querySelector(".modalReviewImg");
+  const modalReviewText = document.querySelector(".modalReviewText");
+  const modalReviewScore = document.querySelector(".modalReviewScore");
+  const modalReviewer = document.querySelector(".modalReviewer");
+  const modalRegDate = document.querySelector(".modalRegDate");
+
+  const reviewViewCount = 5    // 한번에 보여줄 댓글 갯수
+  ///////////////////////////////////////////////////////////////////
+
+  // 최초 페이지 로딩
+  pageInit()
+
+  reCalculation()
+
+  resetReview(1, reviewViewCount)
+
+
+  function resetReview(page, size){
+    getListReview({shopItemId, page, size}).then(data => {
+
+      reviewCount.textContent = 'count : ' + data.total
+      reviewAvgScore.textContent = '( 별점 평균 : ' + data.reviewAvgScore + ' )'
+
+      printReview(data.dtoList)
+      printReviewPage(data)
+
+    }).catch(e => {
+      console.log(e)
+    })
+  }
+
+  function printReview(dtoList){
+
+    let content = '';
+
+    if(dtoList && dtoList.length > 0) {
+        dtoList.forEach(function (e, i) {
+
+        const maskingReviewer = maskingName(e.reviewer)
+        // 문장 개행 처리
+        const reviewText = e.reviewText.replace(/(?:\r\n|\r|\n)/g, '<br />');
+
+        content += `<tr class="memList">`;
+        content += `  <th scope="row" class="col-md-3">`
+
+        for(let index = 1 ; index <= e.score; index++){
+          content += `    <i class="fa-solid fa-star" style="color: blueviolet"></i>`
+        }
+        if(e.mainImage !== null){
+          content += `    <div><img src="/view/${e.mainImage.uuid}_${e.mainImage.fileName}" width=150></div>`
+        }
+        content += `  </th>`
+        content += `<td><a onclick="javascript:showReviewModal('${e.reviewId}')" style="cursor:pointer" class="text-decoration-none">${reviewText}</a></td>`
+        content += `  <td>${maskingReviewer}</td>`
+        content += `  <td>${e.regDate}</td>`
+        content += `</tr>`;
+      })
+    }
+
+    tableReview.innerHTML = content
+  }
+
+  function showReviewModal(reviewId){
+
+    getReview({reviewId}).then(data => {
+      setReviewDetailValue(data)  // 리뷰 상세 창 내용 설정
+      reviewDetailModal.show()
+    }).catch(e => {
+      console.log(e)
+    })
+
+  }
+  function setReviewDetailValue(data){
+
+    modalReviewText.textContent = data.reviewText
+    modalReviewer.textContent = '작성자 : ' + data.reviewer
+    modalRegDate.textContent = data.regDate
+
+    // 리뷰 별점수
+    let scoreContents = ''
+    for(let index = 1 ; index <= data.score; index++){
+      scoreContents += `<i class="fa-solid fa-star" style="color: blueviolet"></i>`
+    }
+    modalReviewScore.innerHTML = scoreContents
+
+    // 리뷰 이미지
+    let imageContents = ''
+    data.fileNames.forEach(function(file){
+      imageContents += `<img width="400" src="/view/${file.uuid}_${file.fileName}" class="rounded mgb-15">`
+    })
+    modalReviewImg.innerHTML = imageContents
+  }
+  function printReviewPage(data){
+
+    let content = '';
+
+    if(data.prev === true){
+      content = `<li class="page-item">`
+      content += `<a class="page-link" data-num="${data.start - 1}">Previous</a>`
+      content += `</li>`
+    }
+
+    for(var index = data.start; index <= data.end; index++){
+      if( data.page === index){
+        content += `<li class="page-item active">`
+      }
+      else{
+        content += `<li class="page-item">`
+      }
+      content += `<a class="page-link" data-num="${index}">${index}</a>`
+      content += `</li>`
+    }
+
+    if(data.next === true){
+      content += `<li class="page-item">`
+      content += `<a class="page-link" data-num="${data.end + 1}">Next</a>`
+      content += `</li>`
+    }
+
+    pagination.innerHTML = content;
+  }
+
+  // 페이지 버튼 클릭 이벤트 begin ------------------
+  document.querySelector(".pagination").addEventListener("click", function(e){
+
+    e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
+    e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
+
+    const target = e.target   // a 태그
+    if(target.tagName !== 'A'){
+      return
+    }
+    const num = target.getAttribute("data-num")
+
+    resetReview(num, reviewViewCount)
+
+  }, false)
+  // 페이지 버튼 클릭 이벤트 end ------------------
+
+
+  // 수량 변경
+  document.querySelector(".pItemCount").addEventListener("change", function (e){
+    reCalculation()
+  }, false)
+
+  function reCalculation(){
+
+    const itemPrice = pOriginalPrice.value
+    const discountPrice = pDiscountPrice.value
+    const itemCount = pItemCount.value
+    const isFreeDelivery = pIsFreeDelivery.value
+
+    const totalOriginalPrice = itemPrice * itemCount
+    const totalDiscountPrice = discountPrice * itemCount
+    const totalPrice = (itemPrice - discountPrice) * itemCount
+
+    // 배송비 계산
+    const deliveryPrice = (isFreeDelivery === 'true' || totalPrice === 0 || totalPrice > 15000) ? 0 : 2500
+
+    pOrderPrice.value = totalOriginalPrice.toLocaleString('ko-KR')
+    pDeliveryFee.value = deliveryPrice.toLocaleString('ko-KR')
+    pTotalDiscountPrice.value = totalDiscountPrice.toLocaleString('ko-KR')
+    pExpectedPrice.value = (totalPrice + deliveryPrice).toLocaleString('ko-KR')   // 결제 예정 금액
+  }
+
+  function checkItemSelect(){
+    if( pItemCount.value === '0'){
+      alert('수량을 선택 하세요!')
+      return false
+    }
+    if(pItemOptionValue1.value === '0'){
+      alert('옵션1을 선택 하세요!')
+      return false
+    }
+    if( optionCount > 1 && pItemOptionValue2.value === '0' ){
+      alert('옵션2을 선택 하세요!')
+      return false
+    }
+    return true
+  }
+
+  // [장바구니 담기] 버튼 클릭
+  document.querySelector(".addCartBtn").addEventListener("click", function(e){
+    e.preventDefault()
+    e.stopPropagation()
+
+    // 상품 선택 했는지 체크
+    if(checkItemSelect() === false){
+      return
+    }
+
+    const formObj = {
+      shopItemId: shopItemId,
+      itemName: itemName,
+      itemCount: pItemCount.value,
+      itemPrice: pOriginalPrice.value,
+      itemOptionIds: pItemOptionValue1.value + "," + (optionCount > 1 ? pItemOptionValue2.value : 0),
+    }
+
+    ////////////////////////////////////////////////////
+    addCartItem(formObj).then(result => {
+      alert("정상적으로 장바구니에 담겼습니다")
+
+      // 장바구니 페이지 로 이동
+      self.location = '/cart/list'
+
+    }).catch(e => {
+      console.log(e)
+    })
+  }, false)
+
+  // 바로 주문하기
+  document.querySelector(".orderBtn").addEventListener("click", function(e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    // 상품 선택 했는지 체크
+    if(checkItemSelect() === false){
+      return
+    }
+
+    const formObj = {
+      shopItemId: shopItemId,
+      itemName: itemName,
+      itemCount: pItemCount.value,
+      itemPrice: pOriginalPrice.value,
+      itemOptionIds: pItemOptionValue1.value + "," + ( optionCount > 1 ? pItemOptionValue2.value : 0 ),
+    }
+
+    ////////////////////////////////////////////////////
+    addOrderTemporary(formObj).then(result => {
+
+      // 주문서 페이지 로 이동
+      self.location = '/order/orderPage/' + result.orderTemporaryId
+
+    }).catch(e => {
+      console.log(e)
+    })
+  }, false)
+
+
+</script>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>MyCar 통계</title>
+</head>
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          Car 통계
+        </div>
+
+        <div class="card-body">
+
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="consume-tab" data-bs-toggle="tab" data-bs-target="#consume"
+                      type="button" role="tab" aria-controls="consume" aria-selected="true">월별 지출</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="fuelAmount-tab" data-bs-toggle="tab" data-bs-target="#fuelAmount"
+                      type="button" role="tab" aria-controls="fuelAmount" aria-selected="false">월별 주유량</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="distance-tab" data-bs-toggle="tab" data-bs-target="#distance"
+                      type="button" role="tab" aria-controls="distance" aria-selected="false">월별 운행 거리</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="total-tab" data-bs-toggle="tab" data-bs-target="#total"
+                      type="button" role="tab" aria-controls="total" aria-selected="true">총 내역 </button>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="consume" role="tabpanel" aria-labelledby="consume-tab">
+
+              <div class="row mt-3">
+                <div class="input-group-prepend">
+                  <label for="selectConsumeYear">연도</label>
+                  <select name="selectYearName" id="selectConsumeYear"
+                          th:with="endYear= ${#calendars.format(#calendars.createNow(),'yyyy')}, startYear= ${endYear}-3">
+                    <option th:each="i, stat: ${#numbers.sequence( startYear, endYear)}" th:value="${i}"
+                            th:selected="${stat.index} == 3">[[${i}]]</option>
+                  </select>
+
+                  <button type="button" class="btn btn-info refreshConsumeBtn" data-bs-target="#consume">조회</button>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div>
+                  <canvas id="consumeChart"></canvas>
+                </div>
+              </div>
+
+            </div>
+            <div class="tab-pane fade" id="fuelAmount" role="tabpanel" aria-labelledby="fuelAmount-tab">
+
+              <div class="row mt-3">
+                <div class="input-group-prepend">
+                  <label for="selectConsumeYear">연도</label>
+                  <select name="selectYearName" id="selectFuelAmountYear"
+                          th:with="endYear= ${#calendars.format(#calendars.createNow(),'yyyy')}, startYear= ${endYear}-3">
+                    <option th:each="i, stat: ${#numbers.sequence( startYear, endYear)}" th:value="${i}"
+                            th:selected="${stat.index} == 3">[[${i}]]</option>
+                  </select>
+
+                  <button type="button" class="btn btn-info refreshFuelAmountBtn" data-bs-target="#fuelAmount">조회1</button>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div>
+                  <canvas id="fuelAmountChart"></canvas>
+                </div>
+              </div>
+
+            </div>
+            <div class="tab-pane fade" id="distance" role="tabpanel" aria-labelledby="distance-tab">
+
+              <div class="row mt-3">
+                <div class="input-group-prepend">
+                  <label for="selectConsumeYear">연도</label>
+                  <select name="selectYearName" id="selectDistanceYear"
+                          th:with="endYear= ${#calendars.format(#calendars.createNow(),'yyyy')}, startYear= ${endYear}-3">
+                    <option th:each="i, stat: ${#numbers.sequence( startYear, endYear)}" th:value="${i}"
+                            th:selected="${stat.index} == 3">[[${i}]]</option>
+                  </select>
+
+                  <button type="button" class="btn btn-info refreshDistanceBtn" data-bs-target="#distance">조회2</button>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div>
+                  <canvas id="distanceChart"></canvas>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="total" role="tabpanel" aria-labelledby="total-tab">
+
+              <div class="row mt-3">
+                <div class="input-group-prepend">
+                  <label for="selectConsumeYear">연도</label>
+                  <select name="selectYearName" id="selectTotalYear"
+                          th:with="endYear= ${#calendars.format(#calendars.createNow(),'yyyy')}, startYear= ${endYear}-3">
+                    <option th:each="i, stat: ${#numbers.sequence( startYear, endYear)}" th:value="${i}"
+                            th:selected="${stat.index} == 3">[[${i}]]</option>
+                  </select>
+
+                  <button type="button" class="btn btn-info refreshTotalBtn" data-bs-target="#total">조회3</button>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col">
+                  <div class="card">
+                    <div class="card-header">
+                      Total Info
+                    </div>
+                    <div class="card-body">
+                      <!--            dto 값 출력 부분-->
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">총 주유비</span>
+                        <input type="text" class="form-control totalGasCost" readonly>
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">총 정비 비용</span>
+                        <input type="text" class="form-control totalRepairCost" readonly>
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">총 주유량</span>
+                        <input type="text" class="form-control totalGasAmount" readonly>
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">총 운행거리</span>
+                        <input type="text" class="form-control totalAccKm" readonly>
+                      </div>
+                    </div><!-- <div class="card-body">-->
+
+                  </div>
+                </div>
+
+              </div><!-- <div class="row mt-3">-->
+            </div>
+
+
+          </div><!-- <div class="tab-content" id="myTabContent">-->
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div><!--    <div class="col">-->
+
+    <a th:href="|@{/myPage/carDetail(carId=${carId}, memberId=${#authentication.principal.username} )}|" class="text-decoration-none">
+      <button type="button" class="btn btn-primary">back</button>
+    </a>
+
+  </div>
+
+
+  <!--    axios 라이브러리 추가-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/history.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  let page = 1
+  let size = 5
+
+  const currentUser = [[${#authentication.principal.username}]]
+  const carId = [[${carId}]]
+
+  const selectConsumeYear = document.querySelector('#selectConsumeYear');
+  const selectFuelAmountYear = document.querySelector('#selectFuelAmountYear');
+  const selectDistanceYear = document.querySelector('#selectDistanceYear');
+  const selectTotalYear = document.querySelector('#selectTotalYear');
+
+  const totalGasCost = document.querySelector(".totalGasCost")
+  const totalRepairCost = document.querySelector(".totalRepairCost")
+  const totalGasAmount = document.querySelector(".totalGasAmount")
+  const totalAccKm = document.querySelector(".totalAccKm")
+
+
+  const consumeChart = document.getElementById('consumeChart');
+  const fuelAmountChart = document.getElementById('fuelAmountChart');
+  const distanceChart = document.getElementById('distanceChart');
+
+
+  let arrElement = []
+
+  const consumeObj = {
+    "targetId": "#consume",
+    "selectYear": selectConsumeYear,
+    "chart": consumeChart,
+    "label1": "# 주유",
+    "label2": "# 정비"
+  }
+  const fuelAmountObj = {
+    "targetId": "#fuelAmount",
+    "selectYear": selectFuelAmountYear,
+    "chart": fuelAmountChart,
+    "label1": "# 주유",
+  }
+  const distanceObj = {
+    "targetId": "#distance",
+    "selectYear": selectDistanceYear,
+    "chart": distanceChart,
+    "label1": "운행 거리",
+  }
+  const totalObj = {
+    "targetId": "#total",
+    "selectYear": selectTotalYear,
+    //"chart": distanceChart,
+  }
+  arrElement.push(consumeObj);
+  arrElement.push(fuelAmountObj);
+  arrElement.push(distanceObj);
+  arrElement.push(totalObj);
+
+
+  // 최초 페이지 로딩
+  pageInit()
+
+  getStatisticsList('#consume', selectConsumeYear.value)
+
+
+  const buttons = document.querySelectorAll(".btn")
+  for (const button of buttons) {
+    button.addEventListener('click', function(e) {
+      const target = e.target
+      const targetId = target.getAttribute("data-bs-target")
+
+      //console.log('targetId' + targetId)
+
+      const selectYear = arrElement.find(o => o.targetId === targetId).selectYear.value
+
+      if( targetId === "#consume" || targetId === "#fuelAmount" || targetId === "#distance" ){
+        getStatisticsList(targetId, selectYear)
+      }
+      else if( targetId === "#total"){
+        getStatisticsTotalList(targetId, selectYear)
+      }
+
+    })
+  }
+
+
+  const triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
+  triggerTabList.forEach(function (triggerEl) {
+    const tabTrigger = new bootstrap.Tab(triggerEl)
+
+    triggerEl.addEventListener('click', function (event) {
+      event.preventDefault()
+
+      const target = event.target
+      const targetId = target.getAttribute("data-bs-target")
+      const selectYear = arrElement.find(o => o.targetId === targetId).selectYear.value
+
+      if(targetId === "#consume" || targetId === "#fuelAmount" || targetId === "#distance"){
+        getStatisticsList(targetId, selectYear)
+      }
+      else if(targetId === "#total"){
+        getTotalList(targetId, selectYear)
+      }
+
+      tabTrigger.show()
+    })
+  })
+
+  function getStatisticsList(targetId, selectYear){
+
+    const formObj = {
+      carId:carId,
+      selectYear:selectYear,
+      targetId:targetId
+    }
+
+    getStatisticsHistory(formObj).then(data => {
+
+      printStatisticsList(data, targetId) // 목록 처리
+
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
+
+  function getStatisticsTotalList(targetId, selectYear){
+
+    const formObj = {
+      carId:carId,
+      selectYear:selectYear,
+      targetId:targetId
+    }
+
+    getStatisticsTotal(formObj).then(data => {
+
+      printStatisticsTotal(data) // 목록 처리
+
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
+
+  function getTotalList(targetId, selectYear){
+
+    const formObj = {
+      carId:carId,
+      selectYear:selectYear,
+      targetId:targetId
+    }
+
+    getStatisticsTotal(formObj).then(data => {
+
+      printStatisticsTotal(data, targetId) // 목록 처리
+
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
+
+  function printStatisticsList(dtoList, targetId) {
+
+    const arrFirst = Array.from({length: 12}, () => 0);
+    const arrSecond = Array.from({length: 12}, () => 0);
+
+    console.log(dtoList)
+
+    dtoList.forEach(function (e, i) {
+      if( e.chartBarOrder === 1){
+        arrFirst[parseInt(e.eventDate)-1] = e.eventValue
+      }
+      else{
+        arrSecond[parseInt(e.eventDate)-1] = e.eventValue
+      }
+    })
+
+    let dataset = []
+
+    if(targetId === "#consume" || targetId === "#fuelAmount"){
+      dataset.push({label: arrElement.find(o => o.targetId === targetId).label1,
+        data: arrFirst, borderWidth: 1})
+    }
+    if(targetId === "#consume"){
+      dataset.push({label: arrElement.find(o => o.targetId === targetId).label2,
+        data: arrSecond, borderWidth: 1})
+    }
+    if(targetId === "#distance"){
+      dataset.push({label: arrElement.find(o => o.targetId === targetId).label1,
+        data: arrFirst, borderWidth: 1})
+    }
+
+    printChart(dataset, targetId)
+
+  }
+
+  function printStatisticsTotal(dto) {
+
+    const arrMonth = Array.from({length: 12}, (item, index) =>
+            String(index + 1).padStart(2, "0"));   // 숫자 앞자리 0으로 채우기
+
+    const arrCost = Array.from({length: 12}, () => 0);   // 월별 비용 저장
+
+    totalGasCost.value = dto.gasCost === undefined ? "" : dto.gasCost
+    totalRepairCost.value = dto.repairCost === undefined ? "" : dto.repairCost
+    totalGasAmount.value = dto.gasAmount === undefined ? "" : dto.gasAmount
+    totalAccKm.value = dto.accKm === undefined ? "" : dto.accKm
+
+    // console.log('printStatisticsTotal()~~~')
+    // console.log(dto.gasCost)
+    // console.log(dto.repairCost)
+    // console.log(dto.gasAmount)
+    // console.log(dto.accKm)
+  }
+  function printChart(dataset, targetId) {
+
+    const arrMonth = Array.from({length: 12}, (item, index) =>
+            String(index + 1).padStart(2, "0"));   // 숫자 앞자리 0으로 채우기
+
+    // 차트 출력
+    let chart = arrElement.find(o => o.targetId === targetId).chart
+
+    let chartStatus = Chart.getChart(chart);
+    if (chartStatus !== undefined) {
+      chartStatus.destroy();
+    }
+
+    new Chart(chart, {
+      type: 'bar',
+      data: {
+        labels: arrMonth,
+        datasets: dataset
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+</script>

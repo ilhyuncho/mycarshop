@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>Event Register</title>
+</head>
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+         이벤트 등록
+        </div>
+        <div class="card-body">
+
+          <form action="/admin/eventRegister" id="formEventRegister">
+
+            <input type="hidden" name="target" class="form-control" th:value="event">
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 이름</span>
+              <label>
+                <input type="text" name="name" class="form-control" placeholder="예) 미지정 -> 자동 생성">
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 title</span>
+              <label>
+                <input type="text" name="title" class="form-control" th:value="이벤트Title1">
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 message</span>
+              <label>
+                <input type="text" name="message" class="form-control" value="event message1">
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 시작 날짜</span>
+              <label>
+               <input type="date" name="eventStartDate" class="form-control eventStartDate">
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 종료 날짜</span>
+              <label>
+               <input type="date" name="eventEndDate" class="form-control eventEndDate">
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 종류</span>
+              <label>
+                <select name="eventSelectType" id="eventTypeSelect">
+                  <option th:each="i, stat: ${eventTypeList}" th:value="${i.getType()}">[[${i.getName}]]</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 설정값</span>
+              <label>
+                <input type="text" name="eventValue" class="form-control" th:value="10">
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 활성화</span>
+              <label>
+                <input type="radio" name="isUse" checked value="1">활성화</input>
+                <input type="radio" name="isUse" value="0">비활성화</input>
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 팝업창</span>
+              <label>
+                <input type="radio" name="isPopup" checked value="1">활성화</input>
+                <input type="radio" name="isPopup" value="0">비활성화</input>
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">Page Images</span>
+              <div class="float-end uploadHidden">
+                <button type="button" class="btn btn-primary uploadFileBtn">ADD Files</button>
+              </div>
+            </div>
+
+            <div class="my-4">
+              <div class="float-end">
+                <button type="submit" class="btn btn-primary submitBtn">이벤트 등록</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+              </div>
+            </div>
+          </form>
+        </div><!-- <div class="card-body">-->
+
+      </div>
+    </div>
+  </div>
+
+  <!--    첨부파일 썸네일 보여줄 부분-->
+  <div class="row mt-3">
+    <div class="col">
+      <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap;">
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          이벤트 리스트
+        </div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">notiId</th>
+              <th scope="col">notiName</th>
+              <th scope="col">notiTitle</th>
+              <th scope="col">notiMessage</th>
+              <th scope="col">활성화 여부</th>
+              <th scope="col">팝업창 여부</th>
+              <th scope="col">이벤트 시작 날짜</th>
+              <th scope="col">이벤트 종료 날짜</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="dto:${responseDTO.dtoList}">
+              <th scope="row">[[${dto.notiId}]]</th>
+              <td> <a th:href="|@{'/admin/eventDetail/' + ${dto.notiId}}|"
+                      class="text-decoration-none"> [[${dto.name}]]</a></td>
+              <td>[[${dto.title}]]</td>
+              <td>[[${dto.message}]]</td>
+              <td>[[${dto.isUse}]]</td>
+              <td>[[${dto.isPopup}]]</td>
+              <td>[[${ #temporals.format(dto.eventStartDate, 'yyyy-MM-dd')}]]</td>
+              <td>[[${ #temporals.format(dto.eventEndDate, 'yyyy-MM-dd')}]]</td>
+            </tr>
+            </tbody>
+          </table>
+
+          <!-- 페이지 번호 출력-->
+          <div class="float-end">
+            <ul class="pagination flex-wrap">
+
+              <li class="page-item" th:if="${responseDTO.prev}">
+                <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+              </li>
+
+              <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item' ">
+                  <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                </li>
+              </th:block>
+
+              <li class="page-item" th:if="${responseDTO.next}">
+                <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+              </li>
+
+            </ul>
+          </div>
+          <!-- 페이지 번호 출력-->
+
+        </div><!-- <div class="card-body">-->
+
+      </div>
+    </div>
+  </div>
+
+  <!--    첨부파일 추가를 위한 모달창-->
+  <div class="modal uploadModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Upload File</h5>
+          <button type="button" class="btn-close closeUploadBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <input type="file" name="files" class="form-control" multiple>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary uploadBtn">Upload</button>
+          <button type="button" class="btn btn-outline-dark closeUploadBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>  <!--    uploadModal-->
+
+  <!--    axios 라이브러리 추가-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/upload.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
+  <script src="/js/utilEventHandler.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
+  const eventStartDate = document.querySelector('.eventStartDate');
+  const eventEndDate = document.querySelector('.eventEndDate');
+
+  // 이미지 파일 업로드 결과 화면
+  const uploadResult = document.querySelector(".uploadResult")
+
+  // 에러 처리 부분 begin ----------------------------
+  const errors = [[${errors}]]
+  console.log('errors : ' + errors)
+
+  let errorMsg = ''
+  if (errors) {
+    for (let i = 0; i < errors.length; i++) {
+      errorMsg += `${errors[i].field}은 ${errors[i].code} \n`
+    }
+
+    // param ( 1: 바뀐 주소와 함께 저장할 객체, 2: 바꿀 제목, 3: 바꿀 주소 )
+    // https://www.zerocho.com/category/HTML&DOM/post/599d2fb635814200189fe1a7
+    history.replaceState({}, null, null)
+    alert(errorMsg)
+  }
+
+  const errorMessage = [[${errorMessage}]]
+  if(errorMessage ){
+    console.log('errorMessage : ' + errorMessage)
+
+    history.replaceState({}, null, null)
+    alert(errorMessage)
+  }
+  // 에러 처리 부분 end ----------------------------
+
+  // (테스트용) 기본 날짜 셋팅
+  // eventStartDate.value = new Date().toISOString().substring(0, 10);
+  eventStartDate.value = new Date().toLocaleDateString('en-CA')
+
+  const now = new Date();
+  const oneMonthLater = new Date(now.setDate(now.getDate() + 5));	 // 5일 후
+  eventEndDate.value =  oneMonthLater.toLocaleDateString('en-CA')
+
+
+  // 최초 페이지 로딩
+  pageInit()
+
+
+  // 모달창의 파일 업로드 처리
+  document.querySelector(".uploadBtn").addEventListener("click", function(e){
+    const formObj = new FormData();
+    const fileInput = document.querySelector("input[name='files']")
+    const files = fileInput.files
+
+    for(let i = 0; i < files.length;i++){
+      formObj.append("files", files[i]);
+    }
+
+    uploadToServer(formObj).then(result => {
+
+      for(const uploadResult of result){
+        showUploadFile(uploadResult, true)
+      }
+
+      uploadModal.hide()
+    }).catch(e => {
+      uploadModal.hide()
+    })
+  }, false)
+
+  // 이벤트 등록 요청
+  document.querySelector(".submitBtn").addEventListener("click", function(e){
+    e.preventDefault()
+    e.stopPropagation()
+
+    const target = document.querySelector(".uploadHidden")
+    const uploadFiles = uploadResult.querySelectorAll("img") // uploadResult : 업로드 미리 보기
+
+    if(eventStartDate.value === '' || eventEndDate.value === ''){
+      alert("이벤트 날짜를 입력하세요..")
+      return;
+    }
+
+    let str= ''
+    for(let i = 0 ; i < uploadFiles.length;i++){
+      const uploadFile = uploadFiles[i]
+      const imgLink = uploadFile.getAttribute("data-src")
+
+      console.log("imgLink:" + imgLink)
+
+      str += `<input type='hidden' name='fileNames' value="${imgLink}">`
+    }
+    console.log("str" + str)
+    target.innerHTML = str;
+
+    // 실제 등록 처리
+    const formEventRegister = document.querySelector("#formEventRegister");
+    formEventRegister.method= 'post'
+    formEventRegister.submit();
+
+
+  }, false)
+
+
+
+  // 페이지 버튼 클릭 이벤트 begin ------------------
+  document.querySelector(".pagination").addEventListener("click", function(e){
+
+    e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
+    e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
+
+    const target = e.target   // a 태그
+    if(target.tagName !== 'A'){
+      return
+    }
+
+    const num = target.getAttribute("data-num")
+    const formEventRegister = document.querySelector("#formEventRegister")
+
+    formEventRegister.innerHTML += `<input type='hidden' name='page' value='${num}'>`
+    formEventRegister.method= 'get'
+    formEventRegister.submit();
+
+  }, false)
+  // 페이지 버튼 클릭 이벤트 end ------------------
+
+
+</script>
+</html>

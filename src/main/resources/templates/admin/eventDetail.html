@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>Event Detail</title>
+</head>
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+         이벤트 상세 정보
+        </div>
+        <div class="card-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">이벤트 이름</span>
+            <label>
+              <input type="text" name="name" class="form-control" th:value="${responseDTO.name}" readonly>
+            </label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">이벤트 title</span>
+            <label>
+              <input type="text" name="title" class="form-control" th:value="${responseDTO.title}" readonly>
+            </label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">이벤트 message</span>
+            <label>
+              <input type="text" name="message" class="form-control" th:value="${responseDTO.message}" readonly>
+            </label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">이벤트 시작 날짜</span>
+            <label>
+              <input type="date" name="eventStartDate" class="form-control" th:value="${responseDTO.eventStartDate}" readonly>
+            </label>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">이벤트 종료 날짜</span>
+            <label>
+              <input type="date" name="eventEndDate" class="form-control" th:value="${responseDTO.eventEndDate}" readonly>
+            </label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">이벤트 종류</span>
+            <label>
+            <input type="text" name="message" class="form-control" th:value="${responseDTO.eventSelectType}" readonly>
+            </label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">이벤트 설정값</span>
+            <label>
+              <input type="text" name="eventValue" class="form-control" th:value="${responseDTO.eventValue}" readonly>
+            </label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">이벤트 활성화</span>
+            <label>
+              <input type="radio" name="isUse" value="1" th:checked="${responseDTO.isUse eq true}" onclick="return false;">활성화</input>
+              <input type="radio" name="isUse" value="0" th:checked="${responseDTO.isUse eq false}" onclick="return false;">비활성화</input>
+            </label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">이벤트 팝업창</span>
+            <label>
+              <input type="radio" name="isPopup" value="1" th:checked="${responseDTO.isPopup eq true}" onclick="return false;">활성화</input>
+              <input type="radio" name="isPopup" value="0" th:checked="${responseDTO.isPopup eq false}" onclick="return false;">비활성화</input>
+            </label>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col">
+              <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
+                <th:block th:each="fileName:${responseDTO.fileNames}">
+                  <div class="card col-4">
+                    <div class="card-header d-flex justify-content-center">
+                      [[${fileName.fileName}]] &nbsp; (order: [[${fileName.imageOrder}]])
+                    </div>
+                    <div class="card-body">
+                      <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="${fileName.uuid}" >
+                    </div>
+                  </div>
+                </th:block>
+              </div>
+            </div>
+          </div><!-- <div class="row mt-3">-->
+
+          <div class="my-4">
+            <div class="float-end">
+              <a th:href="|@{/admin/eventRegister}|" class="text-decoration-none">
+                <button type="button" class="btn btn-secondary">List</button>
+              </a>
+              <a th:href="|@{'/admin/eventModify/' + ${responseDTO.notiId}}|" class="text-decoration-none">
+                <button type="button" class="btn btn-primary">이벤트 정보 수정</button>
+              </a>
+              <a th:href="|@{'/admin/notiImageOrderModify/event/' + ${responseDTO.notiId}}|" class="text-decoration-none">
+                <button type="button" class="btn btn-warning">이미지 순서 수정</button>
+              </a>
+            </div>
+          </div>
+
+      </div><!-- <div class="card-body">-->
+
+      </div>
+    </div>
+  </div>
+
+
+  <!--    axios 라이브러리 추가-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/upload.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  // 에러 처리 부분 begin ----------------------------
+  const errors = [[${errors}]]
+  console.log('errors : ' + errors)
+
+  let errorMsg = ''
+  if (errors) {
+    for (let i = 0; i < errors.length; i++) {
+      errorMsg += `${errors[i].field}은 ${errors[i].code} \n`
+    }
+
+    // param ( 1: 바뀐 주소와 함께 저장할 객체, 2: 바꿀 제목, 3: 바꿀 주소 )
+    // https://www.zerocho.com/category/HTML&DOM/post/599d2fb635814200189fe1a7
+    history.replaceState({}, null, null)
+    alert(errorMsg)
+  }
+  // 에러 처리 부분 end ----------------------------
+
+  // 최초 페이지 로딩
+  pageInit()
+
+
+</script>
+</html>

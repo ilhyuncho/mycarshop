@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>Delivery Address Manager</title>
+</head>
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          배송 주소록 관리
+        </div>
+        <div class="card-body">
+
+          <div class="input-group mb-3">
+            <button type="button" class="btn btn-primary registerBtn">배송지 추가하기</button>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col">
+
+      <th:block th:each="addressBook:${responseDTO}">
+        <div class="card" style="width: 25rem;">
+          <div class="card-body">
+            <h5 class="card-title" style="color: red">[[${addressBook.deliveryName}]]
+              <i th:if="${addressBook.mainAddressCheck == true}" class="fa-solid fa-circle" style="color: blueviolet"></i>
+            </h5>
+            <h4 class="card-title">[[${addressBook.RecipientName}]]</h4>
+            <p class="card-text">[[${addressBook.fullAddress}]]</p>
+            <p class="card-text">[[${addressBook.RecipientPhoneNumber}]]</p>
+            <a href="#" class="btn btn-primary" th:onclick="modifyAddress([[${addressBook.userAddressBookId}]])">수정</a>
+            <a href="#" class="btn btn-primary" th:onclick="deleteAddress([[${addressBook.userAddressBookId}]])">삭제</a>
+          </div>
+        </div>
+      </th:block>
+    </div>
+  </div>
+
+
+  <!-- 주소록 등록을 위한 모달창-->
+  <div class="modal updateModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <input type="hidden" class="form-control modalType">
+          <input type="hidden" class="form-control modalUserAddressBookId">
+          <h5 class="modal-title modalTitle" th:value="|배송지 추가|"></h5>
+          <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">배송지명</span>
+            <input type="text" id="modalDeliveryName" th:value="회사1">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">받는 분</span>
+            <input type="text" id="modalRecipientName" th:value="홍길동">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">연락처</span>
+            <input type="tel" id="modalRecipientPhoneNumber" th:value="010-1223-9384">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">우편번호</span>
+            <input type="text" id="modalZipcode" th:value="|123-345|">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">국가</span>
+            <input type="text" id="modalCountry" size=40 maxlength=38 th:value="|대한민국|">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">도시명</span>
+            <input type="text" id="modalCityName" size=40 maxlength=38 th:value="|부천시|">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">주소</span>
+            <input type="text" id="modalStreet" size=40 maxlength=38 th:value="|수도로123번길44|">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">상세주소</span>
+            <input type="text" id="modalDetailAddress" size=40 maxlength=38 th:value="|101동405호|">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">배송 요청사항</span>
+            <input type="text" id="modalDeliveryRequest" size=40 maxlength=38 th:value="|배송 요청사항!!|">
+          </div>
+          <div class="input-group mb-3">
+            <input type="hidden" id="modalMainAddressCheck" class="form-control">
+            <!-- 체크 표시-->
+            <span id="checkSolid" style="display: inline">
+              <i class="fa-solid fa-circle-check"  style="cursor:pointer" th:onclick="javascript:checkMain(false)"></i>
+            </span>
+            <span id="checkRegular" style="display: none">
+              <i class="fa-regular fa-circle-check"  style="cursor:pointer" th:onclick="javascript:checkMain(true)"></i>
+            </span>
+            <span th:text="| 기본 배송지로 설정|"></span>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary sendRegisterBtn">Register</button>
+          <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div> <!-- 주소록 등록을 위한 모달창-->
+
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
+  <script src="/js/utilEventHandler.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  const updateModal = new bootstrap.Modal(document.querySelector(".updateModal"))
+
+  const modalDeliveryName = document.querySelector('#modalDeliveryName');
+  const modalRecipientName = document.querySelector('#modalRecipientName');
+  const modalRecipientPhoneNumber = document.querySelector('#modalRecipientPhoneNumber');
+  const modalDetailAddress = document.querySelector('#modalDetailAddress');
+  const modalDeliveryRequest = document.querySelector('#modalDeliveryRequest');
+  const modalMainAddressCheck = document.querySelector('#modalMainAddressCheck');
+  const modalZipcode = document.querySelector('#modalZipcode');
+  const modalCountry = document.querySelector('#modalCountry');
+  const modalCityName = document.querySelector('#modalCityName');
+  const modalStreet = document.querySelector('#modalStreet');
+
+  const modalTitle = document.querySelector('.modalTitle');
+  const modalType = document.querySelector('.modalType');
+  const modalUserAddressBookId = document.querySelector('.modalUserAddressBookId');
+
+  const checkSolid = document.getElementById("checkSolid");
+  const checkRegular = document.getElementById("checkRegular");
+
+
+  // 최초 페이지 로딩
+  pageInit()
+
+
+  document.querySelector(".registerBtn").addEventListener("click", function (e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    modalTitle.innerHTML = '배송지 추가'
+    modalType.value = 'register'
+
+    checkSolid.style.display='none'
+    checkRegular.style.display='inline'
+    modalMainAddressCheck.value='false'
+
+    updateModal.show()
+  }, false)
+
+  // [배송지 추가 or 수정] 요청 처리
+  document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
+
+    const formObj = {
+      deliveryName:modalDeliveryName.value,
+      recipientName:modalRecipientName.value,
+      recipientPhoneNumber:modalRecipientPhoneNumber.value,
+      zipcode:modalZipcode.value,
+      country:modalCountry.value,
+      cityName:modalCityName.value,
+      street:modalStreet.value,
+      detailAddress:modalDetailAddress.value,
+      deliveryRequest:modalDeliveryRequest.value,
+      userAddressBookId:modalUserAddressBookId.value,
+      mainAddressCheck:JSON.parse(modalMainAddressCheck.value),
+      callType:modalType.value
+    }
+
+    sendDeliveryAddress(formObj).then(result => {
+
+      updateModal.hide()
+
+      if(result.result === 'fail'){
+        alert(result.message)
+        //initModalForm()
+        return
+      }
+
+      // 화면 재 갱신
+      self.location = '/myInfo/deliveryAddress?memberId=' + [[${#authentication.principal.username}]]
+
+    }).catch(e => {
+      errorResponse(e)
+
+      updateModal.hide()
+    })
+  }, false)
+
+  function modifyAddress(userAddressBookId){
+
+    const formObj = {
+      userAddressBookId:userAddressBookId,
+    }
+
+    getDeliveryAddress(formObj).then(result => {
+
+      modalTitle.innerHTML = '배송지 수정'
+      modalType.value = 'modify'
+      modalUserAddressBookId.value = userAddressBookId
+
+      modalDeliveryName.value = result.deliveryName
+      modalRecipientName.value = result.recipientName
+      modalRecipientPhoneNumber.value = result.recipientPhoneNumber
+      modalZipcode.value = result.zipcode
+      modalCountry.value = result.country
+      modalCityName.value = result.cityName
+      modalStreet.value = result.street
+      modalDetailAddress.value = result.detailAddress
+      modalDeliveryRequest.value = result.deliveryRequest
+
+      // 기본 배송지 설정
+      checkMain(result.mainAddressCheck)
+
+      updateModal.show()
+
+    }).catch(e => {
+      errorResponse(e)
+      updateModal.hide()
+    })
+  }
+
+
+
+  function deleteAddress(userAddressBookId){
+
+    if(!confirm("정말로 삭제 하겠습니까?")){
+      return
+    }
+
+    deleteDeliveryAddress(userAddressBookId).then(result => {
+
+      updateModal.hide()
+
+      if(result.result === 'fail'){
+        alert(result.message)
+        //initModalForm()
+        return
+      }
+
+      // 화면 재 갱신
+      self.location = '/myInfo/deliveryAddress?memberId=' + [[${#authentication.principal.username}]]
+
+    }).catch(e => {
+      errorResponse(e)
+      updateModal.hide()
+    })
+  }
+
+  function initModalForm(){
+    modalDeliveryName.value =''
+    modalRecipientName.value =''
+    modalRecipientPhoneNumber.value =''
+    modalZipcode.value =''
+    modalCountry.value =''
+    modalCityName.value =''
+    modalStreet.value =''
+    modalDetailAddress.value =''
+    modalDeliveryRequest.value =''
+  }
+
+  // 모달 창 값 초기화
+  function initModalData(obj){
+    console.log('deliveryAddress.html - initModalData()!!!!')
+
+    updateModal.hide()
+
+    initModalForm()
+  }
+
+
+</script>
+
