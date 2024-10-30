@@ -125,7 +125,7 @@
 
     findMyCar(formObj).then(result => {
 
-      if( result.carNumber !== undefined && result.carNumber.length > 0){
+      if(result.carNumber !== undefined && result.carNumber.length > 0){
         // 모달 창 값 셋팅
         modalCarNumber.value = result.carNumber
         modalCarModel.value = result.carModel

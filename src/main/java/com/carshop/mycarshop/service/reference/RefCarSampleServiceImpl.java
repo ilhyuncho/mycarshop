@@ -23,10 +23,15 @@ public class RefCarSampleServiceImpl implements RefCarSampleService {
 
         if(carNumber.isEmpty()){
             // 임의로 차량 정보 db에서 get ( 테스트 간편하게... )
-            List<RefCarSample> all = refCarSampleRepository.findAll();
+            List<RefCarSample> listCarSample = refCarSampleRepository.findAll();
 
-            int skipIndex = new Random().nextInt(all.size() - 1);
-            return all.stream().skip(skipIndex).findFirst().get();
+            if(listCarSample.size() > 0){
+                int skipIndex = new Random().nextInt(listCarSample.size() - 1);
+                return listCarSample.stream().skip(skipIndex).findFirst().get();
+            }
+            else{
+                return null;
+            }
         }
         else{
             Optional<RefCarSample> byCarNumber = refCarSampleRepository.findByCarNumber(carNumber);
