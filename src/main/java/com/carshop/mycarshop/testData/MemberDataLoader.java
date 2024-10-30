@@ -27,78 +27,90 @@ import java.util.stream.IntStream;
 
 @Component
 @Log4j2
-@Profile("aws")    // 이 클래스는 프로파일이 활성화될 때만 로드 된다.
+@Profile({"aws","test"})    // 이 클래스는 프로파일이 활성화될 때만 로드 된다.
 @AllArgsConstructor
 public class MemberDataLoader {
 
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
+    private final UserPointHistoryRepository userPointHistoryRepository;
 
     private final PasswordEncoder passwordEncoder;
+
 
     @EventListener(ApplicationReadyEvent.class) // 애플리케이션 시작 단계가 완료되면 발생한다.
     public void loadMemberTestData(){
 
-        log.error("loadMemberTestData()!!!!!!!!!!!!!!");
-
-        memberRepository.deleteAll();
-        userRepository.deleteAll();
-
+        log.error("member 테이블 데이터 생성!!!!!!!!!!!!!!");
+        log.error("member 테이블 데이터 생성!!!!!!!!!!!!!!");
+        log.error("member 테이블 데이터 생성!!!!!!!!!!!!!!");
+        log.error("member 테이블 데이터 생성!!!!!!!!!!!!!!");
         // member 생성
-        IntStream.rangeClosed(1, 10).forEach(i -> {
+        if(memberRepository.count() == 0){
+            log.error("member 테이블 데이터 생성!!!!!!!!!!!!!!");
+            IntStream.rangeClosed(1, 10).forEach(i -> {
 
-            Member member = Member.builder()
-                    .memberId("member" + i)
-                    .memberPw(passwordEncoder.encode("1111"))
-                    .email("email" + i + "@naver.com")
-                    .build();
-            member.addRole(MemberRole.USER);
+                Member member = Member.builder()
+                        .memberId("member" + i)
+                        .memberPw(passwordEncoder.encode("1111"))
+                        .email("email" + i + "@naver.com")
+                        .build();
+                member.addRole(MemberRole.USER);
 
-            if (i >= 8) {
-                member.addRole(MemberRole.ADMIN);
-            }
-            memberRepository.save(member);
-        });
+                if (i >= 8) {
+                    member.addRole(MemberRole.ADMIN);
+                }
+                memberRepository.save(member);
+            });
+        }
 
-        // zip-code 생성  ( Stream 활용 테스트 겸 )
-        IntStream randomStream = Util.createRandomStream(2, 100000, 999999);
-        List<String> listZipcode = randomStream.mapToObj(String::valueOf).map(a -> {
-                    StringBuilder buf = new StringBuilder(a);
-                    buf.insert(3, "-");
-                    return buf.toString();
-                })
-                .peek(log::error)
-                .collect(Collectors.toList());
+        // 계정 생성
+        if(userRepository.count() ==0){
+            log.error("user 테이블 데이터 생성!!!!!!!!!!!!!!");
+            // 참조 테이블 먼저 삭제
+            //userPointHistoryRepository.deleteAll();
 
-        // User 생성
-        IntStream.rangeClosed(1, 10).forEach(i -> {
+            // zip-code 생성  ( Stream 활용 테스트 겸 )
+            IntStream randomStream = Util.createRandomStream(2, 100000, 999999);
+            List<String> listZipcode = randomStream.mapToObj(String::valueOf).map(a -> {
+                        StringBuilder buf = new StringBuilder(a);
+                        buf.insert(3, "-");
+                        return buf.toString();
+                    })
+                    .peek(log::error)
+                    .collect(Collectors.toList());
 
-            City city = new City(listZipcode.get(0), "부천시", "대한민국");
-            Address address = Address.builder()
-                    .city(city)
-                    .street("수지로22번길55")
-                    .detailAddress("101동 404호")
-                    .build();
+            // User 생성
+            IntStream.rangeClosed(1, 10).forEach(i -> {
 
-            City city1 = new City(listZipcode.get(1), "buchoen", "korea");
-            Address address1 = Address.builder()
-                    .city(city1)
-                    .street("sugi22to257")
-                    .detailAddress("101dong404ho")
-                    .build();
+                City city = new City(listZipcode.get(0), "부천시", "대한민국");
+                Address address = Address.builder()
+                        .city(city)
+                        .street("수지로22번길55")
+                        .detailAddress("101동 404호")
+                        .build();
 
-            User user = User.builder()
-                    .memberId("member" + i)
-                    .userName("김민수" + i)
-                    .address(address)
-                    .billingAddress(address1)
-                    .mPoint(0)
-                    .mGrade(UserGradeType.GRADE_E)
-                    .build();
+                City city1 = new City(listZipcode.get(1), "buchoen", "korea");
+                Address address1 = Address.builder()
+                        .city(city1)
+                        .street("sugi22to257")
+                        .detailAddress("101dong404ho")
+                        .build();
 
-            Long userId = userRepository.save(user).getUserId();
+                User user = User.builder()
+                        .memberId("member" + i)
+                        .userName("김민수" + i)
+                        .address(address)
+                        .billingAddress(address1)
+                        .mPoint(0)
+                        .mGrade(UserGradeType.GRADE_E)
+                        .build();
+
+                Long userId = userRepository.save(user).getUserId();
 
 
-        });
+            });
+        }
+
     }
 }

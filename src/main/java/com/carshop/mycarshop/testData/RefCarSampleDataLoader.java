@@ -21,7 +21,7 @@ import java.util.stream.IntStream;
 
 @Component
 @Log4j2
-@Profile({"test","aws"})    // 이 클래스는 프로파일이 활성화될 때만 로드 된다.
+@Profile("aws")    // 이 클래스는 프로파일이 활성화될 때만 로드 된다.
 @AllArgsConstructor
 public class RefCarSampleDataLoader {
 
@@ -40,7 +40,7 @@ public class RefCarSampleDataLoader {
 
 
     @EventListener(ApplicationReadyEvent.class) // 애플리케이션 시작 단계가 완료되면 발생한다.
-    public void loadMemberTestData() {
+    public void loadRefCarSampleData() {
 
         List<RefCarSample> listRefCarSample = refCarSampleRepository.findAll();
 
