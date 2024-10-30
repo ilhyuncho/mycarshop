@@ -31,7 +31,6 @@ import java.util.stream.IntStream;
 @AllArgsConstructor
 public class MemberDataLoader {
 
-
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
     private final UserPointHistoryRepository userPointHistoryRepository;
