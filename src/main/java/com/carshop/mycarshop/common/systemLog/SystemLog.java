@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name="SystemLog")
+@Table(name="systemLogs")
 public class SystemLog extends OnlyRegDateBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
