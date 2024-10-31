@@ -41,10 +41,10 @@ public class MemberDataLoader {
     @EventListener(ApplicationReadyEvent.class) // 애플리케이션 시작 단계가 완료되면 발생한다.
     public void loadMemberTestData(){
 
-        log.error("member 테이블 데이터 생성!!!!!!!!!!!!!!");
-        log.error("member 테이블 데이터 생성!!!!!!!!!!!!!!");
-        log.error("member 테이블 데이터 생성!!!!!!!!!!!!!!");
-        log.error("member 테이블 데이터 생성!!!!!!!!!!!!!!");
+        log.error("member 테이블 데이터 !!!!!!!!!!!!!!");
+        log.error("member 테이블 데이터 !!!!!!!!!!!!!!");
+        log.error("member 테이블 데이터 !!!!!!!!!!!!!!");
+        log.error("member 테이블 데이터 !!!!!!!!!!!!!!");
         // member 생성
         if(memberRepository.count() == 0){
             log.error("member 테이블 데이터 생성!!!!!!!!!!!!!!");

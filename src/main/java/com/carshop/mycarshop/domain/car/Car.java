@@ -172,19 +172,19 @@ public class Car extends BaseEntity {
     }
 
     ////////////////////////// 학습용 /////////////////////////////////////////////////////
-    @Builder.Default
-    @ElementCollection  // Entity 생성을 어노테이션으로 지정 가능
-    @GenericGenerator(name="identity_gen", strategy = "sequence")
-    @CollectionTable(
-            name = "carTemps", // 테이블 이름
-            joinColumns = @JoinColumn(name = "carId"))  // 고유하지 않은 인덱스, primarykey(x)
-    @CollectionId(  // 대리키 생성
-            columns = @Column(name = "carTempId"),
-            type = @org.hibernate.annotations.Type(type="long"),
-            generator = "identity_gen"
-    )
-    @Column(name = "carTemp")  // carTemps 테이블의 이미지 피일이름이 저장될 컬럼명
-    private Collection<String> carTemps = new ArrayList<>();
+//    @Builder.Default
+//    @ElementCollection  // Entity 생성을 어노테이션으로 지정 가능
+//    @GenericGenerator(name="identity_gen", strategy = "sequence")
+//    @CollectionTable(
+//            name = "carTemps", // 테이블 이름
+//            joinColumns = @JoinColumn(name = "carId"))  // 고유하지 않은 인덱스, primarykey(x)
+//    @CollectionId(  // 대리키 생성
+//            columns = @Column(name = "carTempId"),
+//            type = @org.hibernate.annotations.Type(type="long"),
+//            generator = "identity_gen"
+//    )
+//    @Column(name = "carTemp")  // carTemps 테이블의 이미지 피일이름이 저장될 컬럼명
+//    private Collection<String> carTemps = new ArrayList<>();
     ////////////////////////// 학습용
 
     // 엔티티 리스너 등록 방법 (3가지)

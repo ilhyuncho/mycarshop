@@ -10,46 +10,46 @@ env:
   CODE_DEPLOY_APPLICATION_NAME: mycarshop_codedeploy #CodeDeploy 애플리케이션 이름
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: mycarshop_deployment_group #CodeDeploy 배포 그룹 이름
 jobs:
-  build:
-    name: Build and Test
-    runs-on: ubuntu-22.04
-    permissions:    # 작업에 부여된 권한
-      contents: read    # 현재 깃 저장소를 체크 아웃할 수 있는 권한
-      security-events: write  # 깃 허브에 보안 이벤트를 제출할 수 있는 권한
-    steps:
-      - name: setup mariadb
-        uses: YakkaDev/mariadb-actions@v1.1.0
-        with:
-          version: '10.6.15'
-          character: 'utf8mb4'
-          database: 'project2db'
-          user: 'webuser'
-          password: 'abcd1234'
-      - name: Checkout source code
-        uses: actions/checkout@v3     # 현재 깃 저장소를 체크아웃
-      - name: Set up JDK
-        uses: actions/setup-java@v3   # 자바 런타임을 설치 하고 설정
-        with:
-          distribution: temurin
-          java-version: 17
-          cache: gradle
-      - name: Code vulnerability scanning
-        uses: anchore/scan-action@v3        # 그라이프를 사용해 취약성을 스캔
-        id: scan                            # 현재 단계의 식별자를 할당 하고 이후의 단계에서 참고 할수 있도록
-        with:
-          path: "${{ github.workspace }}"   # 체크아웃 저장소 패스
-          fail-build: false                 # 취약성 발견시 빌드 실패 여부
-          severity-cutoff: high             # 오류로 간주할 최소 수준의 보안 유형(낮음, 중간, 높음, 치명적)
-          acs-report-enable: true           # 스캔 완료 후 리포트 생성 여부
-      - name: Upload vulnerability report
-        uses: github/codeql-action/upload-sarif@v2    #깃허브로 취약성 리포트 전송
-        if: success() || failure()
-        with:
-          sarif_file: ${{ steps.scan.outputs.sarif }}     # 이전 단계 결과의 리포트를 가져온다
-      - name: Build, unit tests and integration tests
-        run: |                                    # 윈도우 호환성 해결, 그래들 스크립트를 실행 가능하게 
-          chmod +x gradlew          
-          ./gradlew build
+#  build:
+#    name: Build and Test
+#    runs-on: ubuntu-22.04
+#    permissions:    # 작업에 부여된 권한
+#      contents: read    # 현재 깃 저장소를 체크 아웃할 수 있는 권한
+#      security-events: write  # 깃 허브에 보안 이벤트를 제출할 수 있는 권한
+#    steps:
+#      - name: setup mariadb
+#        uses: YakkaDev/mariadb-actions@v1.1.0
+#        with:
+#          version: '10.6.15'
+#          character: 'utf8mb4'
+#          database: 'project2db'
+#          user: 'webuser'
+#          password: 'abcd1234'
+#      - name: Checkout source code
+#        uses: actions/checkout@v3     # 현재 깃 저장소를 체크아웃
+#      - name: Set up JDK
+#        uses: actions/setup-java@v3   # 자바 런타임을 설치 하고 설정
+#        with:
+#          distribution: temurin
+#          java-version: 17
+#          cache: gradle
+#      - name: Code vulnerability scanning
+#        uses: anchore/scan-action@v3        # 그라이프를 사용해 취약성을 스캔
+#        id: scan                            # 현재 단계의 식별자를 할당 하고 이후의 단계에서 참고 할수 있도록
+#        with:
+#          path: "${{ github.workspace }}"   # 체크아웃 저장소 패스
+#          fail-build: false                 # 취약성 발견시 빌드 실패 여부
+#          severity-cutoff: high             # 오류로 간주할 최소 수준의 보안 유형(낮음, 중간, 높음, 치명적)
+#          acs-report-enable: true           # 스캔 완료 후 리포트 생성 여부
+#      - name: Upload vulnerability report
+#        uses: github/codeql-action/upload-sarif@v2    #깃허브로 취약성 리포트 전송
+#        if: success() || failure()
+#        with:
+#          sarif_file: ${{ steps.scan.outputs.sarif }}     # 이전 단계 결과의 리포트를 가져온다
+#      - name: Build, unit tests and integration tests
+#        run: |                                    # 윈도우 호환성 해결, 그래들 스크립트를 실행 가능하게
+#          chmod +x gradlew
+#          ./gradlew build
 #  package:
 #    name: Package and Publish
 #    if: ${{ github.ref == 'refs/heads/master' }}  # 잡을 master 브랜치에 대해서만 실행

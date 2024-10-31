@@ -29,6 +29,7 @@ public class OrderItem extends ItemOptionEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORDER_ID")
+    //@Column(name = "\"order\"")
     private Order order;
 
     private int orderPrice;                           // 실제 결제한 가격

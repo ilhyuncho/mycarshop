@@ -1,5 +1,6 @@
 package com.carshop.mycarshop.service.car;
 
+import com.carshop.mycarshop.common.exception.OwnerCarNotFoundException;
 import com.carshop.mycarshop.domain.car.Car;
 import com.carshop.mycarshop.domain.car.CarRepository;
 import com.carshop.mycarshop.dto.car.CarViewResDTO;
@@ -20,10 +21,8 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car getCarInfo(Long carId) {
-//        return carRepository.findById(carId)
-//                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
-
-        return null;
+        return carRepository.findById(carId)
+                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
     }
 
     @Override
@@ -43,25 +42,24 @@ public class CarServiceImpl implements CarService {
                 .carGrade(car.getCarGrade().getValue())
                 .carModel(car.getCarModel())
                 .carYears(car.getCarYears())
-//                .userName(car.getUser().getUserName())
-//                .memberId(car.getUser().getMemberId())
+                .userName(car.getUser().getUserName())
+                .memberId(car.getUser().getMemberId())
                 .build();
 
-//        // 판매 진행 상황 매핑
-//        if(!Objects.isNull(car.getSellingCar())){
-//            carViewResDTO.setSellingCarId(car.getSellingCar().getSellingCarId());
-//            carViewResDTO.setSellingCarStatus(car.getSellingCar().getSellingCarStatus());
-//            carViewResDTO.setSellType(car.getSellingCar().getSellType());
-//        }
-//
-//        // 차 이미지 파일 정보 매핑
-//        car.getImageSet().forEach(carImage -> {
-//            carViewResDTO.addImage(carImage.getCarImageId(), carImage.getUuid(), carImage.getFileName(),
-//                    carImage.getImageOrder(), carImage.getIsMainImage());
-//        });
+        // 판매 진행 상황 매핑
+        if(!Objects.isNull(car.getSellingCar())){
+            carViewResDTO.setSellingCarId(car.getSellingCar().getSellingCarId());
+            carViewResDTO.setSellingCarStatus(car.getSellingCar().getSellingCarStatus());
+            carViewResDTO.setSellType(car.getSellingCar().getSellType());
+        }
+
+        // 차 이미지 파일 정보 매핑
+        car.getImageSet().forEach(carImage -> {
+            carViewResDTO.addImage(carImage.getCarImageId(), carImage.getUuid(), carImage.getFileName(),
+                    carImage.getImageOrder(), carImage.getIsMainImage());
+        });
 
         return carViewResDTO;
     }
 
 }
-

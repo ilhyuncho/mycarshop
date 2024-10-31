@@ -21,7 +21,7 @@ import java.util.stream.IntStream;
 
 @Component
 @Log4j2
-@Profile("aws")    // 이 클래스는 프로파일이 활성화될 때만 로드 된다.
+@Profile({"aws","test"})    // 이 클래스는 프로파일이 활성화될 때만 로드 된다.
 @AllArgsConstructor
 public class RefCarSampleDataLoader {
 

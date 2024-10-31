@@ -19,8 +19,8 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     List<Projection.CarSummary> findByUser(User user);
     List<Projection.CarSummary2> findAllByUser(User user);
 
-    @Query("select c from Car c inner join fetch c.carTemps where c.carId = :carId")
-    Car findCarWithCarTemps(@Param("carId") Long carid);
+//    @Query("select c from Car c inner join fetch c.carTemps where c.carId = :carId")
+//    Car findCarWithCarTemps(@Param("carId") Long carid);
     @Query(value = "SELECT carTemp FROM carTemps WHERE carId = ?1",
             nativeQuery = true)
     Set<String> findCarTempsNative(Long carId);
