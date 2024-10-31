@@ -16,7 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED) // 조인 전략
-@Table(name="Notification")
+@Table(name="notifications")
 //@Immutable                     // 불변 객체 지정, DB에 업데이트 되지 않음, 부모 객체에만 지정하면 됨
 @ToString
 public abstract class Notification {

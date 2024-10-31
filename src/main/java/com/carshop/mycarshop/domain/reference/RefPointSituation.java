@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="RefPointSituations")
+@Table(name="refPointSituations")
 @ToString
 public class RefPointSituation {
 

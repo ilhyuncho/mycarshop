@@ -25,7 +25,7 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name="Cars")
+@Table(name="cars")
 @Log4j2
 // 부모에게 상속받은 컬럼명 변경 시
 //@AttributeOverride(name="regDate", column = @Column(name="REG_DATE"))

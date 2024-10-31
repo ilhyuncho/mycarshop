@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="EventNotification")
+@Table(name="eventNotifications")
 @PrimaryKeyJoinColumn(name = "EventNotiID")     // 자식 테이블의 기본키 컬럼명을 변경
 @ToString(callSuper = true)
 public class EventNotification extends Notification {

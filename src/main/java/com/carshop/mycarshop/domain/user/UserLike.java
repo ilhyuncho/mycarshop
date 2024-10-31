@@ -11,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name="UserLikes")
+@Table(name="userLikes")
 public class UserLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

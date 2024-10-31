@@ -15,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = "user")
-@Table(name="UserAlarms")
+@Table(name="userAlarms")
 public class UserAlarm extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name="UserSearchCarHistorys")
+@Table(name="userSearchCarHistorys")
 public class UserSearchCarHistory extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

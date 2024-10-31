@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name="Books")
+@Table(name="books")
 @Log4j2
 public class Book extends BaseEntity {
     @Id

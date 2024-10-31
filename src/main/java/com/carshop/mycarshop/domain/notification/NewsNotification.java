@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="NewsNotification")
+@Table(name="newsNotifications")
 @Setter
 public class NewsNotification extends Notification{
 

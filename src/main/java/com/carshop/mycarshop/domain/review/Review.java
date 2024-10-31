@@ -16,7 +16,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="Reviews")
+@Table(name="reviews")
 @ToString
 @Log4j2
 public class Review extends BaseEntity {
