@@ -1,5 +1,6 @@
 package com.carshop.mycarshop.controller.buyingCar;
 
+import com.carshop.mycarshop.common.exception.UserNotFoundException;
 import com.carshop.mycarshop.common.message.MessageCode;
 import com.carshop.mycarshop.common.message.MessageHandler;
 import com.carshop.mycarshop.domain.buyingCar.BuyCarStatus;
@@ -34,8 +35,8 @@ import java.util.Map;
 public class BuyingCarRestController {
 
     private final BuyingCarService buyingCarService;
-    private final UserService userService;
     private final UserAlarmService userAlarmService;
+    private final UserService userService;
     private final CarService carService;
 
     private final MessageHandler messageHandler;
@@ -50,29 +51,32 @@ public class BuyingCarRestController {
             throw new BindException(bindingResult);
         }
 
-        User user = userService.findUser(principal.getName());
+        User offerUser = userService.findUser(principal.getName());
 
         Car car = carService.getCarInfo(buyingCarRegDTO.getCarId());
+        User carOwnerUser = car.getUser();
+        if(carOwnerUser == null) {
+            throw new UserNotFoundException("해당 유저는 존재하지 않습니다");
+        }
 
         // 신청 상태 get
         BuyCarStatus buyCarStatus = BuyCarStatus.fromValue(buyingCarRegDTO.getOfferType());
 
         if(buyCarStatus.equals(BuyCarStatus.AUCTION_REQUEST) ||
                 buyCarStatus.equals(BuyCarStatus.CONSULT_REQUEST)){
-            buyingCarService.registerBuyingCar(user, buyingCarRegDTO);
+
+            buyingCarService.registerBuyingCar(offerUser, buyingCarRegDTO);
 
             // 알림 등록---------------------------------------
-
-            // Locale 메시지 정보 가져오기
             List<String> listArgs = new ArrayList<>();
             listArgs.add(car.getCarModel());
             listArgs.add(car.getCarNumber());
-
+            // Locale 메시지 정보 가져오기
             String message = messageHandler.getMessage(MessageCode.fromValue(buyCarStatus.getName()), listArgs);
-            userAlarmService.registerAlarm(user, message, buyingCarRegDTO.getConsultText());
+            userAlarmService.registerAlarm(carOwnerUser, message, buyingCarRegDTO.getAlarmContent(offerUser));
         }
         else{
-            buyingCarService.updateBuyingCar(user, buyingCarRegDTO);
+            buyingCarService.updateBuyingCar(offerUser, buyingCarRegDTO);
         }
 
         Map<String, String> resultMap = new HashMap<>();

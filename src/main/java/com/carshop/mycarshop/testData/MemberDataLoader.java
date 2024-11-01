@@ -33,6 +33,8 @@ public class MemberDataLoader {
 
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
+
+    private final UserAlarmRepository userAlarmRepository;
     private final UserPointHistoryRepository userPointHistoryRepository;
 
     private final PasswordEncoder passwordEncoder;
@@ -108,6 +110,13 @@ public class MemberDataLoader {
 
                 Long userId = userRepository.save(user).getUserId();
 
+                // 알림 추가
+                UserAlarm userAlarm = UserAlarm.builder()
+                        .user(user)
+                        .alarmTitle("회원가입을 축하드립니다")
+                        .alarmContent("회원가입을 축하드립니다!!! 앞으로 많이 이용해 주세요~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                        .build();
+                userAlarmRepository.save(userAlarm);
 
             });
         }
