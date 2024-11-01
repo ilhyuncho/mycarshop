@@ -83,6 +83,7 @@ public class SellingCarRestController {
 
         List<SellingCarResDTO> listRecommend = sellingCarService.getListRecommend();
 
+        log.error("getRecommendSellingCar()~~~~~~~~~~~~~");
         for (SellingCarResDTO sellingCarResDTO : listRecommend) {
             log.error(sellingCarResDTO);
         }
