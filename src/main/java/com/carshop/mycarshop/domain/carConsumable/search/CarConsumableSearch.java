@@ -11,4 +11,5 @@ public interface CarConsumableSearch {
     List<StatisticsResDTO> statisticsFuelAmount(StatisticsReqDTO statisticsReqDTO);
     List<StatisticsResDTO> statisticsDistance(StatisticsReqDTO statisticsReqDTO);
     StatisticsTotalResDTO statisticsTotal(StatisticsReqDTO statisticsReqDTO);
+
 }
