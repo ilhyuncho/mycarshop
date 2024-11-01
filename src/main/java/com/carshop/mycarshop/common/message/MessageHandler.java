@@ -22,6 +22,7 @@ public class MessageHandler {
         //Locale locale = Locale.US;    // 영어 테스트
         //String[] args = {"10"};
 
+
         return messageSource.getMessage(messageCode.getMsgCode(), args.toArray(), locale);
     }
 
