@@ -17,7 +17,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="sellingCars")
+//@Table(name="sellingCars")
 @ToString(exclude = {"car", "user", "buyingCarSet"})
 public class SellingCar extends BaseEntity {
     @Id
