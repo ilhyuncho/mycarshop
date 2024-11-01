@@ -81,7 +81,13 @@ public class SellingCarRestController {
     @GetMapping("/recommend")
     public List<SellingCarResDTO> getRecommendSellingCar(){
 
-        return sellingCarService.getListRecommend();
+        List<SellingCarResDTO> listRecommend = sellingCarService.getListRecommend();
+
+        for (SellingCarResDTO sellingCarResDTO : listRecommend) {
+            log.error(sellingCarResDTO);
+        }
+
+        return listRecommend;
     }
 
     @ApiOperation(value = "최근 본 차량 정보 전달", notes = "메인 화면")
