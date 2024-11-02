@@ -51,7 +51,9 @@ public class AlarmRestController {
     @GetMapping("/new")
     public boolean getNewAlarm(Principal principal){
 
+        log.error("alarm/new call!!!!!!!!!start!!!!!!!!!!!!!!!!!!!!!!!!!");
         User user = userService.findUser(principal.getName());
+        log.error("alarm/new call!!!!!!!!!!!end!!!!!!!!!!!!!!!!!!!!!!!");
 
         return userAlarmService.isNewAlarm(user);
     }
