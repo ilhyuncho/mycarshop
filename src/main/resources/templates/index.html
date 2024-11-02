@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layout/basic.html}">
 
 <head>
@@ -93,14 +94,13 @@
   // 페이지 번호 클릭
   let page = 1
   let size = 5
-
+  // 테스트 용
   const greeting = [[${session.greeting}]]
   console.log("session.greeting : " +  greeting)
 
 
-
   // 최초 페이지 로딩
-  pageInit()
+  pageInit([[${#authorization.expression('isAuthenticated()')}]])
 
   getMainPageInfo()
 
@@ -112,6 +112,7 @@
   }
 
   function getMainPageInfo(page,size){
+
     // 추천 차량 정보 요청
     getRecommendSellingCar({page, size}).then(data=> {
       printList(data, RecommendCarList) // 목록 처리
@@ -120,16 +121,16 @@
       console.error(e)
     })
 
+    if([[${#authorization.expression('isAuthenticated()')}]]){
+      // 최근 본 차 정보 요청
+      getRecentlySeenSellingCar({page, size}).then(data=> {
+        printList(data, RecentlySeenCarList) // 목록 처리
 
-    // 로그인 안했을때 처리
+      }).catch(e=>{
+        console.error(e)
+      })
+    }
 
-    // 최근 본 차 정보 요청
-    getRecentlySeenSellingCar({page, size}).then(data=> {
-      printList(data, RecentlySeenCarList) // 목록 처리
-
-    }).catch(e=>{
-      console.error(e)
-    })
   }
 
   function printList(dtoList, form){

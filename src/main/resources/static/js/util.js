@@ -166,10 +166,12 @@ async function callRemoveFiles() {
 }
 
 // html 페이지 로딩시 호출
-function pageInit(){
+function pageInit(userLogin){
 
-    // 새로운 알림 정보 있는지 요청
-    checkNewAlarm(true)
+    if(userLogin){
+        // 새로운 알림 정보 있는지 요청
+        checkNewAlarm(true)
+    }
 }
 
 // 고객에게 온 새로운 알림이 있는지 체크
