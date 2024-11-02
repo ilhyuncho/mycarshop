@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -28,6 +29,9 @@
       <button class="btn btn-primary" id="btnNavbarSearch"
               type="submit"><i class="fas fa-search"></i></button>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <div sec:authorize="isAuthenticated()">
+        안녕하세요
+      </div>
 
       <!-- 메인 화면 알림 표시-->
       <a class="icon-link" th:href="|@{/myPage/alarmInfo}|">
