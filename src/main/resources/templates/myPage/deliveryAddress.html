@@ -149,7 +149,7 @@
 
 
   // 최초 페이지 로딩
-  pageInit()
+  pageInit([[${#authorization.expression('isAuthenticated()')}]])
 
 
   document.querySelector(".registerBtn").addEventListener("click", function (e){

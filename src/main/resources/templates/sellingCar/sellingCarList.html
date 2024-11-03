@@ -132,7 +132,7 @@
 
 
   // 최초 페이지 로딩
-  pageInit()
+  pageInit([[${#authorization.expression('isAuthenticated()')}]])
 
   document.querySelector(".pagination").addEventListener("click", function(e){
     e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단

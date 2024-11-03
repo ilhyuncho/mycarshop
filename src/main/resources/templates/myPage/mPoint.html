@@ -104,7 +104,7 @@
 
 
   // 최초 페이지 로딩
-  pageInit()
+  pageInit([[${#authorization.expression('isAuthenticated()')}]])
 
   // 조회 기간 셋팅 (기본 현재 날짜 기준 90일 전 부터 조회)
   changePeriodSelect()

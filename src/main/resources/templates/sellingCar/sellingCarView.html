@@ -220,7 +220,7 @@
   const checkRegular = document.getElementById("checkRegular");
 
   // 최초 페이지 로딩
-  pageInit()
+  pageInit([[${#authorization.expression('isAuthenticated()')}]])
 
   // 좋아요 표시 결정
   viewCarLike([[${responseDTO.isLike}]])

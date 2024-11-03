@@ -313,7 +313,7 @@
     const currentUser = [[${#authentication.principal.username}]]
 
     // 최초 페이지 로딩
-    pageInit()
+    pageInit([[${#authorization.expression('isAuthenticated()')}]])
 
     // 결제 금액 계산 호출
     reCalculation()

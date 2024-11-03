@@ -90,7 +90,7 @@
   let size = 5
 
   // 최초 페이지 로딩
-  pageInit()
+  pageInit([[${#authorization.expression('isAuthenticated()')}]])
 
   getListAlarms(page, size)
 

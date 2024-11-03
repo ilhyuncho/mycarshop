@@ -274,7 +274,7 @@
   const listFileNames = [[${responseDTO.fileNames}]]
 
   // 최초 페이지 로딩
-  pageInit()
+  pageInit([[${#authorization.expression('isAuthenticated()')}]])
 
   // [모달창] 차량 판매 방식 라디오 버튼 클릭시
   sellTypeRadios.forEach((radio) => {

@@ -57,7 +57,7 @@
   // 에러 처리 부분 end ----------------------------
 
   // 최초 페이지 로딩
-  pageInit()
+  pageInit([[${#authorization.expression('isAuthenticated()')}]])
 
 
 

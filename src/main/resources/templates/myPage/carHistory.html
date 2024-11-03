@@ -240,7 +240,7 @@
   const repairType = document.querySelector('#repairType');
 
   // 최초 페이지 로딩
-  pageInit()
+  pageInit([[${#authorization.expression('isAuthenticated()')}]])
 
   // 전체 차량 기록 조회
   getAllList()

@@ -186,7 +186,7 @@
     //console.log('userDTO : ' + userDTO.address)
 
     // 최초 페이지 로딩
-    pageInit()
+    pageInit([[${#authorization.expression('isAuthenticated()')}]])
 
 
     function selectModalOpen(){

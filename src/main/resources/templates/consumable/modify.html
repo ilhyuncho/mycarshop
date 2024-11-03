@@ -86,7 +86,7 @@
   const consumableId = document.querySelector(".consumableId")
 
   // 최초 페이지 로딩
-  pageInit()
+  pageInit([[${#authorization.expression('isAuthenticated()')}]])
 
   // 수정 요청
   document.querySelector(".modifyBtn").addEventListener("click", function(e){

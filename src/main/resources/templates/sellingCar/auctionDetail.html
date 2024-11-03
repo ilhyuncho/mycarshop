@@ -189,7 +189,7 @@
 
 
   // 최초 페이지 로딩
-  pageInit()
+  pageInit([[${#authorization.expression('isAuthenticated()')}]])
 
   // 경매 현황 가져오기
   getListAuctionBuyingCar(page,size)
