@@ -16,8 +16,8 @@ hooks:
   AfterInstall:
     - location: scripts/stop.sh
       timeout: 60
-      runas: ubuntu
+      runas: root
   ApplicationStart:
     - location: scripts/start.sh
       timeout: 60
-      runas: ubuntu
+      runas: root # ec2에서 s3 업로드 시 권한 오류가 발생 하여
