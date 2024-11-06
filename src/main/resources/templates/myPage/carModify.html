@@ -90,10 +90,10 @@
               </input>
 
               [[${fileName.fileName}]]
-              <button class="btn-sm btn-danger" th:onclick="removeFileData([[${fileName.uuid}]], [[${fileName.fileName}]], false, true, this)">X</button>
+              <button class="btn-sm btn-danger" th:onclick="removeFileData([[${fileName.uuid}]], [[${fileName.fileName}]], 'carImage', false, true, this)">X</button>
             </div>
             <div class="card-body">
-              <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="|${fileName.uuid}_${fileName.fileName}|" >
+              <img th:src="|/view/carImage/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="|${fileName.uuid}_${fileName.fileName}|" >
             </div>
           </div>
         </th:block>
@@ -160,6 +160,7 @@
     for(let i = 0; i < files.length;i++){
       formObj.append("files", files[i]);
     }
+    formObj.append('fileType','carImage'); // s3에 저장할 때 폴더 이름
 
     uploadToServer(formObj).then(result => {
 
@@ -168,7 +169,7 @@
       let temp = uploadFiles.length
       for(const uploadResult of result){
         //console.log('showUploadFile')
-        showUploadFile(uploadResult, false, temp++)
+        showUploadFile(uploadResult, 'carImage', false, temp++)
       }
 
       uploadModal.hide()
@@ -210,7 +211,7 @@
     }
 
     // 삭제 대상 파일들을 삭제
-    callRemoveFiles().then(result => {
+    callRemoveFiles('carImage').then(result => {
 
       if(result.length > 0){
         console.log('remove files fail!!!')

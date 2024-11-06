@@ -137,7 +137,7 @@
                         <tr th:each="dto:${itemList}">
                             <th scope="row">
                                 <div class="text-decoration-none"> [[${dto.shopItemId}]]</div>
-                                <img th:src="|/view/${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|" th:width="200px"
+                                <img th:src="|/view/shopImage/${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|" th:width="200px"
                                      th:data-src="${dto.getMainImage().uuid}" onclick="window.open(this.src)">
                             </th>
                             <td>
@@ -244,6 +244,7 @@
             formObj.append("files", files[i]);
         }
         //formObj.append("isResize", true);
+        formObj.append('fileType','shopImage'); // s3에 저장할 때 폴더 이름
 
         uploadToServer(formObj).then(result => {
 
@@ -251,7 +252,10 @@
 
             let temp = uploadFiles.length
             for(const uploadResult of result){
-                showUploadFile(uploadResult, true, temp++ )
+
+                console.log('uploadResult: ' + uploadResult)
+
+                showUploadFile(uploadResult, 'shopImage', true, temp++ )
             }
 
             uploadModal.hide()
@@ -307,6 +311,8 @@
             mainImageFileName:getMainImageFileName()
         }
 
+        console.log(formObj)
+
         registerShopItem(formObj).then(result => {
 
             if(result.result === 'success'){
@@ -344,14 +350,14 @@
         itemOptionType2.options[2].selected = true
         itemOptionValue2.value = '소,중,대'
 
-        const uploadFiles = uploadResult.querySelectorAll("img") // uploadResult : 업로드 미리 보기
+        const uploadFiles = uploadResult.querySelectorAll('img') // uploadResult : 업로드 미리 보기
 
         for(let i = 0 ; i < uploadFiles.length;i++){
             const uploadFile = uploadFiles[i]
-            const imgLink = uploadFile.getAttribute("data-src")
+            const imgLink = uploadFile.getAttribute('data-src')
             const ArrayFileName = imgLink.split('_')    // uuid, fileName 으로 분리
 
-            removeFileData(ArrayFileName[0], ArrayFileName[1], true, false, uploadFile)
+            removeFileData(ArrayFileName[0], ArrayFileName[1], 'shopImage', true, false, uploadFile)
         }
 
     }, false)

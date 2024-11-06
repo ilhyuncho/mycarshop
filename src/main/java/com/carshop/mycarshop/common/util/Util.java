@@ -27,6 +27,12 @@ public class Util {
         return preString + randomValue;
     }
     public static Stream<UUID> createUUID(long count){
+
+        // Stream.generate 활용 예제
+        //Stream<UUID> uuid1 = Util.createUUID(4);
+        //uuid1.forEach(log::error);
+
+
         return Stream.generate(UUID::randomUUID)
                 .limit(count);
     }

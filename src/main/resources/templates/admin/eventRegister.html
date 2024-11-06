@@ -269,11 +269,12 @@
     for(let i = 0; i < files.length;i++){
       formObj.append("files", files[i]);
     }
+    formObj.append('fileType','eventImage'); // s3에 저장할 때 폴더 이름
 
     uploadToServer(formObj).then(result => {
 
       for(const uploadResult of result){
-        showUploadFile(uploadResult, true)
+        showUploadFile(uploadResult, 'eventImage', true)
       }
 
       uploadModal.hide()

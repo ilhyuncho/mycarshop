@@ -24,7 +24,7 @@ const maskingName = (value) => {
 }
 
 // 이미지 파일 [바로 삭제] 또는 [임시 삭제] 처리
-function removeFileData(uuid, fileName, direct, checkMain, obj){
+function removeFileData(uuid, fileName, fileType, direct, checkMain, obj){
 
     const targetDiv = obj.closest('.card')
 
@@ -36,7 +36,7 @@ function removeFileData(uuid, fileName, direct, checkMain, obj){
         // if(!confirm("파일을 삭제!!")){
         //     return
         // }
-        removeFileToServer(uuid, fileName).then(data =>{
+        removeFileToServer(uuid, fileName, fileType).then(data =>{
             targetDiv.remove()
         })
     }
@@ -149,13 +149,13 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-async function callRemoveFiles() {
+async function callRemoveFiles(fileType) {
 
     const removeFailResult = []
 
     for ({uuid, fileName} of removeFileList) {   // 비동기 처리를 위해 for...of 를 사용
 
-        await removeFileToServer(uuid, fileName).then(result => {
+        await removeFileToServer(uuid, fileName, fileType).then(result => {
 
             if (result['removed'] === false) {
                 removeFailResult.push(fileName)

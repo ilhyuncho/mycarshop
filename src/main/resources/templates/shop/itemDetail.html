@@ -35,7 +35,7 @@
   <div class="d-flex">
     <div class="itemMainImgDiv">
       <img class="rounded" style="width:200px; margin-right: 5rem" th:alt="${responseDTO.itemName}"
-           th:src="|/view/${responseDTO.getMainImage().uuid}_${responseDTO.getMainImage().fileName}|">
+           th:src="|/view/shopImage/${responseDTO.getMainImage().uuid}_${responseDTO.getMainImage().fileName}|">
     </div>
     <div class="wd50">
       <span style="background-color: #0a53be" class="badge badge-primary mgb-15"
@@ -152,7 +152,7 @@
 
   <div th:each="fileName : ${responseDTO.getListExceptMainImage()}" class="text-center">
     <img th:if="${not #strings.isEmpty(fileName.fileName)}" width="800"
-            th:src="|/view/${fileName.uuid}_${fileName.fileName}|" class="rounded mgb-15" >
+            th:src="|/view/shopImage/${fileName.uuid}_${fileName.fileName}|" class="rounded mgb-15" >
   </div>
 
   <hr class="my-4">
@@ -306,7 +306,7 @@
           content += `    <i class="fa-solid fa-star" style="color: blueviolet"></i>`
         }
         if(e.mainImage !== null){
-          content += `    <div><img src="/view/${e.mainImage.uuid}_${e.mainImage.fileName}" width=150></div>`
+          content += `    <div><img src="/view/shopImage/${e.mainImage.uuid}_${e.mainImage.fileName}" width=150></div>`
         }
         content += `  </th>`
         content += `<td><a onclick="javascript:showReviewModal('${e.reviewId}')" style="cursor:pointer" class="text-decoration-none">${reviewText}</a></td>`
@@ -345,7 +345,7 @@
     // 리뷰 이미지
     let imageContents = ''
     data.fileNames.forEach(function(file){
-      imageContents += `<img width="400" src="/view/${file.uuid}_${file.fileName}" class="rounded mgb-15">`
+      imageContents += `<img width="400" src="/view/shopImage/${file.uuid}_${file.fileName}" class="rounded mgb-15">`
     })
     modalReviewImg.innerHTML = imageContents
   }

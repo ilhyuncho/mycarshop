@@ -66,7 +66,7 @@ public class UserCreditController {
 
         Long bno = userCreditService.register(user, userCreditDTO);
 
-        return "redirect:userCredit/info?userName=" + principal.getName();
+        return "redirect:/userCredit/info?userName=" + principal.getName();
     }
 
 

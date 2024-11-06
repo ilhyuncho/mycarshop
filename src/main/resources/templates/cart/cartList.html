@@ -48,7 +48,7 @@
                             <td><a th:href="|@{'/shop/itemDetail/' + ${dto.shopItemId}}|"
                                     class="text-decoration-none"> [[${dto.itemName}]]</a>
                                 <!-- 이미지 출력-->
-                                <img th:src="|/view/s_${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|" style="width:100px"
+                                <img th:src="|/view/shopImage/s_${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|" style="width:100px"
                                      class="rounded itemMainImg">
                             </td>
                             <td><input type="hidden" th:name="p_price+${stat.index}" id="p_price" class="p_price" th:value="${dto.itemPrice}">

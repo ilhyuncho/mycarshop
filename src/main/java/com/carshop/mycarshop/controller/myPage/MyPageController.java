@@ -91,7 +91,7 @@ public class MyPageController {
 
         redirectAttributes.addFlashAttribute("result", "removed");
 
-        return "redirect:myPage/carList?memberId=" + principal.getName();
+        return "redirect:/myPage/carList?memberId=" + principal.getName();
     }
 
     @ApiOperation(value = "차 정보 읽기", notes = "도메인 클래스 컨버터 기능 확인용")

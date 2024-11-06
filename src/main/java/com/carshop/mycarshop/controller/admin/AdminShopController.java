@@ -79,7 +79,7 @@ public class AdminShopController {
 
         redirectAttributes.addFlashAttribute("result", "removed");
 
-        return "redirect:admin/shopItem";
+        return "redirect:/admin/shopItem";
     }
 
 

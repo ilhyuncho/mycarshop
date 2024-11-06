@@ -32,9 +32,9 @@ function appendFileData(){
 }
 
 // 첨부파일 업로드 후 화면에 표시
-function showUploadFile({uuid, fileName, link}, direct, index){
+function showUploadFile({uuid, fileName, link}, fileType, direct, index){
 
-    console.log(index)
+    console.log('showUploadFile fileType : ' + fileType)
 
     let str = `<div class="card col-3">
             <div class="card-header d-flex">`
@@ -47,15 +47,17 @@ function showUploadFile({uuid, fileName, link}, direct, index){
     }
 
     str += `&nbsp;&nbsp; ${fileName}
-              <button class="btn-sm btn-danger" onclick="javascript:removeFileData('${uuid}', '${fileName}', ${direct}, true, this)" >X</button>
+              <button class="btn-sm btn-danger" onclick="javascript:removeFileData('${uuid}', '${fileName}', '${fileType}', ${direct}, true, this)" >X</button>
             </div>
             <div class="card-body">
-                <img src="/view/${link}" data-src="${uuid+"_"+fileName}">
+                <img src="/view/${fileType}/${link}" data-src="${uuid+"_"+fileName}">  
             </div>
            </div>`
 
     uploadResult.innerHTML+=str
 }
+
+// <img src="${s3Path +"s_"+uuid +"_"+fileName}" data-src="${uuid+"_"+fileName}">
 
 function appendNotShownData(){
     if(removeFileList.length === 0) {

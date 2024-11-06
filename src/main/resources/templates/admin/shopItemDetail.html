@@ -98,7 +98,7 @@
                   (메인 이미지) &nbsp; [[${responseDTO.mainImage.fileName}]]
                 </div>
                 <div class="card-body">
-                  <img th:src="|/view/${responseDTO.mainImage.uuid}_${responseDTO.mainImage.fileName}|" th:width="200px"
+                  <img th:src="|/view/shopImage/${responseDTO.mainImage.uuid}_${responseDTO.mainImage.fileName}|" th:width="200px"
                        th:data-src="${responseDTO.mainImage.uuid}" onclick="window.open(this.src)">
                 </div>
               </div>
@@ -116,7 +116,7 @@
                     [[${fileName.fileName}]] &nbsp; (order: [[${fileName.imageOrder}]])
                   </div>
                   <div class="card-body">
-                    <img th:src="|/view/${fileName.uuid}_${fileName.fileName}|" th:width="200px"
+                    <img th:src="|/view/shopImage/${fileName.uuid}_${fileName.fileName}|" th:width="200px"
                          th:data-src="${fileName.uuid}" onclick="window.open(this.src)">
                   </div>
                 </div>

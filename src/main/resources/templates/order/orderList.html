@@ -29,7 +29,7 @@
                                 <td>[[${dto.orderDate}]]</td>
                                 <td>
                                     <th:block th:each="fileName:${dto.fileNames}">
-                                        <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:width="50"
+                                        <img th:src="|/view/shopImage/s_${fileName.uuid}_${fileName.fileName}|" th:width="50"
                                              th:data-src="|${fileName.uuid}_${fileName.fileName}|" >
                                     </th:block>
                                 </td>

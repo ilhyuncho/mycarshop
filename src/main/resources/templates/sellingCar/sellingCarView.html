@@ -23,7 +23,7 @@
 
   <div class="d-flex">
     <div class="itemMainImgDiv">
-      <img th:src="|/view/${responseDTO.getMainImage().uuid}_${responseDTO.getMainImage().fileName}|"
+      <img th:src="|/view/carImage/${responseDTO.getMainImage().uuid}_${responseDTO.getMainImage().fileName}|"
            style="width:400px; margin-right: 5rem" class="rounded itemMainImg" th:alt="${responseDTO.carModel}">
     </div>
     <div class="wd50">
@@ -126,7 +126,7 @@
 
     <div th:each="fileName : ${responseDTO.getListExceptMainImage()}" class="text-center">
       <img th:if="${not #strings.isEmpty(fileName.fileName)}"
-           th:src="|/view/${fileName.uuid}_${fileName.fileName}|" class="rounded mgb-15" width="800">
+           th:src="|/view/carImage/${fileName.uuid}_${fileName.fileName}|" class="rounded mgb-15" width="800">
     </div>
 
   </div>

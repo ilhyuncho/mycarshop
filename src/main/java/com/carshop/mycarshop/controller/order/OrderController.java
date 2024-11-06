@@ -62,7 +62,7 @@ public class OrderController {
         OrderTemporaryResDTO orderTemporaryResDTO = orderService.getOrderTemporary(orderTemporaryId);
         if(orderTemporaryResDTO == null){
             // 유효 기간 만료
-            return "redirect:shop/main/";
+            return "redirect:/shop/main/";
         }
 
         UserAddressBookResDTO mainAddressInfo = userAddressBookService.getMainAddressInfo(user);

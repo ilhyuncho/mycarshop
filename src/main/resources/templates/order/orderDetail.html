@@ -41,7 +41,7 @@
                                 <a th:href="|@{'/shop/itemDetail/' + ${dto.shopItemId}}|"
                                    class="text-decoration-none"> [[${dto.itemName}]]</a>
                                 <div>
-                                    <img th:src="|/view/s_${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|"
+                                    <img th:src="|/view/shopImage/s_${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|"
                                          class="rounded itemMainImg" style="width:100px">
                                 </div>
                             </td>
@@ -252,6 +252,7 @@
          for(let i = 0; i < files.length;i++){
              formObj.append("files", files[i]);
          }
+         formObj.append('fileType','shopImage'); // s3에 저장할 때 폴더 이름
 
          uploadToServer(formObj).then(result => {
 
@@ -259,7 +260,7 @@
 
              let temp = uploadFiles.length
              for(const uploadResult of result){
-                 showUploadFile(uploadResult, true, temp++ )
+                 showUploadFile(uploadResult, 'shopImage', true, temp++ )
              }
 
              uploadModal.hide()
