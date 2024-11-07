@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-@RestControllerAdvice
+@ControllerAdvice
 @Log4j2
 public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
 
