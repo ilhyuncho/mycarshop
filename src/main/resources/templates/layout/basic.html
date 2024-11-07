@@ -60,7 +60,6 @@
         <div th:unless="${#authorization.expression('hasRole(''USER'')')}">
           <li><a class="dropdown-item" th:href="|@{/auth/login}|">Login</a></li>
         </div>
-<!--        <li><a class="dropdown-item" href="#!">Activity Log</a></li>-->
         <li><hr class="dropdown-divider" /></li>
 
       </ul>
