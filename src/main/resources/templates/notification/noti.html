@@ -33,12 +33,11 @@
                         <div class="tab-pane fade show active" id="news" role="tabpanel" aria-labelledby="news-tab">
 
                             <div class="row mt-3">
-                                <table id="tableNewsId">
+                                <table id="tableNewsId" style="margin-left: 50px">
                                     <thead>
                                     <tr>
-                                        <th scope="col">번호</th>
-                                        <th scope="col">제목</th>
                                         <th scope="col">등록 날짜</th>
+                                        <th scope="col">제목</th>
                                     </tr>
                                     </thead>
                                     <tbody id="tableNews">
@@ -50,14 +49,13 @@
                         <div class="tab-pane fade " id="event" role="tabpanel" aria-labelledby="event-tab">
 
                             <div class="row mt-3">
-                                <table id="tableEventId">
+                                <table id="tableEventId" style="margin-left: 50px">
                                     <thead>
                                     <tr>
-                                        <th scope="col">번호</th>
+                                        <th scope="col">등록 날짜</th>
                                         <th scope="col">제목</th>
                                         <th scope="col">이벤트 시작</th>
                                         <th scope="col">이벤트 종료</th>
-                                        <th scope="col">등록 날짜</th>
                                     </tr>
                                     </thead>
                                     <tbody id="tableEvent">
@@ -109,8 +107,6 @@
     arrElement.push(newsObj);
 
     if( [[${targetId}]] === 'event'){
-        console.log('news~~~~~~~~')
-
         newsTab.classList.remove("active");
         eventTab.classList.add("active");
 
@@ -118,7 +114,7 @@
         eventContent.classList.add("show", "active");
     }
 
-    console.log([[${targetId}]])
+    console.log('targetId : ' + [[${targetId}]])
 
     // 최초 페이지 로딩
     pageInit([[${#authorization.expression('isAuthenticated()')}]])
@@ -158,12 +154,12 @@
         })
     }
 
-    function makeHistoryData(arr, dtoData){
+    function makeNotiData(arr, dtoData){
         arr[0] = dtoData.notiId
-        arr[1] = dtoData.title
-        arr[2] = dtoData.eventStartDate === undefined ? '' : stringToDateFormat(dtoData.eventStartDate)
-        arr[3] = dtoData.eventEndDate === undefined ? '' : stringToDateFormat(dtoData.eventEndDate)
-        arr[4] = dtoData.regDate
+        arr[1] = dtoData.regDate
+        arr[2] = dtoData.title
+        arr[3] = dtoData.eventStartDate === undefined ? '' : stringToDateFormat(dtoData.eventStartDate)
+        arr[4] = dtoData.eventEndDate === undefined ? '' : stringToDateFormat(dtoData.eventEndDate)
     }
     function printNotiList(dtoList, tableRef, pathName) {    // 목록 출력
 
@@ -175,17 +171,17 @@
         if(dtoList && dtoList.length > 0) {
             dtoList.forEach(function (e, i) {
                 const arr = []
-                makeHistoryData(arr, e)
+                makeNotiData(arr, e)
 
                 let newRow = tableRef.insertRow(-1);
 
-                for (let j = 0, k = 0; j < arr.length; j++){
+                for (let j = 1, k = 0; j < arr.length; j++){
                     if(arr[j] !== ''){
 
                         let newCell = newRow.insertCell(k);
                         let newText = document.createTextNode(arr[j]);
 
-                        if( j === 1 ){
+                        if( j === 2 ){
                             const url="/notification/show/" + pathName + "/" + arr[0];
                             const link = document.createElement("a");
                             link.setAttribute("href",url);

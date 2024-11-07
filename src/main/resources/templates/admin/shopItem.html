@@ -260,6 +260,7 @@
 
             uploadModal.hide()
         }).catch(e => {
+            alert(e.response.data)
             uploadModal.hide()
         })
     }, false)

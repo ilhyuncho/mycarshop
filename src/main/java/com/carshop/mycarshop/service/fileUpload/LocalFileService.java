@@ -35,7 +35,6 @@ public class LocalFileService implements FileService{
     @Override
     public ResponseEntity<?> getFile(String fileName, String fileType){
 
-        log.error("getFileData fileName : " + fileName);
         Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
 
         HttpHeaders headers = new HttpHeaders();

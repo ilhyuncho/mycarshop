@@ -1,16 +1,27 @@
 package com.carshop.mycarshop.controller.auth;
 
+import com.carshop.mycarshop.common.exception.member.MemberTaskException;
+import com.carshop.mycarshop.common.util.Util;
+import com.carshop.mycarshop.dto.member.MemberJoinDTO;
+import com.carshop.mycarshop.service.member.MemberService;
+import com.carshop.mycarshop.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Log4j2
+
 public class AuthController {
+
+    private final MemberService memberService;
+    private final UserService userService;
 
     @GetMapping("/login")
     public void login(String error, String logout){
@@ -22,11 +33,35 @@ public class AuthController {
         if( logout != null){
             log.error("user logout======================");
         }
-
     }
     @GetMapping("/register")
     public void register(){
 
     }
 
+    @PostMapping("/register")
+    public String postRegister(MemberJoinDTO memberJoinDTO, RedirectAttributes redirectAttributes){
+
+        // 테스트 용
+        if(memberJoinDTO.getMemberId().isEmpty()){
+            memberJoinDTO.setMemberId(Util.createRandomName("member"));
+        }
+
+        try{
+            memberService.registerMember(memberJoinDTO);
+            userService.registerUser(memberJoinDTO);
+        }catch (MemberService.MemberIdExistException ex){
+            redirectAttributes.addFlashAttribute("error", "memberId");
+            return "redirect:/auth/register";
+        }catch (MemberTaskException ex){
+            //log.error("MemberTaskException()~~~~~~~~~~~~~ : " + ex.getMsg() + "," + ex.getCode());
+            redirectAttributes.addFlashAttribute("error", ex.getMsg());
+            return "redirect:/auth/register";
+        }
+
+        redirectAttributes.addFlashAttribute("result", "success");
+        return "redirect:/auth/login";
+    }
+
 }
+

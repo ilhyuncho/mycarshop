@@ -1,7 +1,6 @@
 async function uploadToServer(formObj) {
 
     console.log("upload to Server....................")
-    console.log(formObj)
 
     const response = await axios({
         method: 'post',

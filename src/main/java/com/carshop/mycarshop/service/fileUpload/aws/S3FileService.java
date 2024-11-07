@@ -5,7 +5,7 @@ import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
-import com.carshop.mycarshop.common.exception.aws.S3FileNullException;
+import com.carshop.mycarshop.common.exception.aws.AwsExceptions;
 import com.carshop.mycarshop.controller.fileUpload.UploadResultDTO;
 import com.carshop.mycarshop.service.fileUpload.FileService;
 import lombok.RequiredArgsConstructor;
@@ -63,8 +63,7 @@ public class S3FileService implements FileService {
         String uuid = UUID.randomUUID().toString().substring(0, 13);
 
         File uploadFile = convertToFile(multipartFile)
-                //.orElseThrow(() -> new BusinessException(ErrorCode.FILE_CONVERT_FAIL));
-                .orElseThrow(() -> new S3FileNullException("fsdfsdfsdf"));
+                .orElseThrow(AwsExceptions.FILE_CONVERT_FAIL::get);
 
         UploadResultDTO uploadResultDTO = uploadS3(uploadFile, fileType, uuid);
 
@@ -109,7 +108,6 @@ public class S3FileService implements FileService {
         }
 
         return Optional.of(result);
-        //return CommonResponse.toResponseEntity(ResultCode.DELETE_SUCCESS);
     }
     private void uploadThumbnail(MultipartFile multipartFile, String dirName, String uuid) throws IOException {
         String uploadPathName = dirName + "/" + "s_" + uuid + "_" + multipartFile.getOriginalFilename();
@@ -146,7 +144,6 @@ public class S3FileService implements FileService {
             }
             return Optional.of(convertFile);
         }
-        // 새파일이 성공적으로 생성되지 않았다면, 비어있는 Optional 객체를 반환
         return Optional.empty();
     }
 
@@ -175,16 +172,12 @@ public class S3FileService implements FileService {
     private MediaType contentType(String keyname) {
         String[] arr = keyname.split("\\.");
         String type = arr[arr.length - 1];
-        switch (type) {
-            case "txt":
-                return MediaType.TEXT_PLAIN;
-            case "png":
-                return MediaType.IMAGE_PNG;
-            case "jpg":
-                return MediaType.IMAGE_JPEG;
-            default:
-                return MediaType.APPLICATION_OCTET_STREAM;
-        }
+        return switch (type) {
+            case "txt" -> MediaType.TEXT_PLAIN;
+            case "png" -> MediaType.IMAGE_PNG;
+            case "jpg" -> MediaType.IMAGE_JPEG;
+            default -> MediaType.APPLICATION_OCTET_STREAM;
+        };
     }
 
     private void removeLocalTempFile(File targetFile){

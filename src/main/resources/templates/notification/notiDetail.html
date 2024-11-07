@@ -18,14 +18,12 @@
         </div>
         <div class="card-body">
 
-              <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
-                <th:block th:each="fileName:${responseDTO.getListAllImage()}">
-                      <img th:src="|/view/${fileName.uuid}_${fileName.fileName}|" style="width: 1000px"
-                           th:data-src="${fileName.uuid}" >
-                </th:block>
-              </div>
-
-          </div><!-- <div class="row mt-3">-->
+          <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
+            <th:block th:each="fileName:${responseDTO.getListAllImage()}">
+                  <img th:src="|/view/${fileType}/${fileName.uuid}_${fileName.fileName}|" style="width: 1000px"
+                       th:data-src="${fileName.uuid}" >
+            </th:block>
+          </div>
 
           <div class="my-4">
             <div class="float-end">
@@ -38,13 +36,11 @@
 
 <!--        <a th:href="|@{/myPage/carList(memberId=${#authentication.principal.username})}|" ></a>-->
 
-
         </div><!-- <div class="card-body">-->
 
       </div>
     </div>
   </div>
-
 
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

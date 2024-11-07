@@ -2,6 +2,7 @@ package com.carshop.mycarshop.testData;
 
 import com.carshop.mycarshop.common.util.Util;
 import com.carshop.mycarshop.domain.car.Car;
+import com.carshop.mycarshop.domain.car.CarRepository;
 import com.carshop.mycarshop.domain.car.CarSize;
 import com.carshop.mycarshop.domain.member.Member;
 import com.carshop.mycarshop.domain.member.MemberRepository;
@@ -36,6 +37,10 @@ public class MemberDataLoader {
 
     private final UserAlarmRepository userAlarmRepository;
     private final UserPointHistoryRepository userPointHistoryRepository;
+    private final UserAddressBookRepository userAddressBookRepository;
+
+    private final CarRepository carRepository;
+
 
     private final PasswordEncoder passwordEncoder;
 
@@ -110,6 +115,19 @@ public class MemberDataLoader {
 
                 Long userId = userRepository.save(user).getUserId();
 
+                // 배송 주소록 추가
+                UserAddressBook userAddressBook = UserAddressBook.builder()
+                        .user(user)
+                        .address(address)
+                        .deliveryName("마이홈")
+                        .RecipientName("김민수")
+                        .deliveryRequest("문앞에 놓아주세요")
+                        .RecipientPhoneNumber("01012349482")
+                        .isMainAddress(true)
+                        .isActive(true)
+                        .build();
+                userAddressBookRepository.save(userAddressBook);
+                
                 // 알림 추가
                 UserAlarm userAlarm = UserAlarm.builder()
                         .user(user)
@@ -117,6 +135,62 @@ public class MemberDataLoader {
                         .alarmContent("회원가입을 축하드립니다!!! 앞으로 많이 이용해 주세요~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                         .build();
                 userAlarmRepository.save(userAlarm);
+
+                if(i == 1){
+                    Car car = Car.builder().carNumber("221가6323")
+                            .user(user)
+                            .carColors("빨강색")
+                            .carModel("쏘나타")
+                            .carYears(2015)
+                            .carGrade(CarSize.MIDDLE)
+                            .carKm(0L)
+                            .isActive(true)
+                            .build();
+
+                    List<String> listImage = new ArrayList<>();
+                    listImage.add("1111_carin.png");
+                    listImage.add("2222_carin2.png");
+
+                    car.resetImages(listImage, "carin.png");
+
+                    // 차량 판매 등록
+                    // SellType sellType = SellType.fromValue("auctionType");
+                    SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
+                            .sellingCarStatus(SellingCarStatus.PROCESSING)
+                            .sellType("auctionType")
+                            .requiredPrice(1000000)
+                            .build();
+                    car.registerSellingCar(sellingCarRegDTO);
+
+                    carRepository.save(car);
+                }
+                else if(i == 8){
+                    Car car = Car.builder().carNumber("228가6323")
+                            .user(user)
+                            .carColors("노란색")
+                            .carModel("쏘나타")
+                            .carYears(2013)
+                            .carGrade(CarSize.MIDDLE)
+                            .carKm(0L)
+                            .isActive(true)
+                            .build();
+
+                    List<String> listImage = new ArrayList<>();
+                    listImage.add("3333_carin3.png");
+
+                    car.resetImages(listImage, "carin3.png");
+
+                    // 차량 판매 등록
+                    // SellType sellType = SellType.fromValue("auctionType");
+                    SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
+                            .sellingCarStatus(SellingCarStatus.PROCESSING)
+                            .sellType("consultType")
+                            .requiredPrice(500_000)
+                            .build();
+                    car.registerSellingCar(sellingCarRegDTO);
+
+                    carRepository.save(car);
+                }
 
             });
         }

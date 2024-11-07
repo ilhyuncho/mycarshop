@@ -37,6 +37,7 @@ public class NotificationController {
 
         model.addAttribute("responseDTO", eventInfo);
         model.addAttribute("targetId", pathName);
+        model.addAttribute("fileType", pathName.equals("news") ? "newsImage" : "eventImage");
 
         return "notification/notiDetail";
     }
