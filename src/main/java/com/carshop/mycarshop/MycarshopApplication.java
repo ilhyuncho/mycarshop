@@ -5,7 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
-@ConfigurationPropertiesScan
+@ConfigurationPropertiesScan    // @EnableConfigurationProperties({DataSourceProperties.class, InfluxProperties.class, ...})
+                                // 일일이 설정 클래스를 지정 해야 하는 번거로움을 없애기 위해 (springboot 2.2부터 지원)
 public class MycarshopApplication {
 
     public static void main(String[] args) {

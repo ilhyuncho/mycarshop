@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "mail")   // 설정 데이터를 나타내는 클래스임을 표시
 @Setter
 @Getter
-//@PropertySource(value = "classpath:application.properties", encoding = "UTF-8")
+//@PropertySource(value = "classpath:application.properties", encoding = "UTF-8")   // 특별히 설정 파일 경로 지정
 public class ConfigProperties {
 
     private String hostName;

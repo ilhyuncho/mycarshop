@@ -39,9 +39,9 @@ public class CartController {
                           Model model, Principal principal){
 
         // test
-        log.error(configProperties.getHostName());
-        log.error(configProperties.getSendName());
-        log.error(configProperties.getPort());
+        log.error("ConfigProperties test value - hostName : " + configProperties.getHostName());
+        log.error("ConfigProperties test value - hostName : " + configProperties.getSendName());
+        log.error("ConfigProperties test value - hostName : " + configProperties.getPort());
 
         // 속성 변경이 가능
         configProperties.setPort(8090);
