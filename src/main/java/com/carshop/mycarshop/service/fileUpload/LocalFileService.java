@@ -7,6 +7,7 @@ import net.coobird.thumbnailator.Thumbnailator;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +27,7 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 @Log4j2
-@Qualifier("local")
+@ConditionalOnProperty(name="file.upload.local", matchIfMissing = false)
 public class LocalFileService implements FileService{
 
     @Value("${com.cih.upload.path}")

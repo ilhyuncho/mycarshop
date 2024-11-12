@@ -19,7 +19,7 @@ public class UpDownController {
     private final FileService fileService;
 
     @Autowired
-    UpDownController(@Qualifier("s3") FileService fileService) {
+    public UpDownController(FileService fileService) {
         this.fileService = fileService;
     }
 

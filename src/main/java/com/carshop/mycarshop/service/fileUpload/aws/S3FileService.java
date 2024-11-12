@@ -13,6 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,7 +31,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-@Qualifier("s3")
+@ConditionalOnProperty(name="file.upload.s3", matchIfMissing = false)
 public class S3FileService implements FileService {
 
     private final AmazonS3Client amazonS3Client;
