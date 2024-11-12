@@ -9,6 +9,10 @@
 
 <div layout:fragment="content">
 
+  <div th:with="isLogin = ${#authorization.expression('isAuthenticated()')}">
+    [[${isLogin}]]
+  </div>
+
   <div class="row mt-3">
     <div class="col">
       <div class="card">
@@ -168,7 +172,13 @@
   const carId = [[${carViewDTO.carId}]]
   const carOwner = [[${carViewDTO.memberId}]]
   const sellingCarId = [[${carViewDTO.sellingCarId}]]
-  const currentUser = [[${#authentication.principal.username}]]
+
+  // 인증 정보 확인 테스트
+  let currentUser = 'guest'
+  const principal = [[${#authentication.principal}]]
+
+  alert('principal username : ' + principal.username)
+
 
   const purchaseOfferModal = new bootstrap.Modal(document.querySelector(".purchaseOfferModal"))
   const modifyOfferModal = new bootstrap.Modal(document.querySelector(".modifyOfferModal"))

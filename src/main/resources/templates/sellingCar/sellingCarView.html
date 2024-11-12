@@ -234,6 +234,13 @@
 
   // 모달창 오픈 요청
   function requestSellingCar(obj){
+
+    if([[${#authorization.expression('isAuthenticated()')}]] === false)
+    {
+      alert('로그인 한 고객만 참여 가능 합니다')
+      return
+    }
+
     const offerType = obj.getAttribute("data-bs-target")
 
     if(offerType === 'modalConsultRequest'){
