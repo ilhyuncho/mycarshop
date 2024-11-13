@@ -133,7 +133,7 @@ public class MemberDataLoader {
                 UserAlarm userAlarm = UserAlarm.builder()
                         .user(user)
                         .alarmTitle("회원가입을 축하드립니다")
-                        .alarmContent("회원가입을 축하드립니다!!! 앞으로 많이 이용해 주세요~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                        .alarmContent("앞으로 많이 이용해 주세요~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                         .build();
                 userAlarmRepository.save(userAlarm);
 

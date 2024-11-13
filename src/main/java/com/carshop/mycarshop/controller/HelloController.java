@@ -38,7 +38,7 @@ public class HelloController {
 
         // 메인 페이지에서 출력
         HttpSession session = request.getSession();
-        session.setAttribute("greeting", "환영합니다");
+       // session.setAttribute("greeting", "환영합니다");
 
         return "index";
     }

@@ -9,7 +9,7 @@ import com.carshop.mycarshop.dto.user.UserPasswordReqDTO;
 public interface UserService {
     User findUser(String memberId);
     UserDTO findUserDTO(String memberId);
-    Long registerUser(MemberJoinDTO memberJoinDTO);
+    User registerUser(MemberJoinDTO memberJoinDTO);
     User registerMainAddress(String memberId, UserAddressReqDTO userAddressReqDTO);
     void changePassword(String memberId, UserPasswordReqDTO userPasswordReqDTO);
 }

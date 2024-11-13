@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService{
         return entityToDTO(user);
     }
     @Override
-    public Long registerUser(MemberJoinDTO memberJoinDTO) {
+    public User registerUser(MemberJoinDTO memberJoinDTO) {
         User user = User.builder()
                 .userName(memberJoinDTO.getMemberName())    // 유저 이름
                 .memberId(memberJoinDTO.getMemberId())
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService{
                 .mGrade(UserGradeType.GRADE_A)
                 .build();
 
-        return userRepository.save(user).getUserId();
+        return userRepository.save(user);
     }
     @Override
     public User registerMainAddress(String memberId, UserAddressReqDTO userAddressReqDTO) {

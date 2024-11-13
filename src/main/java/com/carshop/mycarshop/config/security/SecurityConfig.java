@@ -1,6 +1,7 @@
 package com.carshop.mycarshop.config.security;
 
 
+import com.carshop.mycarshop.common.handler.AuthFailureHandler;
 import com.carshop.mycarshop.common.handler.LoginSuccessHandler;
 import com.carshop.mycarshop.config.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class SecurityConfig {
     private final DataSource dataSource;
     private final CustomUserDetailsService userDetailsService;
     private final LoginSuccessHandler loginSuccessHandler;
-
+    private final AuthFailureHandler authFailureHandler;
     //private final JWTCheckFilter jwtCheckFilter;
 
     @Bean
@@ -36,7 +37,9 @@ public class SecurityConfig {
 
         // 로그인 화면에서 로그인 진행
         http.formLogin().loginPage("/auth/login")
-                .successHandler(loginSuccessHandler);
+                .successHandler(loginSuccessHandler)
+                //.failureUrl("/auth/loginError");
+                .failureHandler(authFailureHandler);    // 로그인 실패 커스텀 핸들러 등록
 
         // CSRF 토큰 비활성화
         http.csrf().disable();

@@ -1,5 +1,9 @@
 package com.carshop.mycarshop.common.handler;
 
+import com.carshop.mycarshop.common.message.MessageCode;
+import com.carshop.mycarshop.common.message.MessageHandler;
+import com.carshop.mycarshop.domain.user.UserActionType;
+import com.carshop.mycarshop.service.user.UserPointHistoryService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
@@ -19,9 +23,9 @@ import java.util.List;
 @Component      // 스테레오 타입 애너테이션
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    //private final UserPointHistoryService userPointHistoryService;
+    private final UserPointHistoryService userPointHistoryService;
 
-    //private final MessageHandler messageHandler;
+    private final MessageHandler messageHandler;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -30,17 +34,17 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         log.error("LoginSuccessHandler-onAuthenticationSuccess()~~~ : " + authentication.getName());
 
         // 포인트 획득 처리
-        //userPointHistoryService.gainUserPoint(authentication.getName(), UserActionType.ACTION_LOGIN);
+        userPointHistoryService.gainUserPoint(authentication.getName(), UserActionType.ACTION_LOGIN);
 
         // 메인 페이지에서 출력
         HttpSession session = request.getSession();
 
         // Locale 메시지 정보 가져오기
-//        List<String> listArgs = new ArrayList<>();
-//        listArgs.add(authentication.getName());
-//        String message = messageHandler.getMessage(MessageCode.WELCOME_GREETING, listArgs);
+        List<String> listArgs = new ArrayList<>();
+        listArgs.add(authentication.getName());
+        String message = messageHandler.getMessage(MessageCode.WELCOME_GREETING, listArgs);
 
-        String message = "환영 합니다...";
+        //String message = "환영 합니다...";
 
         session.setAttribute("greeting", message);
         response.sendRedirect("/");

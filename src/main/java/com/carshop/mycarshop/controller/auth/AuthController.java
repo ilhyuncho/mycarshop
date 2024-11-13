@@ -2,10 +2,14 @@ package com.carshop.mycarshop.controller.auth;
 
 import com.carshop.mycarshop.common.event.userRegister.UserRegistrationEvent;
 import com.carshop.mycarshop.common.exception.member.MemberTaskException;
+import com.carshop.mycarshop.common.message.MessageCode;
+import com.carshop.mycarshop.common.message.MessageHandler;
 import com.carshop.mycarshop.common.util.Util;
 import com.carshop.mycarshop.domain.member.Member;
+import com.carshop.mycarshop.domain.user.User;
 import com.carshop.mycarshop.dto.member.MemberJoinDTO;
 import com.carshop.mycarshop.service.member.MemberService;
+import com.carshop.mycarshop.service.user.UserAlarmService;
 import com.carshop.mycarshop.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -27,6 +34,8 @@ public class AuthController {
 
     private final MemberService memberService;
     private final UserService userService;
+    private final UserAlarmService userAlarmService;
+    private final MessageHandler messageHandler;
 
     private final ApplicationEventPublisher eventPublisher;
 
@@ -56,10 +65,19 @@ public class AuthController {
 
         try{
             Member member = memberService.registerMember(memberJoinDTO);
-            userService.registerUser(memberJoinDTO);
+            User user = userService.registerUser(memberJoinDTO);
 
             // 유저 등록 이후 이메일 인증 이벤트 발생
             eventPublisher.publishEvent(new UserRegistrationEvent(member));
+
+            // 알림 등록---------------------------------------
+            // Locale 메시지 정보 가져오기
+            List<String> listArgs = new ArrayList<>();
+            listArgs.add(user.getUserName());
+            String messageTitle = messageHandler.getMessage(MessageCode.WELCOME_REGISTER_TITLE, listArgs);
+            String messageContent = messageHandler.getMessage(MessageCode.WELCOME_REGISTER_CONTENT, listArgs);
+
+            userAlarmService.registerAlarm(user, messageTitle, messageContent);
 
         }catch (MemberService.MemberIdExistException ex){
             redirectAttributes.addFlashAttribute("error", "memberId");
