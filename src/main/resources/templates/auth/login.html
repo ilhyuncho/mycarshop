@@ -29,6 +29,10 @@
                                     </div>
                                 </th:block>
 
+                                <div th:if="${loginError}" class="alert alert-danger">Wrong Username or Password</div>
+                                <div th:if="${loginDisabled}" class="alert alert-danger">Account has Not verified.</div>
+                                <div th:if="${loginVerified}" class="alert alert-success">Account has been verified. Please sign-in</div>
+
                                 <form th:action="@{/auth/login}" method="post" id="f1" th:if="${param.logout == null}">
                                     <div class="form-floating mb-3">
                                         <input class="form-control" name="username" id="inputID" placeholder="Input Your ID" value="member8" />
@@ -48,7 +52,7 @@
                                     </div>
                                     <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                         <!-- 이 부분 처리 해야 함-->
-                                        <a class="small" href="password.html">Forgot Password?</a>
+                                        <a class="small" th:href=|@{/auth/password}|>>Forgot Password?</a>
                                         <button type="submit" class="btn btn-primary uploadBtn">Login</button>
                                         <!-- <a class="btn btn-primary" th:href="|@{/auth/login}|">Login</a>-->
                                     </div>
@@ -82,3 +86,4 @@
 <script th:src="@{/js/scripts.js}"></script>
 </body>
 </html>
+

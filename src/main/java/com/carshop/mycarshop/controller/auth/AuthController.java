@@ -1,13 +1,18 @@
 package com.carshop.mycarshop.controller.auth;
 
+import com.carshop.mycarshop.common.event.userRegister.UserRegistrationEvent;
 import com.carshop.mycarshop.common.exception.member.MemberTaskException;
 import com.carshop.mycarshop.common.util.Util;
+import com.carshop.mycarshop.domain.member.Member;
 import com.carshop.mycarshop.dto.member.MemberJoinDTO;
 import com.carshop.mycarshop.service.member.MemberService;
 import com.carshop.mycarshop.service.user.UserService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +27,8 @@ public class AuthController {
 
     private final MemberService memberService;
     private final UserService userService;
+
+    private final ApplicationEventPublisher eventPublisher;
 
     @GetMapping("/login")
     public void login(String error, String logout){
@@ -48,8 +55,12 @@ public class AuthController {
         }
 
         try{
-            memberService.registerMember(memberJoinDTO);
+            Member member = memberService.registerMember(memberJoinDTO);
             userService.registerUser(memberJoinDTO);
+
+            // 유저 등록 이후 이메일 인증 이벤트 발생
+            eventPublisher.publishEvent(new UserRegistrationEvent(member));
+
         }catch (MemberService.MemberIdExistException ex){
             redirectAttributes.addFlashAttribute("error", "memberId");
             return "redirect:/auth/register";
@@ -62,6 +73,37 @@ public class AuthController {
         redirectAttributes.addFlashAttribute("result", "success");
         return "redirect:/auth/login";
     }
+
+    @ApiOperation(value = "패스워드를 잊어버렸을때", notes = "패스워드 재설정 페이지로 이동")
+    @GetMapping("/password")
+    public void password(){
+
+    }
+
+    @ApiOperation(value = "이메일 인증 성공", notes = "로그인 페이지로 이동")
+    @GetMapping("/loginVerified")
+    public String loginVerified(Model model) {
+        model.addAttribute("loginVerified", true);
+        return "auth/login";
+    }
+
+    @GetMapping("/loginError")
+    public String loginError(Model model) {
+        log.error("loginError()~!~~~~");
+
+        model.addAttribute("loginError", true);
+        return "auth/login";
+    }
+
+    @ApiOperation(value = "아직 이메일 미인증", notes = "로그인 페이지로 이동")
+    @GetMapping("/loginDisabled")
+    public String loginDisabled(Model model) {
+        log.error("loginDisabled()~!~~~~");
+
+        model.addAttribute("loginDisabled", true);
+        return "auth/login";
+    }
+
 
 }
 

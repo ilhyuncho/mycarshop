@@ -12,16 +12,19 @@ public class MemberSecurityDTO extends User {
     private String email;
     private boolean isDel;
     private boolean isSocial;
+    private boolean verified;       // 이메일 인증 유무
 
 
-    public MemberSecurityDTO(String username, String password, String email, boolean isDel, boolean isSocial,
+    public MemberSecurityDTO(String username, String password, String email, boolean isDel,
+                             boolean isSocial, boolean enabled,
                              Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, authorities);
+        super(username, password, enabled, true, true, true, authorities);
 
         this.memberId = username;
         this.memberPw = password;
         this.email = email;
         this.isDel = isDel;
         this.isSocial = isSocial;
+        this.verified = enabled;
     }
 }

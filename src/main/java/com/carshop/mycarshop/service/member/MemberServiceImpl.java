@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ public class MemberServiceImpl implements MemberService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     @Override
-    public void registerMember(MemberJoinDTO memberJoinDTO){
+    public Member registerMember(MemberJoinDTO memberJoinDTO){
 
         boolean isExisted = memberRepository.existsById(memberJoinDTO.getMemberId());
         if(isExisted){
@@ -37,7 +38,7 @@ public class MemberServiceImpl implements MemberService {
         member.changePassword(passwordEncoder.encode(member.getMemberPw()));
         member.addRole(MemberRole.USER);
 
-        memberRepository.save(member);
+        return memberRepository.save(member);
     }
 
     @Override
@@ -50,6 +51,18 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return new MemberDTO(member.getMemberId(), member.getMemberPw(), member.getEmail());
+    }
+
+    @Override
+    public Member findByMemberId(String memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberExceptions.BAD_CREDENTIALS::get);
+        return member;
+    }
+
+    @Override
+    public void updateMember(Member member) {
+        memberRepository.save(member);
     }
 
 

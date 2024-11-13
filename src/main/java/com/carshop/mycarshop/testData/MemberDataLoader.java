@@ -61,6 +61,7 @@ public class MemberDataLoader {
                         .memberId("member" + i)
                         .memberPw(passwordEncoder.encode("1111"))
                         .email("email" + i + "@naver.com")
+                        .verified(true)
                         .build();
                 member.addRole(MemberRole.USER);
 

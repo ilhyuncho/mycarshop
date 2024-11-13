@@ -156,6 +156,9 @@ dependencies {
     // AWS S3 업로드 ( 24.11.03 )
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+    // 이메일 서비스 ( 24.11.12 )
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 }
 
 // 스프링 클라우드 컨피그 클라이언트 의존성 추가 ( 24.10.18 )

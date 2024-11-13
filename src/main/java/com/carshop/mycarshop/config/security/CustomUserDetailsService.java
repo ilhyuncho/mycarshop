@@ -30,6 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         Optional<Member> result = memberRepository.getWithRoles(username);
         if(result.isEmpty()){
+            log.error("exception!!!!!!!!!!!!!! UsernameNotFoundException");
             throw new UsernameNotFoundException("username not found...");
         }
 
@@ -37,6 +38,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         MemberSecurityDTO memberSecurityDTO = new MemberSecurityDTO(member.getMemberId(),
                 member.getMemberPw(), member.getEmail(), member.isDel(), false,
+                member.isVerified(),        // 이메일 인증 유무 ( DisabledException 발생 함 )
                 member.getRoleSet().stream().
                         map(memberRole -> new SimpleGrantedAuthority("ROLE_" + memberRole.name())).collect(Collectors.toList()));
 

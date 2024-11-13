@@ -27,7 +27,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-        log.error("onAuthenticationSuccess~~~ : " + authentication.getName());
+        log.error("LoginSuccessHandler-onAuthenticationSuccess()~~~ : " + authentication.getName());
 
         // 포인트 획득 처리
         //userPointHistoryService.gainUserPoint(authentication.getName(), UserActionType.ACTION_LOGIN);
@@ -40,7 +40,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 //        listArgs.add(authentication.getName());
 //        String message = messageHandler.getMessage(MessageCode.WELCOME_GREETING, listArgs);
 
-        String message = "환영 합니다 임시..";
+        String message = "환영 합니다...";
 
         session.setAttribute("greeting", message);
         response.sendRedirect("/");

@@ -16,4 +16,5 @@ public class ConfigProperties {
     private int port;
     private String sendName;
 
+    private String verifyDomainUrl;
 }
