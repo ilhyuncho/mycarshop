@@ -21,7 +21,7 @@ import java.security.Principal;
 @RequestMapping("/alarm")
 @RequiredArgsConstructor
 @Log4j2
-//@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('USER')")
 public class AlarmRestController {
 
     private final UserAlarmService userAlarmService;

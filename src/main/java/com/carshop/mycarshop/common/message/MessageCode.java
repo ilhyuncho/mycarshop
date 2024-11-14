@@ -10,7 +10,8 @@ public enum MessageCode {
     AUCTION_REQUEST_AUCTION(2, "alarm.request.auction", "auctionRequest"),
     WELCOME_GREETING(3, "welcome.greeting", "greeting"),
     WELCOME_REGISTER_TITLE(4, "welcome.register.title","welcomeRegister"),
-    WELCOME_REGISTER_CONTENT(5, "welcome.register.content","welcomeRegisterContent")
+    WELCOME_REGISTER_CONTENT(5, "welcome.register.content","welcomeRegisterContent"),
+    ERROR_ACCESS_DENIED(100, "error.access.denied","errorAccessDenied")
     ;
     private final int msgType;
     private final String msgCode;

@@ -458,13 +458,15 @@
 
     ////////////////////////////////////////////////////
     addCartItem(formObj).then(result => {
+
       alert("정상적으로 장바구니에 담겼습니다")
 
       // 장바구니 페이지 로 이동
       self.location = '/cart/list'
 
     }).catch(e => {
-      console.log(e)
+      alert(e.response.data)
+      //self.location = '/auth/login'
     })
   }, false)
 
@@ -493,7 +495,7 @@
       self.location = '/order/orderPage/' + result.orderTemporaryId
 
     }).catch(e => {
-      console.log(e)
+      alert(e.response.data)
     })
   }, false)
 

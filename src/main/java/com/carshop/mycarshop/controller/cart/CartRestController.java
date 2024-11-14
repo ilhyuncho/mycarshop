@@ -8,6 +8,7 @@ import com.carshop.mycarshop.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,7 +20,7 @@ import java.util.Map;
 @RequestMapping("/cart")
 @RequiredArgsConstructor
 @Log4j2
-//@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('USER')")
 public class CartRestController {
     private final CartService cartService;
     private final UserService userService;

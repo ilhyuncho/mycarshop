@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -75,7 +76,7 @@ public class AuthController {
             List<String> listArgs = new ArrayList<>();
             listArgs.add(user.getUserName());
             String messageTitle = messageHandler.getMessage(MessageCode.WELCOME_REGISTER_TITLE, listArgs);
-            String messageContent = messageHandler.getMessage(MessageCode.WELCOME_REGISTER_CONTENT, listArgs);
+            String messageContent = messageHandler.getMessage(MessageCode.WELCOME_REGISTER_CONTENT, Collections.emptyList());
 
             userAlarmService.registerAlarm(user, messageTitle, messageContent);
 

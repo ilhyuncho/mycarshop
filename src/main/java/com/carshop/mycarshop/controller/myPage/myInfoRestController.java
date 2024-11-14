@@ -48,7 +48,6 @@ public class myInfoRestController {
 
     @ApiOperation(value = "배송 주소 정보 get", notes = "")
     @GetMapping("/addressInfo")
-    //@PreAuthorize("principal.username != #userName")
     public UserAddressBookResDTO addressInfo(Long userAddressBookId){
         return userAddressBookService.getUserAddressBookInfo(userAddressBookId);
     }
@@ -117,14 +116,12 @@ public class myInfoRestController {
 
     @ApiOperation(value = "배송 진행 상황 get", notes = "")
     @GetMapping("/orderDeliveryProcess")
-    //@PreAuthorize("principal.username != #userName")
     public OrderDeliveryResDTO orderDeliveryProcess(Long orderId){
         return orderService.getOrderDeliveryProcess(orderId);
     }
 
     @ApiOperation(value = "기본 주소 정보 get", notes = "")
     @GetMapping("/getMainAddress")
-    //@PreAuthorize("principal.username != #userName")
     public Address getMainAddress(Principal principal){
 
         User user = userService.findUser(principal.getName());

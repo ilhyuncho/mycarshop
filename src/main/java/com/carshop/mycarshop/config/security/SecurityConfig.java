@@ -3,7 +3,6 @@ package com.carshop.mycarshop.config.security;
 
 import com.carshop.mycarshop.common.handler.AuthFailureHandler;
 import com.carshop.mycarshop.common.handler.LoginSuccessHandler;
-import com.carshop.mycarshop.config.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -39,7 +38,7 @@ public class SecurityConfig {
         http.formLogin().loginPage("/auth/login")
                 .successHandler(loginSuccessHandler)
                 //.failureUrl("/auth/loginError");
-                .failureHandler(authFailureHandler);    // 로그인 실패 커스텀 핸들러 등록
+                .failureHandler(authFailureHandler);
 
         // CSRF 토큰 비활성화
         http.csrf().disable();
@@ -48,7 +47,8 @@ public class SecurityConfig {
         http.rememberMe().key("12345678")
                 .tokenRepository(persistentTokenRepository())
                 .userDetailsService(userDetailsService)
-                .tokenValiditySeconds(60*60*24*30); // 30일?
+                //.tokenValiditySeconds(60*60*24*30); // 30일?
+                .tokenValiditySeconds(60); // 30일?
 
         // 일단, swagger-ui 접근이 안되어서 일단 보류
         // jwtCheckFilter를 UsernamePasswordAuthenticationFilter 앞에 두기

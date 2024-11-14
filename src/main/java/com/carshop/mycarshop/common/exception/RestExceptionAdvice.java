@@ -3,11 +3,16 @@ package com.carshop.mycarshop.common.exception;
 
 import com.carshop.mycarshop.common.exception.aws.AwsTaskException;
 import com.carshop.mycarshop.common.exception.member.MemberTaskException;
+import com.carshop.mycarshop.common.message.MessageCode;
+import com.carshop.mycarshop.common.message.MessageHandler;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -17,15 +22,35 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
-@ControllerAdvice
+@RestControllerAdvice
 @Log4j2
+@RequiredArgsConstructor
 public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
 
+    private final MessageHandler messageHandler;
+
+    private final DefaultRedirectStrategy defaultRedirectStrategy = new DefaultRedirectStrategy();
+
     // 사용자 지정 에러 처리
+    @ExceptionHandler(value = {AccessDeniedException.class})
+    public ResponseEntity<?> handleBoardNotFound(AccessDeniedException e, WebRequest request){
+
+        log.error("request.getUserPrincipal() : " + request.getUserPrincipal());
+        ///defaultRedirectStrategy.sendRedirect(request, response, "/auth/login");
+
+        log.error("RestExceptionAdvice - AccessDeniedException!!! ");
+        String errorMsg = messageHandler.getMessage(MessageCode.ERROR_ACCESS_DENIED, Collections.emptyList());
+
+        return super.handleExceptionInternal(
+                e,
+                errorMsg,
+                new HttpHeaders(),
+                HttpStatus.UNAUTHORIZED,
+                request
+        );
+    }
     @ExceptionHandler(value = {AwsTaskException.class})
     public ResponseEntity<?> handleBoardNotFound(AwsTaskException e, WebRequest request){
 

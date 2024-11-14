@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/buyingCar")
 @RequiredArgsConstructor
 @Log4j2
-//@PreAuthorize("hasRole('USER')")
 public class BuyingCarController {
 
 
