@@ -8,11 +8,12 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
 
-@Service
+@Component
 @Log4j2
 @RequiredArgsConstructor
 public class EmailVerificationListener implements ApplicationListener<UserRegistrationEvent> {

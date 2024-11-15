@@ -122,6 +122,15 @@ public class AuthController {
         model.addAttribute("loginDisabled", true);
         return "auth/login";
     }
+    @ApiOperation(value = "비밀번호3회 틀림", notes = "로그인 페이지로 이동")
+    @GetMapping("/loginLocked")
+    public String loginLocked(Model model) {
+        log.error("loginLocked()~!~~~~");
+
+        model.addAttribute("loginLocked", true);
+        return "auth/login";
+    }
+
 
 
 }

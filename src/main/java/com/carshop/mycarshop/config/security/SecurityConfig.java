@@ -35,7 +35,10 @@ public class SecurityConfig {
         log.info("----------configure------------");
 
         // 로그인 화면에서 로그인 진행
-        http.formLogin().loginPage("/auth/login")
+        http
+                // .authorizeRequests().anyRequest().permitAll().and() // 인증 없이 요청 가능
+                // .authorizeRequests().anyRequest().authenticated().and() // 모든 요청에 인증 필요
+                .formLogin().loginPage("/auth/login")
                 .successHandler(loginSuccessHandler)
                 //.failureUrl("/auth/loginError");
                 .failureHandler(authFailureHandler);
@@ -45,6 +48,8 @@ public class SecurityConfig {
 
 
         http.rememberMe().key("12345678")
+                .key("remember-me-key")
+                .rememberMeCookieName("mycarshop-remember-me")
                 .tokenRepository(persistentTokenRepository())
                 .userDetailsService(userDetailsService)
                 //.tokenValiditySeconds(60*60*24*30); // 30일?

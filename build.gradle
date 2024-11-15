@@ -159,9 +159,11 @@ dependencies {
     // 이메일 서비스 ( 24.11.12 )
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+    // 구아바 의존관계 추가 ( 24.11.14 ) - 캐시 사용
+    implementation("com.google.guava:guava:31.1-jre")
 }
 
-// 스프링 클라우드 컨피그 클라이언트 의존성 추가 ( 24.10.18 )
+// 스프링 클라우드 컨피그 클라이언트 의존성 추가 ( 24.10.18 ) - Google Guava는 문자열, 컬렉션, 캐시, 프리미티브 작업, 파일 작업, 어노테이션 등의 기능을 제공
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"

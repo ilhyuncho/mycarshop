@@ -32,6 +32,7 @@
                                 <div th:if="${loginError}" class="alert alert-danger">Wrong Username or Password</div>
                                 <div th:if="${loginDisabled}" class="alert alert-danger">Account has Not verified.</div>
                                 <div th:if="${loginVerified}" class="alert alert-success">Account has been verified. Please sign-in</div>
+                                <div th:if="${loginLocked}" class="alert alert-danger">Account locked.</div>
 
                                 <form th:action="@{/auth/login}" method="post" id="f1" th:if="${param.logout == null}">
                                     <div class="form-floating mb-3">

@@ -2,6 +2,7 @@ package com.carshop.mycarshop.common.handler;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -28,6 +29,15 @@ public class AuthFailureHandler implements AuthenticationFailureHandler {
             defaultRedirectStrategy.sendRedirect(request, response, "/auth/loginDisabled");
             return;
         }
+        if(exception.getCause() instanceof LockedException){
+            // 비밀번호 3회 틀림
+            log.error("AuthFailureHandler-onAuthenticationFailure() : LockedException");
+
+            defaultRedirectStrategy.sendRedirect(request, response, "/auth/loginLocked");
+            return;
+        }
+
+
         log.error("AuthFailureHandler-onAuthenticationFailure() : not DisabledException");
         defaultRedirectStrategy.sendRedirect(request, response, "/auth/loginError");
     }

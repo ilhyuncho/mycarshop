@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 
 @Controller
 @Log4j2
@@ -39,6 +40,11 @@ public class HelloController {
         // 메인 페이지에서 출력
         HttpSession session = request.getSession();
        // session.setAttribute("greeting", "환영합니다");
+        log.error("mainPage getCookies ");
+        Arrays.stream(request.getCookies()).forEach(a->{
+            log.error("Cookie = " + "[" + a.getName() + "]" + "value: " + a.getValue());
+
+        });
 
         return "index";
     }

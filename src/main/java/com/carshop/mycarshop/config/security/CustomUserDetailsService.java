@@ -3,8 +3,10 @@ package com.carshop.mycarshop.config.security;
 import com.carshop.mycarshop.domain.member.Member;
 import com.carshop.mycarshop.domain.member.MemberRepository;
 import com.carshop.mycarshop.dto.member.MemberSecurityDTO;
+import com.carshop.mycarshop.service.member.LoginAttemptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,13 +22,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final PasswordEncoder passwordEncoder;
+    //private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final LoginAttemptService loginAttemptService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 실제 인증을 처리할때 호출
         log.error("loadUserByUsername!!~~~~~~~~~~~~ : " + username);
+
+        if(loginAttemptService.isBlocked(username)){
+            throw new LockedException("User is Locked...");
+        }
 
         Optional<Member> result = memberRepository.getWithRoles(username);
         if(result.isEmpty()){
