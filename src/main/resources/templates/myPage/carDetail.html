@@ -210,7 +210,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger sendModifyBtn">취소</button>
+          <button type="button" class="btn btn-danger modifySellingCarBtn">취소</button>
           <button type="button" class="btn btn-outline-dark closeCancelModalBtn">닫기</button>
         </div>
       </div>
@@ -261,7 +261,7 @@
   const modifyCarName = document.querySelector(".modifyCarName")
   const currCarKm = document.querySelector(".currCarKm")
   const updateKmValue = document.querySelector(".updateKmValue")
-  const sendModifyBtn = document.querySelector(".sendModifyBtn")
+  const modifySellingCarBtn = document.querySelector(".modifySellingCarBtn")
   const sellingStatus = document.querySelector(".sellingStatus")
   const sellTypeRadios = document.querySelectorAll("input[name='sellType']");
 
@@ -394,7 +394,7 @@
 
     sellingStatus.value = 'CANCEL'
     modifyCarName.value = `"${carNumber}" 차량 판매를 정말 취소 하나요?'`
-    sendModifyBtn.innerHTML='취소'
+    modifySellingCarBtn.innerHTML='취소'
     sellingModifyModal.show()
   }, false)
 
@@ -407,13 +407,13 @@
 
     sellingStatus.value = 'COMPLETE'
     modifyCarName.value = `"${carNumber}" 차량 판매가 정말 완료 되었습니까?'`
-    sendModifyBtn.innerHTML='완료'
+    modifySellingCarBtn.innerHTML='완료'
     sellingModifyModal.show()
   }, false)
 
 
   // 모달창의 [판매 취소 or 완료] 전송 버튼 클릭
-  document.querySelector(".sendModifyBtn").addEventListener("click", function (e){
+  document.querySelector(".modifySellingCarBtn").addEventListener("click", function (e){
     const formObj = {
       carId:carId,
       sellingCarStatus:sellingStatus.value

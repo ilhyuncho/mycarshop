@@ -12,6 +12,9 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,13 +41,21 @@ public class CartController {
     public String getCart(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
                           Model model, Principal principal){
 
-        // test
+        // test start
         log.error("ConfigProperties test value - hostName : " + configProperties.getHostName());
         log.error("ConfigProperties test value - hostName : " + configProperties.getSendName());
         log.error("ConfigProperties test value - hostName : " + configProperties.getPort());
 
         // 속성 변경이 가능
         configProperties.setPort(8090);
+
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        log.error("authentication.getName() : " + authentication.getName());
+        log.error("authentication.getPrincipal() : " + authentication.getPrincipal());
+        log.error("Principal : " + principal);
+
+        // test end
 
 
         User user = userService.findUser(principal.getName());

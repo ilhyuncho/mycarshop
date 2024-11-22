@@ -109,7 +109,7 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary sendRegisterBtn">Register</button>
+          <button type="button" class="btn btn-primary registerAddressBtn">Register</button>
           <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
         </div>
       </div>
@@ -167,7 +167,7 @@
   }, false)
 
   // [배송지 추가 or 수정] 요청 처리
-  document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
+  document.querySelector(".registerAddressBtn").addEventListener("click", function(e){
 
     const formObj = {
       deliveryName:modalDeliveryName.value,

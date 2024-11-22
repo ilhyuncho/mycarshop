@@ -113,7 +113,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary sendRegisterBtn">Register</button>
+                    <button type="button" class="btn btn-primary registerMainAddressBtn">Register</button>
                     <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
                 </div>
             </div>
@@ -175,7 +175,7 @@
     const modalCityName = document.querySelector('#modalCityName');
     const modalStreet = document.querySelector('#modalStreet');
     const modalTitle = document.querySelector('.modalTitle');
-    const sendRegisterBtn = document.querySelector('.sendRegisterBtn');
+    const registerMainAddressBtn = document.querySelector('.registerMainAddressBtn');
 
     const modalCurrentPassword = document.querySelector('#modalCurrentPassword');
     const modalNewPassword = document.querySelector('#modalNewPassword');
@@ -207,7 +207,7 @@
         modalDetailAddress.value = '2동305호'
 
         modalTitle.innerHTML='주소 추가'
-        sendRegisterBtn.innerHTML = '등록하기'
+        registerMainAddressBtn.innerHTML = '등록하기'
 
         registerAddressModal.show()
     }
@@ -226,7 +226,7 @@
             modalDetailAddress.value = result.detailAddress
 
             modalTitle.innerHTML='주소 수정'
-            sendRegisterBtn.innerHTML = '수정하기'
+            registerMainAddressBtn.innerHTML = '수정하기'
 
             registerAddressModal.show()
 
@@ -236,7 +236,7 @@
     }
 
     // [주소 추가] 요청 처리
-    document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
+    document.querySelector(".registerMainAddressBtn").addEventListener("click", function(e){
 
         const formObj = {
             zipcode:modalZipcode.value,

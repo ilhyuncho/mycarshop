@@ -10,7 +10,7 @@
 <div layout:fragment="content">
 
   <div th:with="isLogin = ${#authorization.expression('isAuthenticated()')}">
-    [[${isLogin}]]
+<!--    [[${isLogin}]]-->
   </div>
 
   <div class="row mt-3">
@@ -70,6 +70,10 @@
         <div class="card-body">
 
           <div class="input-group mb-3">
+            <span class="input-group-text">경매 최초 가격</span>
+            <label> <input type="text" class="form-control auctionStartPrice" readonly></label>
+          </div>
+          <div class="input-group mb-3">
             <span class="input-group-text">현재 최고 응찰 가격</span>
             <label> <input type="text" class="form-control highProposalPrice" readonly></label>
           </div>
@@ -114,13 +118,13 @@
         <div class="modal-body">
           <div class="input-group mb-3">
             <span class="input-group-text">응찰 가격</span>
-            <input type="text" class="form-control requestPrice" th:value="${#numbers.formatInteger(100000,3,'COMMA')}"
-                   th:oninput="|transComma(this);|"
-            >
+            <input type="text" class="form-control auctionProposePrice" th:value="${#numbers.formatInteger(100000,3,'COMMA')}"
+                   th:oninput="|transComma(this);|">
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary sendRegisterBtn" data-bs-target="auctionRequest">Register</button>
+          <button type="button" class="btn btn-primary" th:onclick="requestSellingCar(this.getAttribute('data-bs-target'))"
+                  data-bs-target="auctionRequest">Register</button>
           <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
         </div>
       </div>
@@ -148,8 +152,10 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary sendModifyBtn" data-bs-target="proposeChangePrice">가격 수정</button>
-          <button type="button" class="btn btn-danger cancelBtn" data-bs-target="auctionCancel">경매 응찰 취소</button>
+          <button type="button" class="btn btn-primary" th:onclick="requestSellingCar(this.getAttribute('data-bs-target'))"
+                  data-bs-target="proposeChangePrice">가격 수정</button>
+          <button type="button" class="btn btn-danger" th:onclick="requestSellingCar(this.getAttribute('data-bs-target'))"
+                  data-bs-target="auctionCancel">경매 응찰 취소</button>
           <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
         </div>
       </div>
@@ -178,12 +184,14 @@
   const principal = [[${#authentication.principal}]]
 
   alert('principal username : ' + principal.username)
+  currentUser = principal.username
 
 
   const purchaseOfferModal = new bootstrap.Modal(document.querySelector(".purchaseOfferModal"))
   const modifyOfferModal = new bootstrap.Modal(document.querySelector(".modifyOfferModal"))
 
-  const requestPrice = document.querySelector(".requestPrice")
+  const auctionStartPrice = document.querySelector(".auctionStartPrice")
+  const auctionProposePrice = document.querySelector(".auctionProposePrice")
   const modifyPrice = document.querySelector(".modifyPrice")
   const buyingCarList = document.querySelector('.buyingCarList')          // 구매 희망 목록 DOM
   const buyingCarListPaging = document.querySelector('.buyingCarListPaging')  // 페이지 목록 DOM
@@ -224,60 +232,65 @@
     }
   }, false)
 
+  buyingCarListPaging.addEventListener("click", function(e){
+    e.preventDefault()
+    e.stopPropagation()
 
-  function makeFormAndSendToServer(offerType){
+    const target = e.target
+    if(!target || target.tagName !== 'A'){
+      return
+    }
+    page = target.getAttribute("data-page")
 
-    console.log('makeFormAndSendToServer : ' + offerType)
+    // 경매 현황 가져오기
+    getListAuctionBuyingCar(page,size)
+
+  },false)
+
+  function requestSellingCar(offerType){
+
+    if([[${#authorization.expression('isAuthenticated()')}]] === false){
+      alert('로그인 한 고객만 참여 가능 합니다')
+      return
+    }
 
     const formObj = {
-      offerType: offerType
-    }
-
-    if (offerType === "auctionCancel") {
-      Object.assign(formObj, {requestPrice: 0})
-    }
-    else if(offerType === "auctionRequest"){
-      Object.assign(formObj, {requestPrice: requestPrice.value.replaceAll(",","")})
-    }
-    else if(offerType === "proposeChangePrice"){
-      if(modifyPrice.value.replaceAll("원","") === userCurrentPrice.value.replaceAll("원","")){
-        alert('기존 가격과 같습니다')
-        return
-      }
-
-      Object.assign(formObj, {requestPrice: modifyPrice.value.replaceAll(",","")})
-    }
-
-    sendRequestToServer(formObj)
-  }
-
-
-  // 서버로 요청 전송
-  function sendRequestToServer(addFormObj) {
-    const formObj = {
+      offerType: offerType,
       carId:carId,
       sellingCarId:sellingCarId,
     }
-    // 객체 merge
-    Object.assign(formObj, addFormObj)
-    // 고객 요청 전송
-    requestBuyingCar(formObj).then(result => {  // axios 호출
+
+    if(offerType === 'auctionRequest'){
+      Object.assign(formObj, {
+          requestPrice: auctionProposePrice.value.replaceAll(",",""),
+          auctionStartPrice: auctionStartPrice.value.replaceAll("원","").replaceAll(",","")
+      })
+    }
+    else if(offerType === 'proposeChangePrice'){
+      Object.assign(formObj, {
+        requestPrice: modifyPrice.value.replaceAll("원","").replaceAll(",",""),
+        userCurrentPrice: userCurrentPrice.value.replaceAll("원","").replaceAll(",","")
+      })
+    }
+    else if(offerType === "auctionCancel") {
+      Object.assign(formObj, {requestPrice: 0})
+    }
+    else{
+      return
+    }
+
+    checkInputValueAndSendToServer(formObj)
+  }
+
+  function resultSendRequestToServer(){
       // 경매 현황 가져오기
       getListAuctionBuyingCar(1, 10)
-
-    }).catch(e => {
-      errorResponse(e)
-    }).finally(e =>{
-
-      initModalDisplay(formObj)
-    })
   }
 
   // 모달창 및 input value 초기화
   function initModalDisplay(formObj) {
-
     if(formObj.offerType === 'auctionRequest'){
-      requestPrice.value= ''
+      auctionProposePrice.value= ''
       purchaseOfferModal.hide()
     }
     else if(formObj.offerType === 'proposeChangePrice'){
@@ -287,7 +300,6 @@
     else if(formObj.offerType === 'auctionCancel'){
       userCurrentPrice.value= ''
       userProposalPrice.value=''
-
 
       initOfferBtn('new')
       modifyOfferModal.hide()
@@ -313,31 +325,30 @@
     }
   }
 
+  // 모달 창 값 초기화
+  function initModalData(obj){
+    console.log('auctionDetail.html - initModalData()!!!!')
 
-  buyingCarListPaging.addEventListener("click", function(e){
-    e.preventDefault()
-    e.stopPropagation()
+    const target = obj.target
+    const dialog = target.closest(".modal-dialog")
 
-    const target = e.target
-    if(!target || target.tagName !== 'A'){
-      return
+    if(dialog.getAttribute("data-num") === 'modifyCloseBtn'){
+      modifyOfferModal.hide()
     }
-    page = target.getAttribute("data-page")
-
-    // 경매 현황 가져오기
-    getListAuctionBuyingCar(page,size)
-
-  },false)
+    else if(dialog.getAttribute("data-num") === 'purchaseCloseBtn'){
+      purchaseOfferModal.hide()
+    }
+  }
 
   // 경매 현황 가져오기
   function getListAuctionBuyingCar(page,size){
     getListBuyingCar({sellingCarId, page, size}).then(data=> {
-      printListAuction(data.dtoList) // 목록 처리
-      printPages(data, buyingCarListPaging)        // 페이지 처리
+      printListAuction(data.dtoList)                // 목록 처리
+      printPages(data, buyingCarListPaging)         // 페이지 처리
 
       // 현재 최고 응찰 가격 지정
       highProposalPrice.value = makePriceCurrency(data.highProposalPrice)
-
+      auctionStartPrice.value = makePriceCurrency(data.requiredPrice)
     }).catch(e=>{
       console.error(e)
     })
@@ -359,6 +370,7 @@
         let proposalPrice = makePriceCurrency(dto.proposalPrice)
         let registerTime = stringToDateFormat(dto.registerTime)
 
+        console.log('printListAuction()' + dto.memberId + ', ' + currentUser)
         // 해당 차에 가격 제안을 했다면
         if(Object.is(dto.memberId, currentUser)){
           userProposalPrice.value = proposalPrice
@@ -378,21 +390,5 @@
 
     buyingCarList.innerHTML = str
   }
-
-  // 모달 창 값 초기화
-  function initModalData(obj){
-    console.log('auction.html - initModalData()!!!!')
-
-    const target = obj.target
-    const dialog = target.closest(".modal-dialog")
-
-    if(dialog.getAttribute("data-num") === 'modifyCloseBtn'){
-      modifyOfferModal.hide()
-    }
-    else if(dialog.getAttribute("data-num") === 'purchaseCloseBtn'){
-      purchaseOfferModal.hide()
-    }
-  }
-
 
 </script>

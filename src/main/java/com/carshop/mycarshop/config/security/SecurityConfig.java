@@ -35,17 +35,29 @@ public class SecurityConfig {
         log.info("----------configure------------");
 
         // 로그인 화면에서 로그인 진행
-        http
-                // .authorizeRequests().anyRequest().permitAll().and() // 인증 없이 요청 가능
-                // .authorizeRequests().anyRequest().authenticated().and() // 모든 요청에 인증 필요
-                .formLogin().loginPage("/auth/login")
-                .successHandler(loginSuccessHandler)
-                //.failureUrl("/auth/loginError");
-                .failureHandler(authFailureHandler);
+        http.formLogin().loginPage("/auth/login")
+            .successHandler(loginSuccessHandler)
+            //.failureUrl("/auth/loginError");
+            .failureHandler(authFailureHandler);
+
+        http.authorizeRequests()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/","/auth/**").permitAll()
+                .antMatchers("/sellingCar/{carId:^[0-9]+$}", "/sellingCar/list","/sellingCar/recommend","/sellingCar/view/**").permitAll()
+                .antMatchers("/view/**").permitAll()
+                .antMatchers("/buyingCar/list").permitAll()
+                .antMatchers("/shop/**").permitAll()
+                .antMatchers("/notification/**").permitAll()
+                .antMatchers("/review/**").permitAll()
+                .anyRequest().authenticated();
+
+
+        // .authorizeRequests().anyRequest().permitAll().and() // 인증 없이 요청 가능
+        // .authorizeRequests().anyRequest().authenticated().and() // 모든 요청에 인증 필요
+
 
         // CSRF 토큰 비활성화
         http.csrf().disable();
-
 
         http.rememberMe().key("12345678")
                 .key("remember-me-key")
@@ -70,7 +82,10 @@ public class SecurityConfig {
         log.error("-------------web configure----------------");
 
         return (web) -> web.ignoring()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                //.antMatchers("/view/**")
+                //.antMatchers("/mycarshopViewInfo/**", "/css/**", "/js/**", "/assets/**", "item/**")
+                ;
     }
 
     @Bean

@@ -63,6 +63,9 @@ public class BuyingCarServiceImpl implements BuyingCarService {
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("proposalPrice");
 
+        // 구매하려는 차량 정보
+        SellingCar sellingCar = getSellingCarInfo(sellingCarId);
+
         // 해당 차의 구매 요청 리스트 get
         Page<BuyingCarViewDTO> resultDTO = buyingCarRepository.getBuyingCarInfo(sellingCarId, pageable);
         List<BuyingCarViewDTO> listBuyingCarViewDTO = resultDTO.getContent();
@@ -81,6 +84,7 @@ public class BuyingCarServiceImpl implements BuyingCarService {
                 .dtoList(listBuyingCarViewDTO)
                 .total((int)resultDTO.getTotalElements())
                 .highProposalPrice(maxProposalPrice)
+                .requiredPrice(sellingCar.getRequiredPrice())
                 .build();
     }
 

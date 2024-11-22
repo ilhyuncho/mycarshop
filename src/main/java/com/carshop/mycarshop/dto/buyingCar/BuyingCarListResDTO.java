@@ -13,12 +13,14 @@ import java.util.List;
 public class BuyingCarListResDTO<E> extends PageResponseDTO<E> {
 
     int highProposalPrice;
+    int requiredPrice;      // 경매 시작 가격
 
     @Builder(builderMethodName = "withSuper")
     public BuyingCarListResDTO(PageRequestDTO pageRequestDTO, List<E> dtoList, int total,
-                               int highProposalPrice ) {
+                               int highProposalPrice, int requiredPrice) {
         super(pageRequestDTO, dtoList, total);
 
         this.highProposalPrice = highProposalPrice;
+        this.requiredPrice = requiredPrice;
     }
 }

@@ -32,7 +32,7 @@ public class ReviewRestController {
 
         ReviewListResDTO<ReviewResDTO> listReview = reviewService.getListReview(pageRequestDTO, shopItemId);
 
-        log.error(listReview);
+        log.error("listReview : " + listReview);
         return listReview;
     }
     @GetMapping("/{reviewId}")

@@ -30,7 +30,6 @@ public class AdminShopController {
     private final FileHandler fileHandler;
 
     @GetMapping("/shopItem")
-
     @ElapseLoggable // 커스텀 aspect 지정
     public String getShopItem(Model model){
 

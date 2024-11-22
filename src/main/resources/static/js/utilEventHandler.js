@@ -1,27 +1,16 @@
-// 모달창의 [구매 제안], [경매 응찰 취소], [가격 수정] 처리
-document.querySelectorAll(".cancelBtn, .sendRegisterBtn, .sendModifyBtn").forEach(function(item,idx){
-    item.addEventListener("click", function (e) {
-        e.stopPropagation()
-        e.preventDefault()
-
-        const offerType = e.target.getAttribute("data-bs-target")
-
-        makeFormAndSendToServer(offerType)
-    })
-}, false)
-
-
-
 // [상담 요청], [경매 요청] 전송
 document.querySelectorAll(".sendConsultRequestBtn, .sendAuctionRequestBtn").forEach(function(item,idx){
     item.addEventListener("click", function (e) {
         e.stopPropagation()
         e.preventDefault()
 
-        const offerType = e.target.getAttribute("data-bs-target")
+        //const offerType = e.target.getAttribute("data-bs-target")
 
+        const formObj = {
+            offerType: e.target.getAttribute("data-bs-target"),
+        }
 
-        makeFormAndSendToServer(offerType)
+        checkInputValueAndSendToServer(formObj)
     })
 }, false)
 
@@ -41,6 +30,7 @@ document.querySelectorAll(".closeUploadBtn").forEach(function (item,idx){
 // [모달창] 닫기
 document.querySelectorAll(".closeModalBtn").forEach(function (item,idx){
     item.addEventListener('click', function(e){
+
         console.log('closeModalBtn()!!!!!!! e: ' + e)
 
         initModalData(e)    // 모달창 초기화
