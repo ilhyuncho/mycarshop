@@ -44,8 +44,7 @@
         </span>
       </div>
 
-      <div class="my-4" th:if="${#strings.equals(responseDTO.sellingCarStatus, 'PROCESSING')}"
-           th:with="buyCarStatus = ${responseDTO.buyCarStatus}">
+      <div class="my-4" th:with="buyCarStatus = ${responseDTO.buyCarStatus}">
         <hr class="my-4">
         <div class="h3 text-primary" >
           <span th:text="${#strings.equals(responseDTO.sellType, 'SELL_CONSULT')} ? '판매 가격:' : '경매 가격:' "></span>
@@ -56,10 +55,12 @@
 
         <!--        상담 -->
         <div th:if="${#strings.equals(responseDTO.sellType, 'SELL_CONSULT')}">
-          <button type="submit" th:if="${#strings.equals(buyCarStatus, 'CONSULT_REQUEST')}" class="btn btn-primary"
-                  th:text="|상담 요청 취소|" data-bs-target="consultCancel" th:onclick="requestSellingCar(this.getAttribute('data-bs-target'))"></button>
-          <button type="submit" th:unless="${#strings.equals(buyCarStatus, 'CONSULT_REQUEST')}" class="btn btn-primary"
-                  th:text="|상담 요청|" data-bs-target="modalConsultRequest" th:onclick="requestSellingCar(this.getAttribute('data-bs-target'))"></button>
+          <div class="my-4" th:if="${#strings.equals(responseDTO.sellingCarStatus, 'PROCESSING') and !responseDTO.isExpired()}">
+            <button type="submit" th:if="${#strings.equals(buyCarStatus, 'CONSULT_REQUEST')}" class="btn btn-primary"
+                    th:text="|상담 요청 취소|" data-bs-target="consultCancel" th:onclick="requestSellingCar(this.getAttribute('data-bs-target'))"></button>
+            <button type="submit" th:unless="${#strings.equals(buyCarStatus, 'CONSULT_REQUEST')}" class="btn btn-primary"
+                    th:text="|상담 요청|" data-bs-target="modalConsultRequest" th:onclick="requestSellingCar(this.getAttribute('data-bs-target'))"></button>
+          </div>
         </div>
 
         <!--        경매 -->
@@ -77,36 +78,36 @@
           <!--         경매 참여를 한 상태-->
           <div th:if="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')}
                                         or ${#strings.equals(buyCarStatus, 'PROPOSE_CHANGE_PRICE')}">
+            <div class="my-4" th:if="${#strings.equals(responseDTO.sellingCarStatus, 'PROCESSING') and !responseDTO.isExpired()}">
+              <div class="h4 text-warning" >
+                <input type="hidden" class="form-control userCurrentPrice" th:value="${responseDTO.proposalPrice}">
+                <span th:text="|당신의 응찰가 : ${#numbers.formatInteger(responseDTO.proposalPrice, 3, 'COMMA')}원|"></span>
+              </div>
 
-            <div class="h4 text-warning" >
-              <input type="hidden" class="form-control userCurrentPrice" th:value="${responseDTO.proposalPrice}">
-              <span th:text="|당신의 응찰가 : ${#numbers.formatInteger(responseDTO.proposalPrice, 3, 'COMMA')}원|"></span>
+              <div class="input-group mb-3">
+                <span class="input-group-text">새로운 응찰 가격</span>
+                <label>
+                  <input type="text" class="form-control newProposalPrice" step="10000" th:onkeyup="newPriceKepUp(this)">
+                </label>
+              </div>
+
+              <button type="submit" class="btn btn-primary" th:text="|다시 응찰|" data-bs-target="proposeChangePrice"
+                      th:onclick="requestSellingCar(this.getAttribute('data-bs-target'))">
+              </button>
+              <button type="submit" class="btn btn-primary"
+                      th:text="|경매 참여 취소|" data-bs-target="auctionCancel" th:onclick="requestSellingCar(this.getAttribute('data-bs-target'))">
+              </button>
             </div>
-
-            <div class="input-group mb-3">
-              <span class="input-group-text">새로운 응찰 가격</span>
-              <label>
-                <input type="text" class="form-control newProposalPrice" step="10000" th:onkeyup="newPriceKepUp(this)">
-              </label>
-            </div>
-
-            <button type="submit" class="btn btn-primary" th:text="|다시 응찰|" data-bs-target="proposeChangePrice"
-                    th:onclick="requestSellingCar(this.getAttribute('data-bs-target'))">
-            </button>
-            <button type="submit" class="btn btn-primary"
-                    th:text="|경매 참여 취소|" data-bs-target="auctionCancel" th:onclick="requestSellingCar(this.getAttribute('data-bs-target'))">
-            </button>
-
           </div>
           <!--         경매 참여를 하지 않은 상태-->
           <div th:unless="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')}
                                            or ${#strings.equals(buyCarStatus, 'PROPOSE_CHANGE_PRICE')}">
-
-            <button type="submit"
-                    class="btn btn-primary"
-                    th:text="|경매 참여|" data-bs-target="modalAuctionRequest" th:onclick="requestSellingCar(this.getAttribute('data-bs-target'))">
-            </button>
-
+            <div class="my-4" th:if="${#strings.equals(responseDTO.sellingCarStatus, 'PROCESSING') and !responseDTO.isExpired()}">
+              <button type="submit"
+                      class="btn btn-primary"
+                      th:text="|경매 참여|" data-bs-target="modalAuctionRequest" th:onclick="requestSellingCar(this.getAttribute('data-bs-target'))">
+              </button>
+            </div>
           </div>
 
         </div><!--      <div th:if="${#strings.equals(responseDTO.sellType, 'SELL_AUCTION')}">-->

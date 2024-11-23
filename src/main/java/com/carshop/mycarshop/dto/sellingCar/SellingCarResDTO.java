@@ -1,4 +1,5 @@
 package com.carshop.mycarshop.dto.sellingCar;
+import com.carshop.mycarshop.common.util.Util;
 import com.carshop.mycarshop.domain.buyingCar.BuyCarStatus;
 import com.carshop.mycarshop.domain.sellingCar.SellType;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarStatus;
@@ -33,4 +34,7 @@ public class SellingCarResDTO extends ImageListDTO {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiredDate;
+    public boolean isExpired(){
+        return Util.isTimeOver(expiredDate);
+    }
 }

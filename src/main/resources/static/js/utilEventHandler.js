@@ -1,5 +1,5 @@
 // [상담 요청], [경매 요청] 전송
-document.querySelectorAll(".sendConsultRequestBtn, .sendAuctionRequestBtn").forEach(function(item,idx){
+document.querySelectorAll(".sendConsultRequestBtn").forEach(function(item,idx){
     item.addEventListener("click", function (e) {
         e.stopPropagation()
         e.preventDefault()
@@ -7,6 +7,8 @@ document.querySelectorAll(".sendConsultRequestBtn, .sendAuctionRequestBtn").forE
         //const offerType = e.target.getAttribute("data-bs-target")
 
         const formObj = {
+            carId:carId,
+            sellingCarId:sellingCarId,
             offerType: e.target.getAttribute("data-bs-target"),
         }
 

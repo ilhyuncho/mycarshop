@@ -49,6 +49,8 @@ public class SecurityConfig {
                 .antMatchers("/shop/**").permitAll()
                 .antMatchers("/notification/**").permitAll()
                 .antMatchers("/review/**").permitAll()
+                .antMatchers("/verify/email").permitAll()
+//                .antMatchers("/myPage/**").permitAll()
                 .anyRequest().authenticated();
 
 

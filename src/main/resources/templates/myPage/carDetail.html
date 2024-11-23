@@ -423,11 +423,11 @@
 
       if(sellingStatus.value === 'CANCEL'){
         // 화면 재 갱신
-        self.location = '/myPage/carDetail?carId=' + carId + '&memberId=' + [[${#authentication.principal.username}]]
+        pageReload('/myPage/carDetail?carId=' + carId + '&memberId=' + [[${#authentication.principal.username}]])
       }
       else if(sellingStatus.value === 'COMPLETE'){
         // 화면 재 갱신
-        self.location = '/myPage/carList?memberId=' + [[${#authentication.principal.username}]]
+        pageReload('/myPage/carList?memberId=' + [[${#authentication.principal.username}]])
       }
 
     }).catch(e => {

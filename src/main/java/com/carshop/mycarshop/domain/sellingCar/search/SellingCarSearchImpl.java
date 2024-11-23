@@ -31,10 +31,10 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
             BooleanBuilder booleanBuilder = new BooleanBuilder();
             for (String type : types) {
                 switch (type) {
-                    case "m":
+                    case "m":       // 모델명
                         booleanBuilder.or(sellingCar.car.carModel.contains(keyword));
                         break;
-                    case "y":
+                    case "y":       // 연식
                         log.error("keyword: " + keyword);
                         booleanBuilder.or(sellingCar.car.carYears.eq(Integer.valueOf(keyword)));
                         break;
@@ -57,7 +57,7 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
             query.where(booleanBuilder);
         }
 
-        query.where(sellingCar.sellingCarStatus.eq(SellingCarStatus.PROCESSING));   // 판매 중 인것만 표시
+       // query.where(sellingCar.sellingCarStatus.eq(SellingCarStatus.PROCESSING));   // 판매 중 인것만 표시
 
         this.getQuerydsl().applyPagination(pageable, query);
         List<SellingCar> list = query.fetch();

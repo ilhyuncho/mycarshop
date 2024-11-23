@@ -38,8 +38,7 @@ public class myInfoRestController {
     @GetMapping("/getMyPoint")
     public UserListPointHistoryResDTO<UserPointHistoryResDTO>
     getMyPoint(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
-               UserPointHistoryReqDTO userPointHistoryReqDTO,
-               Principal principal){
+               UserPointHistoryReqDTO userPointHistoryReqDTO, Principal principal){
 
         User user = userService.findUser(principal.getName());
 

@@ -444,10 +444,8 @@
         ////////////////////////////////////////////////////
         addOrderItem(formObj).then(result => {
             alert("정상적으로 주문 되었습니다")
-
             // 주문 페이지 로 이동
-            self.location = '/order/list'
-
+            pageReload('/order/list')
         }).catch(e => {
             console.log(e)
         })

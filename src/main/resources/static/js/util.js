@@ -217,11 +217,11 @@ function resetNewAlarmInfo(){
     })
 }
 
+// 고객이 차량을 경매 또는
 function checkInputValueAndSendToServer(formObj){
 
     //console.log('formObj : ' + formObj)
     if (formObj.offerType === "auctionRequest") {
-
         if(formObj.auctionStartPrice > formObj.requestPrice){
             alert('경매 시작가 보다 높은 가격을 응찰해야 합니다!')
             return
@@ -231,7 +231,6 @@ function checkInputValueAndSendToServer(formObj){
         Object.assign(formObj, {phoneNumber: phoneNumber.value, consultText: modalConsultText.value})
     }
     else if(formObj.offerType === 'proposeChangePrice'){
-
         if(formObj.userCurrentPrice >= formObj.requestPrice){
             alert('기존 가격과 같습니다')
             return
@@ -239,7 +238,6 @@ function checkInputValueAndSendToServer(formObj){
     }
     else if(formObj.offerType === 'auctionCancel'
         || formObj.offerType === 'consultCancel' ) {
-
     }
     else{
         alert('서버 오류 입니다~!')
@@ -251,7 +249,6 @@ function checkInputValueAndSendToServer(formObj){
 
 // 서버로 요청 전송
 function sendRequestToServer(formObj) {
-
     // 고객 요청 전송 ( 경매 신청, 가격 수정, 취소... )
     requestBuyingCar(formObj).then(result => {  // axios 호출
         // 각 페이지별 결과 처리
@@ -267,7 +264,6 @@ function sendRequestToServer(formObj) {
 
 // 화면 재 갱신
 function pageReload(url){
-
     self.location = url
 }
 

@@ -2,10 +2,7 @@ package com.carshop.mycarshop.domain.buyingCar;
 
 import com.carshop.mycarshop.domain.sellingCar.SellingCar;
 import com.carshop.mycarshop.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="buyingCars")
+@ToString(exclude = "user")
 public class BuyingCar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

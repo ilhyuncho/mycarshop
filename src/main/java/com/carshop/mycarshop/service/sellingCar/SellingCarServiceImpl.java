@@ -76,7 +76,7 @@ public class SellingCarServiceImpl implements SellingCarService {
         // 검색 기록 save ( 임시로 이 위치 - 위 if문으로 들어가야 함 )
         userSearchCarHistoryService.insertSearchCarHistory(user, sellingCar);
 
-        log.error(sellingCarResDTO);
+        log.error("getSellingCarInfo() sellingCarResDTO : " + sellingCarResDTO);
 
         return sellingCarResDTO;
     }
@@ -92,7 +92,7 @@ public class SellingCarServiceImpl implements SellingCarService {
 //        Page<SellingCar> sellingCars =
 //                sellingCarRepository.findAllBySellingCarStatus(SellingCarStatus.PROCESSING, pageable);      // 진행 중인 것만 get
 
-        // 검색 기능 추가 버전 ( querydsl
+        // 검색 기능 추가 버전 ( querydsl )
         Page<SellingCar> sellingCars = sellingCarRepository.searchAll(types, keyword, typeExts, pageable);
 
         List<SellingCarResDTO> listSellingCarResDTO = sellingCars.getContent().stream()

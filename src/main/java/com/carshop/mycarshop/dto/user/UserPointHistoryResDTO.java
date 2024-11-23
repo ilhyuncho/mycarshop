@@ -1,6 +1,7 @@
 package com.carshop.mycarshop.dto.user;
 
 
+import com.carshop.mycarshop.domain.user.PointType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 public class UserPointHistoryResDTO {
 
     private String situationName;
+    private PointType pointType;
     private Integer pointValue;
     private LocalDate regDate;
 

@@ -104,7 +104,7 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("regDate");
 
-        Page<UserPointHistory> result = userPointHistoryRepository.searchUserPointHistory(types, keyword, pageable, userPointHistoryReqDTO);
+        Page<UserPointHistory> result = userPointHistoryRepository.searchUserPointHistory(types, keyword, pageable, user, userPointHistoryReqDTO);
 
         // Page는 map을 지원해서 내부 데이터를 다른것으로 변경 가능
         List<UserPointHistoryResDTO> dtoList = result.map(UserPointHistoryServiceImpl::entityToDTO)
@@ -148,7 +148,9 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
 
         return UserPointHistoryResDTO.builder()
                 .situationName(userPointHistory.getPointSituation().getTypeName())
-                .pointValue(userPointHistory.getPointValue())
+                .pointType(userPointHistory.getPointType())
+                .pointValue(userPointHistory.getPointType() == PointType.CONSUME ?
+                        userPointHistory.getPointValue() * -1 : userPointHistory.getPointValue())
                 .regDate(userPointHistory.getRegDate().toLocalDate())
                 .build();
     }

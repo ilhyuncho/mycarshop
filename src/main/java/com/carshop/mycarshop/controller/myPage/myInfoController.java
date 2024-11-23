@@ -45,7 +45,7 @@ public class myInfoController {
     @ApiOperation(value = "[나의 포인트 정보] 페이지 이동", notes = "")
     @GetMapping("/myPoint")
     public String getMyPoint(Principal principal){
-        return "myPage/myPoint";
+        return "myPage/mPoint";
     }
 
     @ApiOperation(value = "[배송 주소록 관리] 페이지 이동", notes = "")

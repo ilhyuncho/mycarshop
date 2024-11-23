@@ -85,4 +85,10 @@ public class Util {
                 .collect(Collectors.toList());
     }
 
+    public static boolean isTimeOver(LocalDateTime targetDateTime){
+        LocalDateTime now = LocalDateTime.now();
+        return targetDateTime.isBefore(now);
+    }
+
+
 }

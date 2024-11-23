@@ -133,8 +133,8 @@
   // 포인트 조회 요청 처리
   document.querySelector(".searchBtn").addEventListener("click", function(e){
     getMyPointInfo()
-
   }, false)
+
   function getMyPointInfo(){
 
     const formObj = {
@@ -161,6 +161,7 @@
 
     if(dtoList && dtoList.length > 0) {
       dtoList.forEach(function (e, i) {
+
         const arr = []
         makePointData(arr, e)
 
@@ -169,6 +170,8 @@
         for (let j = 0, k = 0; j < arr.length; j++){
           let newCell = newRow.insertCell(j);
           let newText = document.createTextNode(arr[j]);
+         // newRow.style.textAlign="justify"; // 중앙 정렬??
+         // newRow.style.textAlign="center"; // 가운데 정렬
           newCell.appendChild(newText);
         }
 
@@ -177,7 +180,7 @@
   }
   function makePointData(arr, dtoData){
     arr[0] = dtoData.situationName
-    arr[1] = dtoData.pointValue
+    arr[1] = dtoData.pointValue + ' ' + (dtoData.pointType.toString() === 'GAIN' ? '획득' : '차감')
     arr[2] = dtoData.regDate
   }
 

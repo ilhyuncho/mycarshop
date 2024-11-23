@@ -183,7 +183,6 @@
   let currentUser = 'guest'
   const principal = [[${#authentication.principal}]]
 
-  alert('principal username : ' + principal.username)
   currentUser = principal.username
 
 
@@ -204,7 +203,6 @@
   // 페이지 번호 클릭
   let page = 1
   let size = 5
-
 
   // 최초 페이지 로딩
   pageInit([[${#authorization.expression('isAuthenticated()')}]])
@@ -307,19 +305,14 @@
   }
 
   function initOfferBtn(data) {
-
-    console.log('initOfferBtn : ' + data)
-
     if(data === 'hidden'){
-      purchaseOfferBtn.setAttribute("hidden", true)
+      purchaseOfferBtn.setAttribute("hidden", true.toString())
     }
     else if(data === 'new'){
-      console.log('btn-> new')
       purchaseOfferBtn.innerHTML = '가격 제안'
       purchaseOfferBtn.setAttribute("btn-type", "new")
     }
     else{
-      console.log('btn-> modify')
       purchaseOfferBtn.innerHTML = '가격 수정'
       purchaseOfferBtn.setAttribute("btn-type", "modify")
     }
@@ -346,8 +339,9 @@
       printListAuction(data.dtoList)                // 목록 처리
       printPages(data, buyingCarListPaging)         // 페이지 처리
 
-      // 현재 최고 응찰 가격 지정
+      // 현재 최고 응찰 가격 set
       highProposalPrice.value = makePriceCurrency(data.highProposalPrice)
+      // 경매 최초 시작 가격 set
       auctionStartPrice.value = makePriceCurrency(data.requiredPrice)
     }).catch(e=>{
       console.error(e)

@@ -86,7 +86,7 @@ public class Car extends BaseEntity {
                 .sellingCarStatus(SellingCarStatus.PROCESSING)
                 .sellType(sellType)
                 .RequiredPrice(sellingCarRegDTO.getRequiredPrice())
-                // 판매 종료에 따라 종료 날짜 설정  ( 경매 : 일주일, 상담 : 1년 )
+                // 판매 종류에 따라 종료 날짜 설정  ( 경매 : 일주일, 상담 : 1년 )
                 .expiredDate(sellType.equals(SellType.SELL_AUCTION) ? LocalDateTime.now().plusWeeks(1) : LocalDateTime.now().plusYears(1))
                 .likeCount(0)
                 .viewCount(0)

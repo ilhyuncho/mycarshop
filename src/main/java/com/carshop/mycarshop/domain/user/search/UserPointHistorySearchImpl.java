@@ -23,18 +23,14 @@ public class UserPointHistorySearchImpl extends QuerydslRepositorySupport implem
 
     @Override
     public Page<UserPointHistory> searchUserPointHistory(String[] types, String keyword, Pageable pageable,
-                                                         UserPointHistoryReqDTO userPointHistoryReqDTO ) {
+                                                         User user, UserPointHistoryReqDTO userPointHistoryReqDTO ) {
 
         LocalDateTime searchStartTime = Util.convertStringToLocalDateTime(userPointHistoryReqDTO.getFromDay());
         LocalDateTime searchEndTime = Util.convertStringToLocalDateTime(userPointHistoryReqDTO.getToDay()).plusDays(1);
 
-        log.error("searchStartTime : " + searchStartTime);
-        log.error("searchEndTime : " + searchEndTime);
-
-
         QUserPointHistory userPointHistory = QUserPointHistory.userPointHistory;
         JPQLQuery<UserPointHistory> query = from(userPointHistory);
-
+        query.where(userPointHistory.user.userId.eq(user.getUserId()));
         query.where(userPointHistory.regDate.after(searchStartTime).and(userPointHistory.regDate.before(searchEndTime)));
 
         // 포인트 소비 or 획득 or 모두

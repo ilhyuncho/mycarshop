@@ -17,7 +17,7 @@
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
   <!-- Navbar Brand-->
-  <a class="navbar-brand ps-3" th:href="|@{/}|">Start Bootstrap</a>
+  <a class="navbar-brand ps-3" th:href="|@{/}|">Car Manage & Shop</a>
   <!-- Sidebar Toggle-->
   <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
   <!-- Navbar Search-->
@@ -29,8 +29,10 @@
       <button class="btn btn-primary" id="btnNavbarSearch"
               type="submit"><i class="fas fa-search"></i></button>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <div sec:authorize="isAuthenticated()">
-        안녕하세요
+      <div sec:authorize="isAuthenticated()" style="margin-left:5%;margin-right:5%">
+        <p class="example text-warning">
+          <span th:text="|안녕하세요.. ${#authentication.principal.username} 님|"></span>
+        </p>
       </div>
 
       <!-- 메인 화면 알림 표시-->
@@ -42,6 +44,9 @@
         </a>
       </div>
     </div>
+
+
+
   </form>
   <!-- Navbar-->
   <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">

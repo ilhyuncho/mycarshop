@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface UserPointHistorySearch {
-    Page<UserPointHistory> searchUserPointHistory(String[] types, String keyword, Pageable pageable, UserPointHistoryReqDTO userPointHistoryReqDTO);
+    Page<UserPointHistory> searchUserPointHistory(String[] types, String keyword, Pageable pageable, User user, UserPointHistoryReqDTO userPointHistoryReqDTO);
     List<UserPointHistory> getListPointHistoryBySituationType(User user, PointSituation pointSituation, String checkValue);
 
 
