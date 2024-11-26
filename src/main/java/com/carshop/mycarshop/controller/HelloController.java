@@ -41,10 +41,14 @@ public class HelloController {
         HttpSession session = request.getSession();
        // session.setAttribute("greeting", "환영합니다");
         log.error("mainPage getCookies ");
-        Arrays.stream(request.getCookies()).forEach(a->{
-            log.error("Cookie = " + "[" + a.getName() + "]" + "value: " + a.getValue());
 
-        });
+        if(request.getCookies().length > 0){
+            Arrays.stream(request.getCookies()).forEach(a->{
+                log.error("Cookie = " + "[" + a.getName() + "]" + "value: " + a.getValue());
+
+            });
+        }
+
 
         return "index";
     }
