@@ -3,7 +3,7 @@ package com.carshop.mycarshop.domain.sellingCar.search;
 import com.carshop.mycarshop.domain.sellingCar.QSellingCar;
 import com.carshop.mycarshop.domain.sellingCar.SellType;
 import com.carshop.mycarshop.domain.sellingCar.SellingCar;
-import com.carshop.mycarshop.domain.sellingCar.SellingCarStatus;
+import com.carshop.mycarshop.dto.PageRequestExtDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;
@@ -22,7 +22,13 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
 
 
     @Override
-    public Page<SellingCar> searchAll(String[] types, String keyword, String[] typeExts, Pageable pageable) {
+    public Page<SellingCar> searchAll(Pageable pageable, PageRequestExtDTO pageRequestExtDT) {
+
+        String[] types = pageRequestExtDT.getTypes();
+        String[] typeExts = pageRequestExtDT.getTypeExts();
+        String keyword = pageRequestExtDT.getKeyword();
+        int carYearsMin = pageRequestExtDT.getCarYearsMin();
+        int carYearsMax = pageRequestExtDT.getCarYearsMax();
 
         QSellingCar sellingCar = QSellingCar.sellingCar;
         JPQLQuery<SellingCar> query = from(sellingCar);
@@ -55,6 +61,9 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
                 }
             }
             query.where(booleanBuilder);
+        }
+        if(carYearsMin > 0 && carYearsMax > 0){
+            query.where(sellingCar.car.carYears.between(carYearsMin, carYearsMax));                            // 선택 한 연식
         }
 
        // query.where(sellingCar.sellingCarStatus.eq(SellingCarStatus.PROCESSING));   // 판매 중 인것만 표시

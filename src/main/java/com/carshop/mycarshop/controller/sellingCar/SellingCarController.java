@@ -41,7 +41,7 @@ public class SellingCarController {
 
         PageResponseDTO<SellingCarResDTO> listSellingCar = sellingCarService.getListSellingCar(pageRequestExtDT);
 
-        log.error(listSellingCar);
+        log.error("listSellingCar : " + listSellingCar);
 
         model.addAttribute("responseDTO", listSellingCar);
 

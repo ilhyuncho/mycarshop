@@ -7,7 +7,7 @@
         <Property name="LOG_PATTERN">
             <!--            %highlight{%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M() @%L - %msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue}-->
 
-            %d{HH:mm:ss.SSS} [%thread] %highlight{%-5level}{FATAL=red blink, ERROR=red} %logger{36}.%M() @%L - %highlight{%msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=green bold, TRACE=blue}
+            %d{HH:mm:ss.SSS} [%thread] %highlight{%-5level}{FATAL=red blink, ERROR=red} @%L - %highlight{%msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=green bold, TRACE=blue}
         </Property>
         <Property name="LOG_ASPECT_PATTERN">
             %d{HH:mm:ss.SSS} [%thread] %highlight{%-5level}{FATAL=red blink, ERROR=red} @%L - %highlight{%msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=green bold, TRACE=blue}

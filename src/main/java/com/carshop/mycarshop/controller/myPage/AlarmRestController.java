@@ -50,14 +50,8 @@ public class AlarmRestController {
     @ApiOperation(value = "새로운 알림이 있는지 조회", notes = "")
     @GetMapping("/new")
     public boolean getNewAlarm(Principal principal){
-
-        log.error("alarm/new call!!!!!!!!!start!!!!!!!!!!!!!!!!!!!!!!!!!");
         User user = userService.findUser(principal.getName());
-        log.error("alarm/new call!!!!!!!!!!!end!!!!!!!!!!!!!!!!!!!!!!!");
-
         return userAlarmService.isNewAlarm(user);
     }
-
-
 
 }

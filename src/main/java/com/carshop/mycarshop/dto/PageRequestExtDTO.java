@@ -16,6 +16,8 @@ public class PageRequestExtDTO extends PageRequestDTO{
     }
 
     private String typeExt;        // 검색의 종류 a(경매), c(상담)
+    private int carYearsMin;          // 차 검색 최소 연식
+    private int carYearsMax;          // 차 검색 최대 연식
     public String[] getTypeExts(){
         if(typeExt == null || typeExt.isEmpty()){
             return null;

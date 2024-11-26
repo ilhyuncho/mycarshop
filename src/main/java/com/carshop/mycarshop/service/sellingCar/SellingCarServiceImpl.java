@@ -84,16 +84,13 @@ public class SellingCarServiceImpl implements SellingCarService {
     @Override
     public PageResponseDTO<SellingCarResDTO> getListSellingCar(PageRequestExtDTO pageRequestExtDT) {
 
-        String[] types = pageRequestExtDT.getTypes();
-        String[] typeExts = pageRequestExtDT.getTypeExts();
-        String keyword = pageRequestExtDT.getKeyword();
         Pageable pageable = pageRequestExtDT.getPageable("regDate");
 
 //        Page<SellingCar> sellingCars =
 //                sellingCarRepository.findAllBySellingCarStatus(SellingCarStatus.PROCESSING, pageable);      // 진행 중인 것만 get
 
         // 검색 기능 추가 버전 ( querydsl )
-        Page<SellingCar> sellingCars = sellingCarRepository.searchAll(types, keyword, typeExts, pageable);
+        Page<SellingCar> sellingCars = sellingCarRepository.searchAll(pageable, pageRequestExtDT);
 
         List<SellingCarResDTO> listSellingCarResDTO = sellingCars.getContent().stream()
                 .map(SellingCarServiceImpl::entityToDTO)

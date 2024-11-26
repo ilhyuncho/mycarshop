@@ -21,45 +21,86 @@
 
           <form action="/sellingCar/list" method="get" id="f2">
 
-            <!-- 검색 화면 추가 start-->
             <div  class="row mt-3">
-
               <div class="col">
                 <input type="hidden" name="size" th:value="${pageRequestDto.size}">
-                <div class="input-group">
 
-
-                  <div class="input-group-prepend">
-                    <select class="form-select" name="typeExt">
+                <div class="input-group w-25">
+                  <label class="input-group-text" for="typeSelect">판매 타입</label>
+                    <select class="form-select" id="typeSelect" name="typeExt" >
                       <option value="">-----</option>
                       <option value="a" th:selected="${pageRequestDto.typeExt == 'a'}">경매</option>
                       <option value="c" th:selected="${pageRequestDto.typeExt == 'c'}">상담</option>
                       <option value="ac" th:selected="${pageRequestDto.typeExt == 'ac'}">경매,상담</option>
                     </select>
+                </div>
+                <div class="input-group w-50">
+                  <label class="input-group-text" for="yearsMinSelect">
+                    <a class= "updateAddress"  href="#" onclick="clickSelectBoxCarYears()">연식</a>
+                  </label>
+                  <div class="carYearsMinDiv" style="display: none;" >
+                    <input type="hidden" class="form-control isCarYearsSelect" th:value="hidden">
+                      <label style="width: 100px" for="yearsMinSelect">
+                        <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                id="yearsMinSelect" name="carYearsMin"
+                                th:with="endYear= ${#calendars.format(#calendars.createNow(),'yyyy')}, startYear=2000">
+                          <option selected th:value="${startYear}">최소</option>
+                          <option th:each="i, stat: ${#numbers.sequence( startYear, endYear)}" th:value="${i}"
+                                  th:selected="${pageRequestDto.carYearsMin == i}">[[${i}]]년</option>
+                        </select>
+                      </label>
+
+                      <span class="selectTilde">~</span>
+
+                      <label style="width: 100px" for="yearsMaxSelect">
+                        <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                id="yearsMaxSelect" name="carYearsMax"
+                                th:with="endYear= ${#calendars.format(#calendars.createNow(),'yyyy')}, startYear=2000">
+                          <option selected th:value="${endYear}">최대</option>
+                          <option th:each="i, stat: ${#numbers.sequence( startYear, endYear)}" th:value="${i}"
+                                  th:selected="${pageRequestDto.carYearsMax == i}">[[${i}]]년</option>
+                        </select>
+                      </label>
                   </div>
-                  <div class="input-group-prepend">
+                </div>
+
+                <div class="input-group w-50">
+                  <label class="input-group-text" for="typeSelect">차량 종류</label>
+                  <select class="form-select carGroup1" id="typeSelect1" name="typeEx1" >
+                    <option value="">-----</option>
+                    <option value="a" th:selected="${pageRequestDto.typeExt == 'a'}">국산</option>
+                    <option value="c" th:selected="${pageRequestDto.typeExt == 'c'}">수입</option>
+                  </select>
+                  <select class="form-select carGroup2" id="typeSelect2" name="typeExt1" >
+
+                  </select>
+                  <select class="form-select carGroup3" id="typeSelect3" name="typeExt1" >
+
+                  </select>
+                </div>
+
+
+
+
+                <div class="input-group w-25">
+                  <label>
                     <select class="form-select" name="type">
                       <option value="">-----</option>
-                      <option value="m" th:selected="${pageRequestDto.type == 'm'}">모델명</option>
-                      <option value="y" th:selected="${pageRequestDto.type == 'y'}">연식</option>
-                      <option value="my" th:selected="${pageRequestDto.type == 'my'}">모델명,연식</option>
+                      <option value="m" selected th:selected="${pageRequestDto.type == 'm'}">모델명</option>
+<!--                      <option value="y" th:selected="${pageRequestDto.type == 'y'}">연식</option>-->
+<!--                      <option value="my" th:selected="${pageRequestDto.type == 'my'}">모델명,연식</option>-->
                     </select>
-                  </div>
+                  </label>
                   <input type="text" class="form-control" name="keyword" th:value="${pageRequestDto.keyword}">
-
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary searchBtn" type="submit">Search</button>
-                    <button class="btn btn-outline-secondary clearBtn" type="button">Clear</button>
-                  </div>
-
-
-
                 </div>
+
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary searchBtn" type="submit">Search</button>
+                  <button class="btn btn-outline-secondary clearBtn" type="button">Clear</button>
+                </div>
+
               </div>
-
             </div>
-            <!-- 검색 화면 추가 end-->
-
 
             <table class="table">
               <thead>
@@ -137,9 +178,59 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
+  const carYearsMinDiv = document.querySelector(".carYearsMinDiv")
+  const isCarYearsSelect = document.querySelector(".isCarYearsSelect")
+
+  const carGroup1 = document.querySelector(".carGroup1")
+  const carGroup2 = document.querySelector(".carGroup2")
+  const carGroup3 = document.querySelector(".carGroup3")
 
   // 최초 페이지 로딩
   pageInit([[${#authorization.expression('isAuthenticated()')}]])
+
+  const subOptions= {
+    국산 : ['현대', '기아', 'KGM'],
+    수입 : ['벤츠', 'BMW', '테슬라']
+  }
+
+  carGroup1.onchange = function(){
+
+    const mainOption = carGroup1.options[carGroup1.selectedIndex].innerText;
+
+    switch(mainOption){
+      case '국산':
+        var subOption = subOptions.국산;
+        break;
+      case '수입':
+        var subOption = subOptions.수입;
+        break;
+    }
+
+
+     carGroup2.options.length = 0;
+
+    for(var i = 0 ; i < subOption.length; i++){
+      var option = document.createElement('option')
+      option.innerText = subOption[i];
+      carGroup2.append(option);
+    }
+
+
+  }
+
+
+
+
+  function clickSelectBoxCarYears(){
+    if( isCarYearsSelect.getAttribute("value") === 'hidden'){
+      carYearsMinDiv.setAttribute("style","display:block");
+      isCarYearsSelect.setAttribute("value", "show");
+    }
+    else{
+      carYearsMinDiv.setAttribute("style","display:none");
+      isCarYearsSelect.setAttribute("value", "hidden");
+    }
+  }
 
   document.querySelector(".pagination").addEventListener("click", function(e){
     e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
@@ -165,6 +256,5 @@
     self.location = '/sellingCar/list' // 자바스크립트로 다른 url 호출
 
   },false)
-
 
 </script>
