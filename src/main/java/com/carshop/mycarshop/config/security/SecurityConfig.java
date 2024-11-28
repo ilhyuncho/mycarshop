@@ -50,6 +50,7 @@ public class SecurityConfig {
                 .antMatchers("/notification/**").permitAll()
                 .antMatchers("/review/**").permitAll()
                 .antMatchers("/verify/email").permitAll()
+                .antMatchers("/reference/listRefCarType").permitAll()
 //                .antMatchers("/myPage/**").permitAll()
                 .anyRequest().authenticated();
 

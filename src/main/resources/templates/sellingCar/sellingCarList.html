@@ -64,23 +64,23 @@
                   </div>
                 </div>
 
-                <div class="input-group w-50">
+                <div class="input-group ">
                   <label class="input-group-text" for="typeSelect">차량 종류</label>
                   <select class="form-select carGroup1" id="typeSelect1" name="typeEx1" >
-                    <option value="">-----</option>
-                    <option value="a" th:selected="${pageRequestDto.typeExt == 'a'}">국산</option>
-                    <option value="c" th:selected="${pageRequestDto.typeExt == 'c'}">수입</option>
+                    <option value="">제조사</option>
+<!--                    <option value="a" th:selected="${pageRequestDto.typeExt == 'a'}">국산</option>-->
+<!--                    <option value="c" th:selected="${pageRequestDto.typeExt == 'c'}">수입</option>-->
                   </select>
                   <select class="form-select carGroup2" id="typeSelect2" name="typeExt1" >
-
+                    <option value="">-----</option>
                   </select>
                   <select class="form-select carGroup3" id="typeSelect3" name="typeExt1" >
-
+                    <option value="">-----</option>
+                  </select>
+                  <select class="form-select carGroup4" id="typeSelect4" name="typeExt1" >
+                    <option value="">-----</option>
                   </select>
                 </div>
-
-
-
 
                 <div class="input-group w-25">
                   <label>
@@ -106,7 +106,7 @@
               <thead>
               <tr>
                 <th scope="col">차량 항목</th>
-                <th scope="col">모델명</th>
+                <th scope="col">모델명</th>+
                 <th scope="col">연식</th>
                 <th scope="col">희망 가격</th>
                 <th scope="col">판매 종료 시간</th>
@@ -173,6 +173,8 @@
   <script src="/js/myInfo.js"></script>
   <script src="/js/util.js"></script>
   <script src="/js/utilViewHtml.js"></script>
+  <script src="/js/buyingCar.js"></script>
+  <script src="/js/reference.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -184,38 +186,129 @@
   const carGroup1 = document.querySelector(".carGroup1")
   const carGroup2 = document.querySelector(".carGroup2")
   const carGroup3 = document.querySelector(".carGroup3")
+  const carGroup4 = document.querySelector(".carGroup4")
 
   // 최초 페이지 로딩
   pageInit([[${#authorization.expression('isAuthenticated()')}]])
 
-  const subOptions= {
-    국산 : ['현대', '기아', 'KGM'],
-    수입 : ['벤츠', 'BMW', '테슬라']
+  // 차 선택 종류 list 가져오기
+  setListRefCarType(0, 0)
+
+
+  // 경매 현황 가져오기
+  function setListRefCarType(groupNumber, parentTypeId){
+
+    console.log('setListRefCarType : groupNumber : ' + groupNumber + ',parentTypeId: ' + parentTypeId)
+
+    getListRefCarType({groupNumber, parentTypeId}).then(data=> {
+
+      console.log(data)
+
+      printListRefCarType(groupNumber, data)                // 목록 처리
+
+
+    }).catch(e=>{
+      console.error(e)
+    })
   }
 
+  // const subOptions= {
+  //   국산 : ['현대', '기아', 'KGM'],
+  //   수입 : ['벤츠', 'BMW', '테슬라']
+  // }
+
   carGroup1.onchange = function(){
-
     const mainOption = carGroup1.options[carGroup1.selectedIndex].innerText;
+    const menuTypeId = carGroup1.options[carGroup1.selectedIndex].getAttribute('menuTypeId');
 
-    switch(mainOption){
-      case '국산':
-        var subOption = subOptions.국산;
-        break;
-      case '수입':
-        var subOption = subOptions.수입;
-        break;
-    }
+    console.log('carGroup1 change : ' + mainOption)
 
+    if(mainOption === '제조사'){
+      carGroup2.options.length = 0;
+      carGroup3.options.length = 0;
 
-     carGroup2.options.length = 0;
-
-    for(var i = 0 ; i < subOption.length; i++){
       var option = document.createElement('option')
-      option.innerText = subOption[i];
+      option.innerText = '-----'
       carGroup2.append(option);
+      var option1 = document.createElement('option')
+      option1.innerText = '-----'
+      option1.selected
+
+      carGroup3.append(option1);
+    }
+    else{
+      setListRefCarType(1, menuTypeId)
     }
 
+  }
 
+  carGroup2.onchange = function(){
+    const mainOption = carGroup2.options[carGroup2.selectedIndex].innerText;
+    const menuTypeId = carGroup2.options[carGroup2.selectedIndex].getAttribute('menuTypeId');
+
+    console.log('onchange() menuTypeId : ' + menuTypeId)
+    setListRefCarType(2, menuTypeId)
+  }
+
+  carGroup3.onchange = function(){
+    const mainOption = carGroup3.options[carGroup3.selectedIndex].innerText;
+    const menuTypeId = carGroup3.options[carGroup3.selectedIndex].getAttribute('menuTypeId');
+
+    console.log('onchange() menuTypeId : ' + menuTypeId)
+    setListRefCarType(3, menuTypeId)
+  }
+
+
+  function printListRefCarType(groupNumber, dtoList){
+
+    if(dtoList && dtoList.length > 0){
+      if(groupNumber === 0){
+        carGroup1.options.length = 1;
+        carGroup2.options.length = 1;
+        carGroup3.options.length = 1;
+
+        for(const dto of dtoList){
+          var option = document.createElement('option')
+          option.innerText = dto.typeName
+          option.setAttribute('menuTypeId', dto.typeId)
+          carGroup1.append(option);
+        }
+      }
+
+      if(groupNumber === 1){
+        carGroup2.options.length = 1;
+        carGroup3.options.length = 1;
+
+        for(const dto of dtoList){
+          var option = document.createElement('option')
+          option.innerText = dto.typeName
+          option.setAttribute('menuTypeId', dto.typeId)
+          carGroup2.append(option);
+        }
+      }
+      else if(groupNumber === 2){
+        carGroup3.options.length = 1;
+        carGroup4.options.length = 1;
+
+        for(const dto of dtoList){
+          var option = document.createElement('option')
+          option.innerText = dto.typeName
+          option.setAttribute('menuTypeId', dto.typeId)
+          carGroup3.append(option);
+        }
+      }
+      else if(groupNumber === 3){
+        carGroup4.options.length = 1;
+
+        for(const dto of dtoList){
+          var option = document.createElement('option')
+          option.innerText = dto.typeName
+          option.setAttribute('menuTypeId', dto.typeId)
+          carGroup4.append(option);
+        }
+      }
+
+    }
   }
 
 
