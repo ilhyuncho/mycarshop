@@ -1,7 +1,10 @@
-package com.carshop.mycarshop.domain.car;
+package com.carshop.mycarshop.domain.reference;
 
 import com.carshop.mycarshop.domain.common.BaseEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 

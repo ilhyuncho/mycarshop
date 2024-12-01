@@ -5,6 +5,7 @@ import com.carshop.mycarshop.domain.user.User;
 import com.carshop.mycarshop.dto.car.CarInfoReqDTO;
 import com.carshop.mycarshop.dto.car.CarKmUpdateReqDTO;
 import com.carshop.mycarshop.dto.car.CarRegisterReqDTO;
+import com.carshop.mycarshop.dto.reference.RefCarSampleDTO;
 import com.carshop.mycarshop.service.car.UserCarService;
 import com.carshop.mycarshop.service.reference.RefCarSampleService;
 import com.carshop.mycarshop.service.user.UserService;
@@ -52,13 +53,11 @@ public class MyPageRestController {
 
     @ApiOperation(value = "나의 차량 조회", notes = "")
     @GetMapping("/findMyCar")
-    public RefCarSample findMyCar(String carNumber, Principal principal){
+    public RefCarSampleDTO findMyCar(String carNumber, Principal principal){
+        RefCarSampleDTO refCarSampleDTO = refCarSampleService.findMyCar(carNumber);
 
-        log.error("carNumber : " + carNumber);
-
-        RefCarSample myCar = refCarSampleService.findMyCar(carNumber);
-
-        return myCar;
+        log.error("return : " + refCarSampleDTO);
+        return refCarSampleDTO;
     }
 
     @ApiOperation(value = "차 등록 (post)", notes = "")

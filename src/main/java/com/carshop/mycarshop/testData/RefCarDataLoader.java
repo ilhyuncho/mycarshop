@@ -1,12 +1,13 @@
 package com.carshop.mycarshop.testData;
 
 import com.carshop.mycarshop.common.util.Util;
-import com.carshop.mycarshop.domain.reference.RefCarSample;
-import com.carshop.mycarshop.domain.reference.RefCarSampleRepository;
+import com.carshop.mycarshop.domain.reference.*;
+import com.carshop.mycarshop.testData.builder.RefCarInfoBuilder;
+import com.carshop.mycarshop.testData.event.SampleMemberCreateEvent;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -16,17 +17,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Component
 @Log4j2
 @Profile({"aws","test"})    // 이 클래스는 프로파일이 활성화될 때만 로드 된다.
 @AllArgsConstructor
-public class RefCarSampleDataLoader {
+public class RefCarDataLoader {
+
+    private final RefCarInfoRepository refCarInfoRepository;
 
     private final RefCarSampleRepository refCarSampleRepository;
 
+    private final ApplicationEventPublisher eventPublisher;
 
     static String[] hangul = {"가", "강", "건", "경", "고", "관", "광", "구", "규", "근", "기", "길", "나", "남", "노", "누", "다",
             "단", "달", "담", "대", "덕", "도", "동", "두", "라", "래", "로", "루", "리", "마", "만", "명", "무", "문", "미", "민", "바", "박",
@@ -39,15 +42,42 @@ public class RefCarSampleDataLoader {
             "열", "웅", "분", "변", "양", "출", "타", "흥", "겸", "곤", "번", "식", "란", "더", "손", "술", "훔", "반", "빈", "실", "직", "흠",
             "흔", "악", "람", "뜸", "권", "복", "심", "헌", "엽", "학", "개", "롱", "평", "늘", "늬", "랑", "얀", "향"};
 
-
     @EventListener(ApplicationReadyEvent.class) // 애플리케이션 시작 단계가 완료되면 발생한다.
+    public void loadRefCarData() {
+
+        log.error("(ApplicationReadyEvent) loadRefCarData()!!!!!!!!");
+
+        RefCarInfoBuilder refCarInfoBuilder = new RefCarInfoBuilder();
+
+        List<RefCarInfo> listRefCarSample = refCarInfoRepository.findAll();
+
+        if(refCarInfoBuilder.listRefCarInfo.size() != listRefCarSample.size()){
+
+            log.error("1. RefCarInfo saveAll()~~~~~~~~~~~~~");
+            refCarInfoRepository.deleteAll();
+
+            refCarInfoRepository.saveAll(refCarInfoBuilder.listRefCarInfo);
+        }
+
+        // 차량 샘플 데이터 100개 생성
+        loadRefCarSampleData();
+
+        // 고객 샘플 데이터 n개 생성
+        SampleMemberCreateEvent sampleMemberCreateEvent = new SampleMemberCreateEvent(this, "create member", 10);
+        eventPublisher.publishEvent(sampleMemberCreateEvent);
+
+    }
+
     public void loadRefCarSampleData() {
+
+        List<RefCarInfo> listRefCarInfo = refCarInfoRepository.findAll();
 
         List<RefCarSample> listRefCarSample = refCarSampleRepository.findAll();
 
         if(listRefCarSample.size() != 100){
             refCarSampleRepository.deleteAll();
 
+            log.error("loadRefCarSampleData start");
             // 차 색상 생성
             Map<Integer, String> mapColor = Map.of(0,"흰색",
                     1, "빨강색",
@@ -57,6 +87,7 @@ public class RefCarSampleDataLoader {
                     5, "회색");
 
             // 차 정보 생성
+            //RefCarInfoBuilder carBuilder = new RefCarInfoBuilder();
             RefCarInfoBuilder carBuilder = new RefCarInfoBuilder();
 
             // 임의로 차 넘버 생성  ( Stream 활용 테스트 겸 )
@@ -71,7 +102,7 @@ public class RefCarSampleDataLoader {
                         return buf.toString();
                     })
                     //  .peek(log::error)
-                    .collect(Collectors.toList());
+                    .toList();
 
             IntStream.rangeClosed(1,100).forEach(a -> {
 
@@ -82,26 +113,37 @@ public class RefCarSampleDataLoader {
                 int randomKm = new Random().nextInt(200000) + 1000;
                 int randomColor= new Random().nextInt(mapColor.size());
 
-                int carInfoIndex = new Random().nextInt(carBuilder.carInfoList.size());
-                CarInfo car = carBuilder.carInfoList.get(carInfoIndex);
 
-                RefCarSample refCarSample = RefCarSample.builder()
-                        .carNumber(listCarNumber.get(a-1))
-                        .carModel(car.getCarModel())
-                        .carGrade(car.getCarGrade())
-                        .carOption(car.getCarOption())
-                        .company(car.getCompany())
-                        .companyNation(car.getCompanyNation())
-                        .carYear(car.getModelYear())
-                        .carKm(randomKm)
-                        .carColor(mapColor.get(randomColor))
-                        .regDate(LocalDate.of(randomYear,randomMonth,randomDate))
-                        .build();
+//                int carInfoIndex = new Random().nextInt(carBuilder.carInfoList.size());
+//                CarInfo car = carBuilder.carInfoList.get(carInfoIndex);
 
-                refCarSampleRepository.save(refCarSample);
+                if(listRefCarInfo.size() > 0 ){
+                    int carInfoIndex = new Random().nextInt(listRefCarInfo.size());
+
+                    RefCarInfo car = listRefCarInfo.get(carInfoIndex);
+
+                    int randomCarYear = new Random().nextInt(car.getCarYearStart(), car.getCarYearEnd()+1);
+
+                    RefCarSample refCarSample = RefCarSample.builder()
+                            .carNumber(listCarNumber.get(a-1))
+                            .refCarInfo(car)
+//                        .carModel(car.getCarModel())
+//                        .carGrade(car.getCarGrade())
+//                        .company(car.getCompany())
+//                        .companyNation(car.getCompanyNation())
+//                        .carOption(car.getCarOption())
+
+                            .carYear(randomCarYear)
+                            .carKm(randomKm)
+                            .carColor(mapColor.get(randomColor))
+                            .regDate(LocalDate.of(randomYear,randomMonth,randomDate))
+                            .build();
+
+                    refCarSampleRepository.save(refCarSample);
+                }
             });
 
-            log.warn("refCarSampleRepository.save success!!!!!!!!!!!!!!");
+            log.error("2. refCarSampleRepository.save success!!!!!!!!!!!!!!");
         }
     }
 }

@@ -1,4 +1,5 @@
-package com.carshop.mycarshop.testData;
+package com.carshop.mycarshop.testData.event;
+
 
 import com.carshop.mycarshop.common.util.Util;
 import com.carshop.mycarshop.domain.car.Car;
@@ -8,29 +9,24 @@ import com.carshop.mycarshop.domain.member.Member;
 import com.carshop.mycarshop.domain.member.MemberRepository;
 import com.carshop.mycarshop.domain.member.MemberRole;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarStatus;
-import com.carshop.mycarshop.domain.test.Book;
-import com.carshop.mycarshop.domain.test.BookRepository;
 import com.carshop.mycarshop.domain.user.*;
 import com.carshop.mycarshop.dto.sellingCar.SellingCarRegDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Component
 @Log4j2
 @Profile({"aws","test"})    // 이 클래스는 프로파일이 활성화될 때만 로드 된다.
 @AllArgsConstructor
-public class MemberDataLoader {
+public class SampleDataCreateEventListener implements ApplicationListener<SampleMemberCreateEvent> {
 
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
@@ -40,22 +36,19 @@ public class MemberDataLoader {
     private final UserAddressBookRepository userAddressBookRepository;
 
     private final CarRepository carRepository;
-
-
     private final PasswordEncoder passwordEncoder;
+    @Override
+    public void onApplicationEvent(SampleMemberCreateEvent event) {
 
+        int createMemberCount = event.getCreateMemberCount();
 
-    @EventListener(ApplicationReadyEvent.class) // 애플리케이션 시작 단계가 완료되면 발생한다.
-    public void loadMemberTestData(){
+        log.error("(SampleDataCreateEventListener) onApplicationEvent()!!!!!!!!");
 
-        log.error("member 테이블 데이터 !!!!!!!!!!!!!!");
-        log.error("member 테이블 데이터 !!!!!!!!!!!!!!");
-        log.error("member 테이블 데이터 !!!!!!!!!!!!!!");
-        log.error("member 테이블 데이터 !!!!!!!!!!!!!!");
-        // member 생성
-        if(memberRepository.count() == 0){
-            log.error("member 테이블 데이터 생성!!!!!!!!!!!!!!");
-            IntStream.rangeClosed(1, 10).forEach(i -> {
+        if(memberRepository.count() == 0 && userRepository.count() == 0){
+            log.error("member, user데이터 생성!!!!!!!!!!!!!!");
+
+            // member 생성
+            IntStream.rangeClosed(1, createMemberCount).forEach(i -> {
 
                 Member member = Member.builder()
                         .memberId("member" + i)
@@ -70,11 +63,7 @@ public class MemberDataLoader {
                 }
                 memberRepository.save(member);
             });
-        }
 
-        // 계정 생성
-        if(userRepository.count() ==0){
-            log.error("user 테이블 데이터 생성!!!!!!!!!!!!!!");
             // 참조 테이블 먼저 삭제
             //userPointHistoryRepository.deleteAll();
 
@@ -86,10 +75,10 @@ public class MemberDataLoader {
                         return buf.toString();
                     })
                     .peek(log::error)
-                    .collect(Collectors.toList());
+                    .toList();
 
             // User 생성
-            IntStream.rangeClosed(1, 10).forEach(i -> {
+            IntStream.rangeClosed(1, createMemberCount).forEach(i -> {
 
                 City city = new City(listZipcode.get(0), "부천시", "대한민국");
                 Address address = Address.builder()
@@ -128,7 +117,7 @@ public class MemberDataLoader {
                         .isActive(true)
                         .build();
                 userAddressBookRepository.save(userAddressBook);
-                
+
                 // 알림 추가
                 UserAlarm userAlarm = UserAlarm.builder()
                         .user(user)
@@ -194,7 +183,7 @@ public class MemberDataLoader {
                 }
 
             });
-        }
 
+        }
     }
 }

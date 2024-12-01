@@ -23,7 +23,7 @@ public class BookDataLoader {
     @EventListener(ApplicationReadyEvent.class) // 애플리케이션 시작 단계가 완료되면 발생한다.
     public void loadBookTestData(){
 
-        log.error("loadBookTestData()!!!!!!!!");
+        log.error("(ApplicationReadyEvent) loadBookTestData()!!!!!!!!");
 
         bookRepository.deleteAll();
 

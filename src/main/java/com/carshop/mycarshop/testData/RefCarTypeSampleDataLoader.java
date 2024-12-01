@@ -1,7 +1,8 @@
 package com.carshop.mycarshop.testData;
 
-import com.carshop.mycarshop.domain.car.RefCarType;
-import com.carshop.mycarshop.domain.car.RefCarTypeRepository;
+import com.carshop.mycarshop.domain.reference.RefCarType;
+import com.carshop.mycarshop.domain.reference.RefCarTypeRepository;
+import com.carshop.mycarshop.testData.builder.RefCarTypeInfoBuilder;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -19,21 +20,17 @@ public class RefCarTypeSampleDataLoader {
 
     private final RefCarTypeRepository refCarTypeRepository;
 
-
-
     @EventListener(ApplicationReadyEvent.class) // 애플리케이션 시작 단계가 완료되면 발생한다.
     public void loadRefCarTypeSampleData() {
-
+        log.error("(ApplicationReadyEvent) loadRefCarTypeSampleData()!!!!!!!!");
         RefCarTypeInfoBuilder refCarTypeInfoBuilder = new RefCarTypeInfoBuilder();
 
         List<RefCarType> listRefCarSample = refCarTypeRepository.findAll();
 
         if(refCarTypeInfoBuilder.listRefCarType.size() != listRefCarSample.size()){
-
-            log.error("RefCarTypeSampleData saveAll()~~~~~~~~~~~~~");
             refCarTypeRepository.deleteAll();
-
             refCarTypeRepository.saveAll(refCarTypeInfoBuilder.listRefCarType);
+            log.error("3. RefCarTypeSampleData saveAll()~~~~~~~~~~~~~");
         }
     }
 }

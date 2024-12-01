@@ -1,6 +1,6 @@
-package com.carshop.mycarshop.service.car;
+package com.carshop.mycarshop.service.reference;
 
-import com.carshop.mycarshop.dto.car.RefCarTypeDTO;
+import com.carshop.mycarshop.dto.reference.RefCarTypeDTO;
 
 import java.util.List;
 

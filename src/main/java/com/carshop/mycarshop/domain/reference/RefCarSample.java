@@ -21,12 +21,19 @@ public class RefCarSample {
     private Long refCarSampleId;
 
     private String carNumber;
-    private String carModel;
-    @Enumerated(EnumType.STRING)
-    private CarSize carGrade;        // 등급 ( 소형, 중형, 대형.. )
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "refCarInfoId")      // 주 테이블(RefCarSample)에 외래 키
+    private RefCarInfo refCarInfo;
+
+//    private String carModel;
+//    @Enumerated(EnumType.STRING)
+//    private CarSize carGrade;        // 등급 ( 소형, 중형, 대형.. )
+//    private String company;
+//    private String companyNation;
+
+
     private String carOption;       // 옵션
-    private String company;
-    private String companyNation;
     private String carColor;
     private Integer carYear;      // 출시 연도
     private Integer carKm;          // 주행거리

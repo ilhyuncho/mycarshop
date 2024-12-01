@@ -3,6 +3,7 @@ package com.carshop.mycarshop.domain.car;
 
 import com.carshop.mycarshop.common.validator.CarSizeConverter;
 import com.carshop.mycarshop.domain.common.BaseEntity;
+import com.carshop.mycarshop.domain.reference.RefCarInfo;
 import com.carshop.mycarshop.domain.sellingCar.SellType;
 import com.carshop.mycarshop.domain.sellingCar.SellingCar;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarStatus;
@@ -12,8 +13,6 @@ import com.carshop.mycarshop.dto.sellingCar.SellingCarRegDTO;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.CollectionId;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -71,6 +70,12 @@ public class Car extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "SELLINGCAR_ID")      // 주 테이블(Car)에 외래 키
     private SellingCar sellingCar;          // 판매 정보
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "refCarInfoId")      // 주 테이블(Car)에 외래 키
+    private RefCarInfo refCarInfo;          // 차량 ref 정보
+
+
 
     private Boolean isActive;               // 유효한 상태 인지
 

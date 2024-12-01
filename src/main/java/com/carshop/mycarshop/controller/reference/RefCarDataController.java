@@ -1,7 +1,7 @@
 package com.carshop.mycarshop.controller.reference;
 
-import com.carshop.mycarshop.dto.car.RefCarTypeDTO;
-import com.carshop.mycarshop.service.car.RefCarTypeService;
+import com.carshop.mycarshop.dto.reference.RefCarTypeDTO;
+import com.carshop.mycarshop.service.reference.RefCarTypeService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

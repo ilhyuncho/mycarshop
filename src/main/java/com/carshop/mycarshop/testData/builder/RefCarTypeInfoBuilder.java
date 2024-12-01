@@ -1,28 +1,11 @@
-package com.carshop.mycarshop.testData;
+package com.carshop.mycarshop.testData.builder;
 
-import com.carshop.mycarshop.domain.car.CarSize;
-import com.carshop.mycarshop.domain.car.RefCarType;
+import com.carshop.mycarshop.domain.reference.RefCarType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RefCarTypeInfoBuilder {
-
-    //    Map<String, List<String>> resultMap1 = new HashMap<>();
-//        resultMap1.put("국산", List.of("현대", "기아", "kgm"));
-//        resultMap1.put("수입", List.of("벤츠", "bmw", "테슬라"));
-//
-//    Map<String, List<String>> resultMap2 = new HashMap<>();
-//        resultMap2.put("현대", List.of("쏘나타", "투싼", "아반떼"));
-//        resultMap2.put("기아", List.of("k5", "스포티지", "k3"));
-//        resultMap2.put("벤츠", List.of("c-class", "e-class", "s-class"));
-//        resultMap2.put("bmw", List.of("5-series", "3-series", "x5"));
-//
-//    Map<String, List<String>> resultMap3 = new HashMap<>();
-//        resultMap3.put("쏘나타", List.of("쏘나타 디 엣지(23년~현재)", "쏘나타 하이브리드(19년~23년)", "LF 쏘나타"));
-//        resultMap3.put("투싼", List.of("더 뉴 투싼(23년~현재)", "올 뉴 투싼(15년~20년)", "투싼(04년~09년)"));
-//        resultMap3.put("아반떼", List.of("더 뉴 아반떼(23년~현재)", "아반떼 AD(15년~18년)", "더 뉴 아반떼(13년~15년)"));
-//
 
     static RefCarType refCarType1 = RefCarType.builder().typeId(1).groupIndex(1).typeName("국산").parentTypeId(0).order(1).build();
     static RefCarType refCarType2 = RefCarType.builder().typeId(2).groupIndex(1).typeName("수입").parentTypeId(0).order(2).build();
@@ -48,6 +31,8 @@ public class RefCarTypeInfoBuilder {
     static RefCarType refCarType19 = RefCarType.builder().typeId(19).groupIndex(3).typeName("7-series").parentTypeId(7).order(2).build();
     static RefCarType refCarType20 = RefCarType.builder().typeId(20).groupIndex(3).typeName("x5").parentTypeId(7).order(3).build();
 
+
+
     static RefCarType refCarType21 = RefCarType.builder().typeId(21).groupIndex(4).typeName("쏘나타 디 엣지").parentTypeId(9).order(1)
             .carYearStart(2023).carYearEnd(2024).build();
     static RefCarType refCarType22 = RefCarType.builder().typeId(22).groupIndex(4).typeName("쏘나타 하이브리드").parentTypeId(9).order(2)
@@ -70,15 +55,15 @@ public class RefCarTypeInfoBuilder {
 
 
 
-    List<RefCarType> listRefCarType = new ArrayList<>();
+    public List<RefCarType> listRefCarType = new ArrayList<>();
 
 
-    RefCarTypeInfoBuilder(){
+    public RefCarTypeInfoBuilder(){
         listRefCarType.addAll(List.of(refCarType1, refCarType2, refCarType3, refCarType4, refCarType5, refCarType6,
                 refCarType7, refCarType8, refCarType9, refCarType10, refCarType11, refCarType12,
                 refCarType13, refCarType14, refCarType15, refCarType16, refCarType17, refCarType18,
                 refCarType19, refCarType20, refCarType21, refCarType22, refCarType23, refCarType24,
-                refCarType15, refCarType26, refCarType27, refCarType28, refCarType29));
+                refCarType25, refCarType26, refCarType27, refCarType28, refCarType29));
     }
 
 }

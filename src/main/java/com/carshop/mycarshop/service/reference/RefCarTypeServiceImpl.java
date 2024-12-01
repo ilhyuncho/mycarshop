@@ -1,8 +1,8 @@
-package com.carshop.mycarshop.service.car;
+package com.carshop.mycarshop.service.reference;
 
-import com.carshop.mycarshop.domain.car.RefCarType;
-import com.carshop.mycarshop.domain.car.RefCarTypeRepository;
-import com.carshop.mycarshop.dto.car.RefCarTypeDTO;
+import com.carshop.mycarshop.domain.reference.RefCarType;
+import com.carshop.mycarshop.domain.reference.RefCarTypeRepository;
+import com.carshop.mycarshop.dto.reference.RefCarTypeDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,8 @@ public class RefCarTypeServiceImpl implements RefCarTypeService {
     }
 
     private static RefCarTypeDTO entityToDTO(RefCarType refCarType) {
-        RefCarTypeDTO refCarTypeDTO = RefCarTypeDTO.builder()
+
+        return RefCarTypeDTO.builder()
                 .typeId(refCarType.getTypeId())
                 .typeName(refCarType.getTypeName())
                 .groupIndex(refCarType.getGroupIndex())
@@ -37,8 +38,6 @@ public class RefCarTypeServiceImpl implements RefCarTypeService {
                 .carYearStart(refCarType.getCarYearStart())
                 .carYearEnd(refCarType.getCarYearEnd())
                 .build();
-
-        return refCarTypeDTO;
     }
 
 }

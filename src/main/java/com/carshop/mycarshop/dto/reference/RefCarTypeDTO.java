@@ -1,4 +1,4 @@
-package com.carshop.mycarshop.dto.car;
+package com.carshop.mycarshop.dto.reference;
 
 
 import lombok.*;
