@@ -46,6 +46,7 @@ public class RefCarSampleServiceImpl implements RefCarSampleService {
             return null;
         }
         return RefCarSampleDTO.builder()
+                .refCarInfoId(refCarSample.getRefCarInfo().getRefCarInfoId())
                 .carNumber(refCarSample.getCarNumber())
                 .carColor(refCarSample.getCarColor())
                 .carKm(refCarSample.getCarKm())

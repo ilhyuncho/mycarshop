@@ -13,8 +13,8 @@ import java.time.LocalDate;
 @Getter
 @ToString
 public class RefCarSampleDTO {
+    private Long refCarInfoId;
     private String carNumber;
-
     private String carModel;
     @Enumerated(EnumType.STRING)
     private CarSize carGrade;        // 등급 ( 소형, 중형, 대형.. )

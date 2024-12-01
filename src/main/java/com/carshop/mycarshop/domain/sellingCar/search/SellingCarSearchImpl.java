@@ -38,7 +38,7 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
             for (String type : types) {
                 switch (type) {
                     case "m":       // 모델명
-                        booleanBuilder.or(sellingCar.car.carModel.contains(keyword));
+                        booleanBuilder.or(sellingCar.car.refCarInfo.carModel.contains(keyword));
                         break;
                     case "y":       // 연식
                         log.error("keyword: " + keyword);

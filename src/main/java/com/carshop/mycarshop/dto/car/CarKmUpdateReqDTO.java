@@ -10,5 +10,5 @@ import lombok.*;
 @ToString
 public class CarKmUpdateReqDTO {
     private Long carId;
-    private Long updateKmValue;
+    private int updateKmValue;
 }

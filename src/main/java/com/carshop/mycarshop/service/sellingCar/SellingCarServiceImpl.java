@@ -184,7 +184,7 @@ public class SellingCarServiceImpl implements SellingCarService {
                 .sellingCarStatus(sellingCar.getSellingCarStatus())
                 .expiredDate(sellingCar.getExpiredDate())
                 .carNumber(sellingCar.getCar().getCarNumber())
-                .carModel(sellingCar.getCar().getCarModel())
+                .carModel(sellingCar.getCar().getRefCarInfo().getCarModel())
                 .carYears(sellingCar.getCar().getCarYears())
                 .sellingCarId(sellingCar.getSellingCarId())
                 .viewCount(sellingCar.getViewCount())

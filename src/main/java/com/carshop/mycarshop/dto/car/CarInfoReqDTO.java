@@ -21,7 +21,7 @@ public class CarInfoReqDTO {
     @NotEmpty
     private String  carColors;
     @NotNull
-    private Long    carKm;
+    private int    carKm;
 
     private String mainImageFileName;
     private List<String> fileNames = new ArrayList<>();

@@ -69,7 +69,7 @@ public class BuyingCarRestController {
 
             // 알림 등록---------------------------------------
             List<String> listArgs = new ArrayList<>();
-            listArgs.add(car.getCarModel());
+            listArgs.add(car.getRefCarInfo().getCarModel());
             listArgs.add(car.getCarNumber());
             // Locale 메시지 정보 가져오기
             String message = messageHandler.getMessage(MessageCode.fromValue(buyCarStatus.getName()), listArgs);

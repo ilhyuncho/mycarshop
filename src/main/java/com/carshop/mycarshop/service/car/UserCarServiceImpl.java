@@ -4,12 +4,14 @@ import com.carshop.mycarshop.common.exception.AlreadyRegisterException;
 import com.carshop.mycarshop.domain.car.Car;
 import com.carshop.mycarshop.domain.car.CarRepository;
 import com.carshop.mycarshop.domain.car.Projection;
+import com.carshop.mycarshop.domain.reference.RefCarInfo;
 import com.carshop.mycarshop.domain.user.User;
 import com.carshop.mycarshop.domain.user.UserActionType;
 import com.carshop.mycarshop.dto.car.CarInfoReqDTO;
 import com.carshop.mycarshop.dto.car.CarKmUpdateReqDTO;
 import com.carshop.mycarshop.dto.car.CarViewResDTO;
 import com.carshop.mycarshop.dto.reference.RefCarSampleDTO;
+import com.carshop.mycarshop.service.reference.RefCarInfoService;
 import com.carshop.mycarshop.service.reference.RefCarSampleService;
 import com.carshop.mycarshop.service.user.UserPointHistoryService;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +31,12 @@ import java.util.stream.Collectors;
 public class UserCarServiceImpl implements UserCarService {
 
     private final CarRepository carRepository;
+
     private final CarService carService;
     private final UserPointHistoryService userPointHistoryService;
     private final RefCarSampleService refCarSampleService;
+    private final RefCarInfoService refCarInfoService;
+
 
     @Override
     public List<CarViewResDTO> readMyCarList(User user){
@@ -73,20 +78,16 @@ public class UserCarServiceImpl implements UserCarService {
         // 등록 하려는 차 정보 get
         RefCarSampleDTO refCarSampleDTO = refCarSampleService.findMyCar(carNumber);
 
+        // refCarInfo 데이터 get
+        RefCarInfo refCarInfo = refCarInfoService.getRefCarInfo(refCarSampleDTO.getRefCarInfoId());
+
         // 차 등록
         Car car = Car.builder().carNumber(refCarSampleDTO.getCarNumber())
                 .user(user)
+                .refCarInfo(refCarInfo)
                 .carColors(refCarSampleDTO.getCarColor())
-                .carModel(refCarSampleDTO.getCarModel())
                 .carYears(refCarSampleDTO.getCarYear())
-                .carGrade(refCarSampleDTO.getCarGrade())
-//                .carColors(refCarSample.getCarColor())
-//                .carModel(refCarSample.getCarModel())
-//                .carYears(refCarSample.getCarYear())
-//                .carGrade(refCarSample.getCarGrade())
-
-
-                .carKm(0L)
+                .carKm(0)
                 .isActive(true)
                 .build();
 
@@ -131,8 +132,8 @@ public class UserCarServiceImpl implements UserCarService {
                 .carNumber(car.getCarNumber())
                 .carColors(car.getCarColors())
                 .carKm(car.getCarKm())
-                .carGrade(car.getCarGrade().getValue())
-                .carModel(car.getCarModel())
+                .carGrade(car.getRefCarInfo().getCarGrade().getValue())
+                .carModel(car.getRefCarInfo().getCarModel())
                 .carYears(car.getCarYears())
                 .build();
 

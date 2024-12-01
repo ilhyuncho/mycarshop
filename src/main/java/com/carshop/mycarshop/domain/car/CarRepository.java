@@ -17,7 +17,6 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     Page<Car> findAll(Pageable pageable);
 
     List<Projection.CarSummary> findByUser(User user);
-    List<Projection.CarSummary2> findAllByUser(User user);
 
 //    @Query("select c from Car c inner join fetch c.carTemps where c.carId = :carId")
 //    Car findCarWithCarTemps(@Param("carId") Long carid);

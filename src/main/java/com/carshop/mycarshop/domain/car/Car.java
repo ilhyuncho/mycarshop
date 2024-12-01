@@ -37,13 +37,6 @@ public class Car extends BaseEntity {
     @Column(name="carNumber", length = 50, nullable = false)
     private String carNumber;
 
-    @Column(name="carGrade", length = 4, nullable = false)
-    @Convert(converter= CarSizeConverter.class)
-    private CarSize carGrade;
-
-    @Column(name="carModel", length = 20, nullable = false)
-    private String carModel;
-
     @Column(name="carYears", nullable = false)
     private int carYears;
 
@@ -51,7 +44,7 @@ public class Car extends BaseEntity {
     private String carColors;
 
     @Column(name="carKm", nullable = false)
-    private Long carKm;
+    private int carKm;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="uId")
@@ -74,8 +67,6 @@ public class Car extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "refCarInfoId")      // 주 테이블(Car)에 외래 키
     private RefCarInfo refCarInfo;          // 차량 ref 정보
-
-
 
     private Boolean isActive;               // 유효한 상태 인지
 
@@ -154,26 +145,13 @@ public class Car extends BaseEntity {
         }
     }
 
-    public void changeSpec( Long carKm, int carYears, String carColors ){
+    public void changeSpec(int carKm, int carYears, String carColors){
         this.carKm = carKm;
         this.carYears = carYears;
         this.carColors = carColors;
     }
-    public void changeKm(Long carKm){
+    public void changeKm(int carKm){
         this.carKm = carKm;
-    }
-
-    @Builder(builderMethodName = "writeWithUserBuilder")
-    public Car(String carNumber, CarSize carGrade, String carModel, int carYears,
-               String carColors, Long carKm, User user) {
-
-        this.carNumber = carNumber;
-        this.carGrade = carGrade;
-        this.carModel = carModel;
-        this.carYears = carYears;
-        this.carColors = carColors;
-        this.carKm = carKm;
-        this.user = user;   // 대입 방법 확인해 보자!!!
     }
 
     ////////////////////////// 학습용 /////////////////////////////////////////////////////

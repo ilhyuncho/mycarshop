@@ -35,7 +35,7 @@ public class CarViewResDTO extends ImageListDTO {        // 내차 정보 로딩
     private String  carColors;
 
     @NotNull
-    private Long    carKm;
+    private int     carKm;
 
     private Long sellingCarId;
     private SellingCarStatus sellingCarStatus;
@@ -43,7 +43,7 @@ public class CarViewResDTO extends ImageListDTO {        // 내차 정보 로딩
 
     @Builder(builderMethodName = "writeCarViewNewDTOBuilder")
     public CarViewResDTO(Long carId, String userName, String memberId, String carNumber, String carGrade, String carModel, int carYears,
-                         String carColors, Long carKm) {
+                         String carColors, int carKm) {
         this.carId = carId;
         this.userName = userName;
         this.memberId = memberId;

@@ -4,10 +4,13 @@ package com.carshop.mycarshop.testData.event;
 import com.carshop.mycarshop.common.util.Util;
 import com.carshop.mycarshop.domain.car.Car;
 import com.carshop.mycarshop.domain.car.CarRepository;
-import com.carshop.mycarshop.domain.car.CarSize;
 import com.carshop.mycarshop.domain.member.Member;
 import com.carshop.mycarshop.domain.member.MemberRepository;
 import com.carshop.mycarshop.domain.member.MemberRole;
+import com.carshop.mycarshop.domain.reference.RefCarInfo;
+import com.carshop.mycarshop.domain.reference.RefCarInfoRepository;
+import com.carshop.mycarshop.domain.reference.RefCarSample;
+import com.carshop.mycarshop.domain.reference.RefCarSampleRepository;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarStatus;
 import com.carshop.mycarshop.domain.user.*;
 import com.carshop.mycarshop.dto.sellingCar.SellingCarRegDTO;
@@ -17,9 +20,11 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Component
@@ -34,17 +39,24 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
     private final UserAlarmRepository userAlarmRepository;
     private final UserPointHistoryRepository userPointHistoryRepository;
     private final UserAddressBookRepository userAddressBookRepository;
+    private final RefCarInfoRepository refCarInfoRepository;
+    private final RefCarSampleRepository refCarSampleRepository;
 
     private final CarRepository carRepository;
     private final PasswordEncoder passwordEncoder;
     @Override
+    @Transactional
     public void onApplicationEvent(SampleMemberCreateEvent event) {
 
         int createMemberCount = event.getCreateMemberCount();
 
         log.error("(SampleDataCreateEventListener) onApplicationEvent()!!!!!!!!");
 
-        if(memberRepository.count() == 0 && userRepository.count() == 0){
+        if(memberRepository.count() != createMemberCount || userRepository.count() != createMemberCount){
+
+            memberRepository.deleteAll();
+            userRepository.deleteAll();
+
             log.error("member, user데이터 생성!!!!!!!!!!!!!!");
 
             // member 생성
@@ -127,59 +139,85 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
                 userAlarmRepository.save(userAlarm);
 
                 if(i == 1){
-                    Car car = Car.builder().carNumber("221가6323")
-                            .user(user)
-                            .carColors("빨강색")
-                            .carModel("쏘나타")
-                            .carYears(2015)
-                            .carGrade(CarSize.MIDDLE)
-                            .carKm(0L)
-                            .isActive(true)
-                            .build();
+                    Optional<RefCarSample> refCarSample = refCarSampleRepository.findById(1L);
 
-                    List<String> listImage = new ArrayList<>();
-                    listImage.add("1111_carin.png");
-                    listImage.add("2222_carin2.png");
+                    if(refCarSample.isPresent()){
+                        RefCarSample refCarSampleData = refCarSample.get();
+                        Long refCarInfoId = refCarSampleData.getRefCarInfo().getRefCarInfoId();
 
-                    car.resetImages(listImage, "carin.png");
+                        Optional<RefCarInfo> refCarInfo = refCarInfoRepository.findById(refCarInfoId);
 
-                    // 차량 판매 등록
-                    // SellType sellType = SellType.fromValue("auctionType");
-                    SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
-                            .sellingCarStatus(SellingCarStatus.PROCESSING)
-                            .sellType("auctionType")
-                            .requiredPrice(1000000)
-                            .build();
-                    car.registerSellingCar(sellingCarRegDTO);
+                        refCarInfo.ifPresent(info -> {
 
-                    carRepository.save(car);
+                            Car car = Car.builder()
+                                    .carNumber(refCarSampleData.getCarNumber())
+                                    .user(user)
+                                    .refCarInfo(info)
+                                    .carColors(refCarSampleData.getCarColor())
+                                    .carYears(refCarSampleData.getCarYear())
+                                    .carKm(refCarSampleData.getCarKm())
+                                    .isActive(true)
+                                    .build();
+
+                            List<String> listImage = new ArrayList<>();
+                            listImage.add("1111_carin.png");
+                            listImage.add("2222_carin2.png");
+
+                            car.resetImages(listImage, "carin.png");
+
+                            // 차량 판매 등록
+                            // SellType sellType = SellType.fromValue("auctionType");
+                            SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
+                                    .sellingCarStatus(SellingCarStatus.PROCESSING)
+                                    .sellType("auctionType")
+                                    .requiredPrice(1000000)
+                                    .build();
+                            car.registerSellingCar(sellingCarRegDTO);
+
+                            carRepository.save(car);
+                        });
+                    }
                 }
                 else if(i == 8){
-                    Car car = Car.builder().carNumber("228가6323")
-                            .user(user)
-                            .carColors("노란색")
-                            .carModel("쏘나타")
-                            .carYears(2013)
-                            .carGrade(CarSize.MIDDLE)
-                            .carKm(0L)
-                            .isActive(true)
-                            .build();
+                    Optional<RefCarSample> refCarSample = refCarSampleRepository.findById(2L);
 
-                    List<String> listImage = new ArrayList<>();
-                    listImage.add("3333_carin3.png");
+                    if(refCarSample.isPresent()) {
+                        RefCarSample refCarSampleData = refCarSample.get();
+                        Long refCarInfoId = refCarSampleData.getRefCarInfo().getRefCarInfoId();
 
-                    car.resetImages(listImage, "carin3.png");
+                        Optional<RefCarInfo> refCarInfo = refCarInfoRepository.findById(refCarInfoId);
 
-                    // 차량 판매 등록
-                    // SellType sellType = SellType.fromValue("auctionType");
-                    SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
-                            .sellingCarStatus(SellingCarStatus.PROCESSING)
-                            .sellType("consultType")
-                            .requiredPrice(500_000)
-                            .build();
-                    car.registerSellingCar(sellingCarRegDTO);
+                        refCarInfo.ifPresent(info -> {
 
-                    carRepository.save(car);
+                            Car car = Car.builder()
+                                    .carNumber(refCarSampleData.getCarNumber())
+                                    .user(user)
+                                    .refCarInfo(info)
+                                    .carColors(refCarSampleData.getCarColor())
+                                    .carYears(refCarSampleData.getCarYear())
+                                    .carKm(0)
+                                    .isActive(true)
+                                    .build();
+
+                            List<String> listImage = new ArrayList<>();
+                            listImage.add("3333_carin3.png");
+
+                            car.resetImages(listImage, "carin3.png");
+
+                            // 차량 판매 등록
+                            // SellType sellType = SellType.fromValue("auctionType");
+                            SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
+                                    .sellingCarStatus(SellingCarStatus.PROCESSING)
+                                    .sellType("consultType")
+                                    .requiredPrice(500_000)
+                                    .build();
+                            car.registerSellingCar(sellingCarRegDTO);
+
+                            carRepository.save(car);
+
+                        });
+
+                    }
                 }
 
             });
