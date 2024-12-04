@@ -27,7 +27,7 @@
             <tbody>
             <tr th:each="dto:${listBuyingCarDTO}">
               <th scope="row">[[${dto.carNumber}]]</th>
-              <td>[[${dto.carModel}]]</td>
+              <td>[[${dto.carDetailModel}]]</td>
               <td>[[${#numbers.formatInteger(dto.proposalPrice,3,'COMMA')}]]원</td>
               <td>[[${dto.buyCarStatus.statusDesc}]]</td>
               <td>

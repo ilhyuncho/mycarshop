@@ -125,7 +125,7 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     private static CarViewResDTO entityToDTO(Car car) {
-        CarViewResDTO carViewResDTO = CarViewResDTO.writeCarViewNewDTOBuilder()
+        CarViewResDTO carViewResDTO = CarViewResDTO.writeCarViewDTOBuilder()
                 .carId(car.getCarId())
                 .userName(car.getUser().getUserName())
                 .memberId(car.getUser().getMemberId())
@@ -133,7 +133,7 @@ public class UserCarServiceImpl implements UserCarService {
                 .carColors(car.getCarColors())
                 .carKm(car.getCarKm())
                 .carGrade(car.getRefCarInfo().getCarGrade().getValue())
-                .carModel(car.getRefCarInfo().getCarModel())
+                .carDetailModel(car.getRefCarInfo().getCarDetailModel())
                 .carYears(car.getCarYears())
                 .build();
 

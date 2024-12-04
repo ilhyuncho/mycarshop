@@ -1,5 +1,6 @@
 package com.carshop.mycarshop.domain.sellingCar.search;
 
+import com.carshop.mycarshop.domain.reference.carType.CarCategory;
 import com.carshop.mycarshop.domain.sellingCar.QSellingCar;
 import com.carshop.mycarshop.domain.sellingCar.SellType;
 import com.carshop.mycarshop.domain.sellingCar.SellingCar;
@@ -29,6 +30,10 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
         String keyword = pageRequestExtDT.getKeyword();
         int carYearsMin = pageRequestExtDT.getCarYearsMin();
         int carYearsMax = pageRequestExtDT.getCarYearsMax();
+        String typeGroup1 = pageRequestExtDT.getTypeGroup1();
+        String typeGroup2 = pageRequestExtDT.getTypeGroup2();
+        String typeGroup3 = pageRequestExtDT.getTypeGroup3();
+        String typeGroup4 = pageRequestExtDT.getTypeGroup4();
 
         QSellingCar sellingCar = QSellingCar.sellingCar;
         JPQLQuery<SellingCar> query = from(sellingCar);
@@ -64,6 +69,10 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
         }
         if(carYearsMin > 0 && carYearsMax > 0){
             query.where(sellingCar.car.carYears.between(carYearsMin, carYearsMax));                            // 선택 한 연식
+        }
+
+        if(typeGroup1 != null ){
+            query.where(sellingCar.car.refCarInfo.carCategory.eq(CarCategory.fromValue(Integer.valueOf(typeGroup1)).getName()));
         }
 
        // query.where(sellingCar.sellingCarStatus.eq(SellingCarStatus.PROCESSING));   // 판매 중 인것만 표시

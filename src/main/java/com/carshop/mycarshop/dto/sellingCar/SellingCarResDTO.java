@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class SellingCarResDTO extends ImageListDTO {
     private Long carId;
     private String carNumber;
-    private String carModel;
+    private String carDetailModel;
     private Integer carYears;
     private Boolean isLike;
     private Integer requiredPrice;

@@ -22,7 +22,9 @@ public class RefCarInfo extends BaseEntity {
     @Column(name="refCarInfoId")
     private Long refCarInfoId;
 
+    private String carCategory;        // 국산차 or 수입차
     private String carModel;
+    private String carDetailModel;
     private String company;
     private String companyNation;
 

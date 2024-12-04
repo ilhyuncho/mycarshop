@@ -62,7 +62,7 @@
           </div>
           <div class="input-group mb-3">
             <span class="input-group-text">모델 명</span>
-            <input type="text" class="form-control modalCarModel">
+            <input type="text" class="form-control modalCarDetailModel">
           </div>
         </div>
         <div class="modal-footer">
@@ -89,7 +89,7 @@
   const findCarModal = new bootstrap.Modal(document.querySelector(".findCarModal"))
   const carNumber = document.querySelector('.carNumber')
   const modalCarNumber = document.querySelector('.modalCarNumber')
-  const modalCarModel = document.querySelector('.modalCarModel')
+  const modalCarDetailModel = document.querySelector('.modalCarDetailModel')
 
   // 사용자 인증 정보 확인 begin ----------------------
   const authlog = [[${#authentication}]]
@@ -128,7 +128,7 @@
       if(result.carNumber !== undefined && result.carNumber.length > 0){
         // 모달 창 값 셋팅
         modalCarNumber.value = result.carNumber
-        modalCarModel.value = result.carModel
+        modalCarDetailModel.value = result.carDetailModel
 
         findCarModal.show()
       }

@@ -17,7 +17,7 @@ public class BuyingCarViewDTO {
     private int proposalPrice;
     private BuyCarStatus buyCarStatus;
     private String carNumber;
-    private String carModel;
+    private String carDetailModel;
     private Long carId;
     private Long sellingCarId;
 

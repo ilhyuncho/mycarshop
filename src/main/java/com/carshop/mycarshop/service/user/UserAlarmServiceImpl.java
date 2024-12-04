@@ -71,6 +71,7 @@ public class UserAlarmServiceImpl implements UserAlarmService {
     @Override
     public void registerAlarm(User user, String alarmTitle, String alarmContent) {
 
+        log.error("registerAlarm() " + alarmTitle + "," + alarmContent);
         UserAlarm userAlarm = UserAlarm.builder()
                 .user(user)
                 .alarmTitle(alarmTitle)

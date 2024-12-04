@@ -22,11 +22,14 @@ public class RefCarDataController {
 
     @ApiOperation(value = "판매 차량 종류 리스트 전달", notes = "referenceData 전달")
     @GetMapping("/listRefCarType")
-    public List<RefCarTypeDTO> getListRefCarType(int groupNumber, int parentTypeId){
+    public List<RefCarTypeDTO> getListRefCarType(int groupIndex, String parentMenuName){
 
-        log.error("listRefCarType()~~~~~~~" + groupNumber  + ", " + parentTypeId );
+        log.error("listRefCarType()~~~~~~~" + groupIndex  + ", " + parentMenuName );
 
-        return refCarTypeService.getRefCarType(parentTypeId);
+        List<RefCarTypeDTO> listRefCarTypeDTO = refCarTypeService.getRefCarType(groupIndex, parentMenuName);
+
+        //listRefCarTypeDTO.forEach(log::error);
+        return listRefCarTypeDTO;
     }
 
 }

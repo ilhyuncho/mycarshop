@@ -24,10 +24,10 @@
   <div class="d-flex">
     <div class="itemMainImgDiv">
       <img th:src="|/view/carImage/${responseDTO.getMainImage().uuid}_${responseDTO.getMainImage().fileName}|"
-           style="width:400px; margin-right: 5rem" class="rounded itemMainImg" th:alt="${responseDTO.carModel}">
+           style="width:400px; margin-right: 5rem" class="rounded itemMainImg" th:alt="${responseDTO.carDetailModel}">
     </div>
     <div class="wd50">
-      <div class="h4" th:text="|(${responseDTO.carNumber}) ${responseDTO.carModel}|"></div>
+      <div class="h4" th:text="|(${responseDTO.carNumber}) ${responseDTO.carDetailModel}|"></div>
       <hr class="my-4">
       <div class="my-4">
         <!--       뷰 횟수-->
@@ -36,7 +36,7 @@
         <!--      하트 표시-->
         <span id="checkSolid" style="display: inline">
           <i class="fa-solid fa-heart" style="cursor:pointer"
-             th:onclick="javascript:sellingCarLike(false)" th:data-num="${responseDTO.carModel}"></i>
+             th:onclick="javascript:sellingCarLike(false)" th:data-num="${responseDTO.carDetailModel}"></i>
         </span>
         <span id="checkRegular" style="display: none">
           <i class="fa-regular fa-heart" style="cursor:pointer"

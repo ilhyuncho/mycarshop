@@ -34,13 +34,13 @@ public class CarServiceImpl implements CarService {
     }
 
     private static CarViewResDTO entityToDTO(Car car) {
-        CarViewResDTO carViewResDTO = CarViewResDTO.writeCarViewNewDTOBuilder()
+        CarViewResDTO carViewResDTO = CarViewResDTO.writeCarViewDTOBuilder()
                 .carId(car.getCarId())
                 .carNumber(car.getCarNumber())
                 .carColors(car.getCarColors())
                 .carKm(car.getCarKm())
                 .carGrade(car.getRefCarInfo().getCarGrade().getValue())
-                .carModel(car.getRefCarInfo().getCarModel())
+                .carDetailModel(car.getRefCarInfo().getCarDetailModel())
                 .carYears(car.getCarYears())
                 .userName(car.getUser().getUserName())
                 .memberId(car.getUser().getMemberId())
