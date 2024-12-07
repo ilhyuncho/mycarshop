@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/","/auth/**").permitAll()
                 .antMatchers("/sellingCar/{carId:^[0-9]+$}", "/sellingCar/list","/sellingCar/recommend","/sellingCar/view/**").permitAll()
+                .antMatchers("/sellingCar/listSearch").permitAll()
                 .antMatchers("/view/**").permitAll()
                 .antMatchers("/buyingCar/list").permitAll()
                 .antMatchers("/shop/**").permitAll()
