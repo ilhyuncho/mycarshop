@@ -34,17 +34,9 @@ public class SellingCarController {
     @ApiOperation(value = "판매 차량 리스트 전달", notes = "[판매 차량 조회] 클릭시")
     @GetMapping("/list")
     //@PreAuthorize("isAuthenticated()")  // 로그인한 사용자만 조회, @PreAuthorize("hasRole('USER')") 과 다름
-    public String getSellingCarList(@ModelAttribute("pageRequestDto") PageRequestExtDTO pageRequestExtDT,
-                                    Model model){
+    public String getSellingCarList(@ModelAttribute("pageRequestDto") PageRequestExtDTO pageRequestExtDT){
 
         log.error("getSellingCarList() pageRequestExtDT : " + pageRequestExtDT);
-
-        PageResponseDTO<SellingCarResDTO> listSellingCar = sellingCarService.getListSellingCar(pageRequestExtDT);
-
-        log.error("listSellingCar : " + listSellingCar);
-
-        model.addAttribute("responseDTO", listSellingCar);
-
         return "sellingCar/sellingCarList";
     }
 

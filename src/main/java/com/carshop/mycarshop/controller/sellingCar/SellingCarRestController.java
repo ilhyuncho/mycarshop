@@ -1,6 +1,8 @@
 package com.carshop.mycarshop.controller.sellingCar;
 
 import com.carshop.mycarshop.domain.user.User;
+import com.carshop.mycarshop.dto.PageRequestExtDTO;
+import com.carshop.mycarshop.dto.PageResponseDTO;
 import com.carshop.mycarshop.dto.sellingCar.SellingCarRegDTO;
 import com.carshop.mycarshop.dto.sellingCar.SellingCarResDTO;
 import com.carshop.mycarshop.service.sellingCar.SellingCarService;
@@ -75,6 +77,15 @@ public class SellingCarRestController {
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
         return resultMap;
+    }
+
+    @ApiOperation(value = "판매 차량 리스트 정보 전달", notes = "판매 차량 리스트 화면")
+    @GetMapping("/listSearch")
+    public PageResponseDTO<SellingCarResDTO> getListSellingCar(PageRequestExtDTO pageRequestExtDT){
+
+        log.error("pageRequestExtDT : " + pageRequestExtDT);
+
+        return sellingCarService.getListSellingCar(pageRequestExtDT);
     }
 
     @ApiOperation(value = "추천 차량 정보 전달", notes = "메인 화면")

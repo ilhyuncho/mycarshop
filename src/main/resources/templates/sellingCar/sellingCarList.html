@@ -23,11 +23,10 @@
 
             <div  class="row mt-3">
               <div class="col">
-                <input type="hidden" name="size" th:value="${pageRequestDto.size}">
 
-                <div class="input-group w-25">
-                  <label class="input-group-text" for="typeSelect">판매 타입</label>
-                    <select class="form-select" id="typeSelect" name="typeExt" >
+                <div class="input-group w-50">
+                  <label class="input-group-text" for="typeExt">판매 타입</label>
+                    <select class="form-select" id="typeExt">
                       <option value="">-----</option>
                       <option value="a" th:selected="${pageRequestDto.typeExt == 'a'}">경매</option>
                       <option value="c" th:selected="${pageRequestDto.typeExt == 'c'}">상담</option>
@@ -42,7 +41,7 @@
                     <input type="hidden" class="form-control isCarYearsSelect" th:value="hidden">
                       <label style="width: 100px" for="yearsMinSelect">
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                                id="yearsMinSelect" name="carYearsMin"
+                                id="yearsMinSelect"
                                 th:with="endYear= ${#calendars.format(#calendars.createNow(),'yyyy')}, startYear=2000">
                           <option selected th:value="${startYear}">최소</option>
                           <option th:each="i, stat: ${#numbers.sequence( startYear, endYear)}" th:value="${i}"
@@ -54,7 +53,7 @@
 
                       <label style="width: 100px" for="yearsMaxSelect">
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                                id="yearsMaxSelect" name="carYearsMax"
+                                id="yearsMaxSelect"
                                 th:with="endYear= ${#calendars.format(#calendars.createNow(),'yyyy')}, startYear=2000">
                           <option selected th:value="${endYear}">최대</option>
                           <option th:each="i, stat: ${#numbers.sequence( startYear, endYear)}" th:value="${i}"
@@ -65,33 +64,21 @@
                 </div>
 
                 <div class="input-group ">
-                  <label class="input-group-text" for="typeSelect">차량 종류</label>
-                  <select class="form-select carTypeGroup1 carTypeSelect" name="typeGroup1" >
+                  <label class="input-group-text">차량 종류</label>
+                  <select class="form-select carTypeGroup1 carTypeSelect">
                     <option value="">제조사</option>
-<!--                    <option value="a" th:selected="${pageRequestDto.typeExt == 'a'}">국산</option>-->
-<!--                    <option value="c" th:selected="${pageRequestDto.typeExt == 'c'}">수입</option>-->
+<!--                    <option value="a" th:selected="${pageRequestDto.typ1eExt == 'a'}">국산</option>-->
+<!--                    <option value="c" th:selected="${pageRequestDto.typ1eExt == 'c'}">수입</option>-->
                   </select>
-                  <select class="form-select carTypeGroup2 carTypeSelect" name="typeGroup2" >
+                  <select class="form-select carTypeGroup2 carTypeSelect">
                     <option value="">-----</option>
                   </select>
-                  <select class="form-select carTypeGroup3 carTypeSelect" name="typeGroup3" >
+                  <select class="form-select carTypeGroup3 carTypeSelect">
                     <option value="">-----</option>
                   </select>
-                  <select class="form-select carTypeGroup4 carTypeSelect" name="typeGroup4" >
+                  <select class="form-select carTypeGroup4 carTypeSelect">
                     <option value="">-----</option>
                   </select>
-                </div>
-
-                <div class="input-group w-25">
-                  <label>
-                    <select class="form-select" name="type">
-                      <option value="">-----</option>
-                      <option value="m" selected th:selected="${pageRequestDto.type == 'm'}">모델명</option>
-<!--                      <option value="y" th:selected="${pageRequestDto.type == 'y'}">연식</option>-->
-<!--                      <option value="my" th:selected="${pageRequestDto.type == 'my'}">모델명,연식</option>-->
-                    </select>
-                  </label>
-                  <input type="text" class="form-control" name="keyword" th:value="${pageRequestDto.keyword}">
                 </div>
 
                 <div class="input-group-append">
@@ -101,66 +88,28 @@
 
               </div>
             </div>
+          </form>
 
-            <table class="table">
+          <div class="row mt-3">
+            <table id="tableSellingCar1" style="margin-left: 50px">
               <thead>
               <tr>
                 <th scope="col">차량 항목</th>
-                <th scope="col">모델명</th>+
+                <th scope="col">모델명</th>
                 <th scope="col">연식</th>
                 <th scope="col">희망 가격</th>
                 <th scope="col">판매 종료 시간</th>
               </tr>
               </thead>
-
-              <tbody>
-              <tr th:each="dto:${responseDTO.dtoList}">
-                <th scope="row">
-                  <a th:href="|@{'/sellingCar/view/' + ${dto.sellingCarId}}|"
-                     class="text-decoration-none">[[${dto.carNumber}]]
-                    <span class="badge progress-bar-success"
-                          th:if="${#strings.equals(dto.sellingCarStatus.value, '1') and !dto.isExpired()}"
-                          style="background-color: #0a53be">[[${dto.sellingCarStatus.name}]]</span>
-                    <span class="badge progress-bar-success"
-                          th:if="${!#strings.equals(dto.sellingCarStatus.value, '1') or dto.isExpired()}"
-                          style="background-color: #bb2d3b">판매 종료</span>
-
-                    <span class="badge progress-bar-success" th:if="${#strings.equals(dto.sellType, 'SELL_AUCTION')}"
-                          style="background-color: #611adb">[[${dto.sellType.typeName}]]</span>
-                    <span class="badge progress-bar-success" th:if="${#strings.equals(dto.sellType, 'SELL_CONSULT')}"
-                          style="background-color: #0dd52e">[[${dto.sellType.typeName}]]</span>
-                  </a>
-                  <div>
-                    <img th:src="|/view/carImage/${dto.mainImage.uuid}_${dto.mainImage.fileName}|" th:width="150"
-                         th:data-src="${dto.mainImage.uuid}" onclick="window.open(this.src)">
-                  </div>
-                </th>
-                <td>[[${dto.carDetailModel}]]</td>
-                <td>[[${dto.carYears}]]년형</td>
-                <td>[[${#numbers.formatInteger(dto.requiredPrice,3,'COMMA')}]]원</td>
-                <td>[[${#temporals.format(dto.expiredDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
-              </tr>
+              <tbody id="tableSellingCar">
               </tbody>
             </table>
-          </form>
-          <div class="float-end">
-            <ul class="pagination flex-wrap">
-
-              <li class="page-item" th:if="${responseDTO.prev}">
-                <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
-              </li>
-
-              <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
-                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item' ">
-                  <a class="page-link" th:data-num="${i}">[[${i}]]</a>
-                </li>
-              </th:block>
-
-              <li class="page-item" th:if="${responseDTO.next}">
-                <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
-              </li>
-
-            </ul>
+            <!-- 페이지 번호 출력-->
+            <div class="float-start">
+              <ul class="pagination flex-wrap">
+              </ul>
+            </div>
+            <!-- 페이지 번호 출력-->
           </div>
 
         </div><!-- <div class="card-body">-->
@@ -175,13 +124,21 @@
   <script src="/js/utilViewHtml.js"></script>
   <script src="/js/buyingCar.js"></script>
   <script src="/js/reference.js"></script>
+  <script src="/js/sellingCar.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
 
+  const typeExt = document.getElementById("typeExt")
+  const yearsMinSelect = document.getElementById("yearsMinSelect")
+  const yearsMaxSelect = document.getElementById("yearsMaxSelect")
+
   const carYearsMinDiv = document.querySelector(".carYearsMinDiv")
   const isCarYearsSelect = document.querySelector(".isCarYearsSelect")
+
+  const tableSellingCar = document.getElementById("tableSellingCar");
+  const pagination = document.querySelector(".pagination");
 
   let arrayCarTypeGroup = [];
   arrayCarTypeGroup.push(document.querySelector(".carTypeGroup1"));
@@ -189,6 +146,7 @@
   arrayCarTypeGroup.push(document.querySelector(".carTypeGroup3"));
   arrayCarTypeGroup.push(document.querySelector(".carTypeGroup4"));
 
+  const sellingCarViewCount = 3    // 한번에 보여줄 차량 갯수
 
   // 최초 페이지 로딩
   pageInit([[${#authorization.expression('isAuthenticated()')}]])
@@ -196,21 +154,119 @@
   // 차 선택 메뉴 항목 list 가져오기
   setListRefCarType()
 
+  // 판매 차량 list 가져오기
+  updateListSellingCar(1)
 
-  function setListRefCarType(groupIndex = 0, parentMenuName= ''){
 
-    getListRefCarType({groupIndex, parentMenuName}).then(data=> {
-      printListRefCarType(groupIndex, data, arrayCarTypeGroup[groupIndex])                // 목록 처리
+  // Search 파일 클릭
+  document.querySelector(".searchBtn").addEventListener("click", function(e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    updateListSellingCar(1)
+
+  }, false)
+
+  // 페이지 버튼 클릭 이벤트 begin ------------------
+  document.querySelector(".pagination").addEventListener("click", function(e){
+    e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
+    e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
+
+    const target = e.target   // a 태그
+    if(target.tagName !== 'A'){
+      return
+    }
+    const num = target.getAttribute("data-page")
+
+    updateListSellingCar(num)
+
+  }, false)
+
+  function updateListSellingCar(page){
+
+    const formObj = {
+      page:page,
+      size:sellingCarViewCount,
+      carYearsMin:yearsMinSelect.value,
+      carYearsMax:yearsMaxSelect.value,
+      typeExt: typeExt.value,
+      typeGroup1:arrayCarTypeGroup[0].value,
+      typeGroup2:arrayCarTypeGroup[1].value,
+      typeGroup3:arrayCarTypeGroup[2].value,
+      typeGroup4:arrayCarTypeGroup[3].value,
+    }
+
+    getListSellingCar(formObj).then(data=> {
+
+      printSellingCarList(data.dtoList)                // 목록 처리
+      printPages(data, pagination)
+
     }).catch(e=>{
       console.error(e)
     })
-
   }
 
+  function printSellingCarList(dtoList){
+
+    let content = '';
+    if(dtoList && dtoList.length > 0){
+      for(const dto of dtoList){
+
+        const requiredPrice = makePriceCurrency(dto.requiredPrice)
+
+        content += `<tr class="memList">`;
+        content += `  <th scope="row" class="col-md-3">`
+
+        content += `<a href="/sellingCar/view/${dto.sellingCarId}" class="text-decoration-none">${dto.carNumber}`
+        if(dto.sellingCarStatus === 'PROCESSING' && dto.expired === false){
+          content += `&nbsp;<span class="badge progress-bar-success" style="background-color: #0a53be">판매 중</span>`
+        }
+        if(dto.sellingCarStatus === 'PROCESSING' && dto.expired === true){
+          content += `&nbsp;<span class="badge progress-bar-success" style="background-color: #bb2d3b">판매 완료</span>`
+        }
+        if(dto.sellType === 'SELL_AUCTION') {
+          content += `<span class="badge progress-bar-success" style="background-color: #611adb">경매</span>`
+        }
+        if(dto.sellType === 'SELL_CONSULT') {
+          content += `<span class="badge progress-bar-success" style="background-color: #0dd52e">상담</span>`
+        }
+        content += `</a>`
+
+        if(dto.mainImage !== null){
+          content += `<div><img src="/view/carImage/${dto.mainImage.uuid}_${dto.mainImage.fileName}" width=150`
+          content += `        th:data-src="${dto.mainImage.uuid}" onclick="window.open(this.src)"></div>`
+        }
+        content += `  </th>`
+        content += `<td>${dto.carDetailModel}</td>`
+        content += `<td>${dto.carYears}년형</td>`
+        content += `<td>${requiredPrice}</td>`
+        content += `<td>${dto.expiredDate}</td>`
+        content += `</tr>`;
+      }
+    }
+
+    tableSellingCar.innerHTML = content
+  }
+
+
+  document.querySelector(".clearBtn").addEventListener("click", function(e){
+    e.preventDefault()
+    e.stopPropagation()
+
+    self.location = '/sellingCar/list' // 자바스크립트로 다른 url 호출
+
+  },false)
+
+
   document.querySelectorAll(".carTypeSelect").forEach(function (item,idx){
-    item.addEventListener('change', function(){
+    item.addEventListener('change', function(e){
+
+      e.preventDefault()
+      e.stopPropagation()
 
       const parentMenuName = item.options[item.selectedIndex].innerText;
+
+      console.log('change!!!!!!!!!!!!! : ' + item + ', ' + idx + ', ' + parentMenuName)
 
       if(parentMenuName === '제조사'){
         initCarTypeMenu(arrayCarTypeGroup[1])
@@ -232,18 +288,29 @@
     });
   }, false)
 
+  function setListRefCarType(groupIndex = 0, parentMenuName= ''){
+
+    getListRefCarType({groupIndex, parentMenuName}).then(data=> {
+      printListRefCarType(groupIndex, data, arrayCarTypeGroup[groupIndex])                // 목록 처리
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
   function initCarTypeMenu(tag){
-    tag.options.length = 0;
 
     let option = document.createElement('option')
     option.innerText = '-----'
+    option.setAttribute('value','')
+
+    tag.options.length = 0;
     tag.append(option);
   }
 
-  function setCarTypeMenu(tag, dto){
+  function setCarTypeMenu(groupIndex, tag, dto){
+
     let option = document.createElement('option')
     option.innerText = dto.typeName
-    option.setAttribute('value', dto.typeId)
+
     tag.append(option);
   }
 
@@ -252,7 +319,6 @@
     if(dtoList && dtoList.length > 0){
 
       arrayCarTypeGroup[3].options.length = 1;
-
       if(groupIndex <= 2){
         arrayCarTypeGroup[2].options.length = 1;
       }
@@ -264,9 +330,8 @@
       }
 
       for(const dto of dtoList){
-        setCarTypeMenu(tag, dto)
+        setCarTypeMenu(groupIndex, tag, dto)
       }
-
     }
   }
 
@@ -281,29 +346,67 @@
     }
   }
 
-  document.querySelector(".pagination").addEventListener("click", function(e){
-    e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
-    e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
 
-    const target = e.target   // a 태그
-    if(target.tagName !== 'A'){
-      return
-    }
+  // document.querySelectorAll(".carTypeSelect").forEach(function (item,idx){
+  //   item.addEventListener('click', function(e){
+  //
+  //     e.preventDefault()
+  //     e.stopPropagation()
+  //
+  //     if(idx >= 1){
+  //       const parentMenuName = arrayCarTypeGroup[idx-1].options[arrayCarTypeGroup[idx-1].selectedIndex].innerText;
+  //
+  //       console.log('click!!!!!!!!!!!!! : ' + parentMenuName + ', ' + idx)
+  //
+  //       if(parentMenuName !== '-----'){
+  //
+  //         console.log('click -> setListRefCarType: ' + parentMenuName + ', ' + idx)
+  //         setListRefCarType(idx, parentMenuName)
+  //       }
+  //     }
+  //   });
+  // }, false)
 
-    const num = target.getAttribute("data-num")
-    const formObj = document.querySelector("#f2")
-
-    formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
-    formObj.submit();
-
-  }, false)
-
-  document.querySelector(".clearBtn").addEventListener("click", function(e){
-    e.preventDefault()
-    e.stopPropagation()
-
-    self.location = '/sellingCar/list' // 자바스크립트로 다른 url 호출
-
-  },false)
+  // function setSelectBoxSelected(){
+  //
+  //   // console.log('reqDtoTypeGroup1 : ' + reqDtoTypeGroup1)
+  //   // console.log('reqDtoTypeGroup2 : ' + reqDtoTypeGroup2)
+  //   // console.log('reqDtoTypeGroup3 : ' + reqDtoTypeGroup3)
+  //   // console.log('reqDtoTypeGroup4 : ' + reqDtoTypeGroup4)
+  //
+  //   for (let i = 0; i < document.querySelector(".carTypeGroup1").options.length; i++) {
+  //     if(reqDtoTypeGroup1 === arrayCarTypeGroup[0].options[i].innerHTML){
+  //       arrayCarTypeGroup[0].options[i].setAttribute("selected", true)
+  //     }
+  //   }
+  //
+  //   if(reqDtoTypeGroup2 !== null && reqDtoTypeGroup2.length !== 0){
+  //
+  //     console.log('reqDtoTypeGroup2 is not null : ' + reqDtoTypeGroup2)
+  //
+  //     const dto = {typeName:reqDtoTypeGroup2}
+  //     setCarTypeMenu(1, arrayCarTypeGroup[1], dto)
+  //     arrayCarTypeGroup[1].options[1].setAttribute("selected", true)
+  //     //arrayCarTypeGroup[1].setAttribute("disabled", true)
+  //   }
+  //   if(reqDtoTypeGroup3 !== null && reqDtoTypeGroup3.length !== 0){
+  //
+  //     console.log('reqDtoTypeGroup3 is not null')
+  //
+  //     const dto = {typeName:reqDtoTypeGroup3}
+  //     setCarTypeMenu(2, arrayCarTypeGroup[2], dto)
+  //     arrayCarTypeGroup[2].options[1].setAttribute("selected", true)
+  //     //arrayCarTypeGroup[2].setAttribute("disabled", true)
+  //   }
+  //   if(reqDtoTypeGroup4 !== null && reqDtoTypeGroup4.length !== 0){
+  //
+  //     console.log('reqDtoTypeGroup4 is not null')
+  //
+  //     const dto = {typeName:reqDtoTypeGroup4}
+  //     setCarTypeMenu(3, arrayCarTypeGroup[3], dto)
+  //     arrayCarTypeGroup[3].options[1].setAttribute("selected", true)
+  //     //arrayCarTypeGroup[3].setAttribute("disabled", true)
+  //   }
+  // }
 
 </script>

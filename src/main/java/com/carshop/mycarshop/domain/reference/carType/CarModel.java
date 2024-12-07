@@ -13,7 +13,8 @@ public enum CarModel implements Operation{
     CAR_MODEL_AVANTE(3, "아반떼", "현대"),
     CAR_MODEL_K5(4, "K5","기아"),
     CAR_MODEL_K7(5, "K7", "기아"),
-    CAR_MODEL_SPORTAGE(6, "스포티지", "기아")
+    CAR_MODEL_K8(6, "K8", "기아"),
+    CAR_MODEL_SPORTAGE(7, "스포티지", "기아"),
     ;
 
     private final Integer type;

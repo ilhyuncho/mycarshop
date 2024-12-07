@@ -281,7 +281,7 @@
       reviewAvgScore.textContent = '( 별점 평균 : ' + data.reviewAvgScore + ' )'
 
       printReview(data.dtoList)
-      printReviewPage(data)
+      printPages(data, pagination)
 
     }).catch(e => {
       console.log(e)
@@ -349,35 +349,6 @@
     })
     modalReviewImg.innerHTML = imageContents
   }
-  function printReviewPage(data){
-
-    let content = '';
-
-    if(data.prev === true){
-      content = `<li class="page-item">`
-      content += `<a class="page-link" data-num="${data.start - 1}">Previous</a>`
-      content += `</li>`
-    }
-
-    for(var index = data.start; index <= data.end; index++){
-      if( data.page === index){
-        content += `<li class="page-item active">`
-      }
-      else{
-        content += `<li class="page-item">`
-      }
-      content += `<a class="page-link" data-num="${index}">${index}</a>`
-      content += `</li>`
-    }
-
-    if(data.next === true){
-      content += `<li class="page-item">`
-      content += `<a class="page-link" data-num="${data.end + 1}">Next</a>`
-      content += `</li>`
-    }
-
-    pagination.innerHTML = content;
-  }
 
   // 페이지 버튼 클릭 이벤트 begin ------------------
   document.querySelector(".pagination").addEventListener("click", function(e){
@@ -389,7 +360,7 @@
     if(target.tagName !== 'A'){
       return
     }
-    const num = target.getAttribute("data-num")
+    const num = target.getAttribute("data-page")
 
     resetReview(num, reviewViewCount)
 

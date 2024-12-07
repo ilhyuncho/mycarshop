@@ -40,6 +40,7 @@
                 <span th:if="${#strings.equals(dto.sellingCarStatus, 'COMPLETE')}">
                     [[${dto.carNumber}]]
                   </span>
+                &nbsp;
                 <span class="badge progress-bar-success" th:if="${dto.sellingCarStatus}"
                       style="background-color: #0a53be">[[${dto.sellingCarStatus.name}]]</span>
 

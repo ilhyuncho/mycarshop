@@ -14,6 +14,14 @@ async function getSellingCar({sellingCarId}){
     return result.data
 }
 
+async function getListSellingCar(formObj){
+
+    const result = await axios.get(`/sellingCar/listSearch`, {params: formObj})
+
+    console.log('getListSellingCar : ' + result.data)
+    return result.data
+}
+
 // 추천 차량 조회
 async function getRecommendSellingCar({page, size}){
     const result = await axios.get(`/sellingCar/recommend`, {params: {page}})

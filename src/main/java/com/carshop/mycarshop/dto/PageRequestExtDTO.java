@@ -31,5 +31,29 @@ public class PageRequestExtDTO extends PageRequestDTO{
         return typeExt.split("");
     }
 
+    public String getTypeGroup1() {
+        if(typeGroup1 != null && !typeGroup1.isEmpty()){
+            return typeGroup1;
+        }
+        return null;
+    }
+    public String getTypeGroup2() {
+        if(typeGroup2 != null && !typeGroup2.isEmpty()){
+            return typeGroup2;
+        }
+        return null;
+    }
+    public String getTypeGroup3() {
+        if(typeGroup3 != null && !typeGroup3.isEmpty()){
+            return typeGroup3;
+        }
+        return null;
+    }
+    public String getTypeGroup4() {
+        if(typeGroup4 != null && !typeGroup4.isEmpty()){
+            return typeGroup4;
+        }
+        return null;
+    }
 
 }

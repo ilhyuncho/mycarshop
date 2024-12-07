@@ -30,10 +30,13 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
         String keyword = pageRequestExtDT.getKeyword();
         int carYearsMin = pageRequestExtDT.getCarYearsMin();
         int carYearsMax = pageRequestExtDT.getCarYearsMax();
+
         String typeGroup1 = pageRequestExtDT.getTypeGroup1();
         String typeGroup2 = pageRequestExtDT.getTypeGroup2();
         String typeGroup3 = pageRequestExtDT.getTypeGroup3();
         String typeGroup4 = pageRequestExtDT.getTypeGroup4();
+
+        log.error(pageRequestExtDT);
 
         QSellingCar sellingCar = QSellingCar.sellingCar;
         JPQLQuery<SellingCar> query = from(sellingCar);
@@ -53,6 +56,8 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
             }
             query.where(booleanBuilder);
         }
+
+
         if (typeExts != null && typeExts.length > 0) {
             BooleanBuilder booleanBuilder = new BooleanBuilder();
             for (String type : typeExts) {
@@ -71,9 +76,18 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
             query.where(sellingCar.car.carYears.between(carYearsMin, carYearsMax));                            // 선택 한 연식
         }
 
-        if(typeGroup1 != null ){
-            query.where(sellingCar.car.refCarInfo.carCategory.eq(CarCategory.fromValue(Integer.valueOf(typeGroup1)).getName()));
+        if(null != typeGroup1){
+            query.where(sellingCar.car.refCarInfo.carCategory.eq(typeGroup1));
+        };
+        if(null != typeGroup2){
+            query.where(sellingCar.car.refCarInfo.company.eq(typeGroup2));
         }
+        if(null != typeGroup3){
+            query.where(sellingCar.car.refCarInfo.carModel.eq(typeGroup3));
+        }
+        if(null != typeGroup4){
+            query.where(sellingCar.car.refCarInfo.carDetailModel.eq(typeGroup4));
+        };
 
        // query.where(sellingCar.sellingCarStatus.eq(SellingCarStatus.PROCESSING));   // 판매 중 인것만 표시
 
@@ -81,9 +95,11 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
         List<SellingCar> list = query.fetch();
         long count = query.fetchCount();
 
-//        for (SellingCar car : list) {
-//            log.error(car.getSellingCarId() + "," + car.getCar().getCarNumber() + "," + car.getCar().getCarModel());
-//        }
+        log.error("count : " + count);
+
+        for (SellingCar car : list) {
+            log.error(car.getSellingCarId() + "," + car.getCar().getCarNumber());
+        }
 
         return new PageImpl<>(list, pageable, count);
     }
