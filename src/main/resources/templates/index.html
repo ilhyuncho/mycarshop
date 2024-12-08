@@ -24,7 +24,6 @@
           <div class="row mt-3 text-info" >
             <hr class="my-4">
             <h3>추천 차량</h3>
-
             <div class="my-4">
               <button type="submit" class="btn btn-primary submitBtn">갱신</button>
             </div>
@@ -36,7 +35,6 @@
           <div class="row mt-3 text-warning" >
             <hr class="my-4">
             <h3>최근 본 차량</h3>
-
             <div class="row RecentlySeenCarList">
 
             </div>
@@ -147,7 +145,7 @@
         const requiredPrice = makePriceCurrency(dto.requiredPrice)
         const sellTypeText = dto.sellType === 'SELL_AUCTION' ? '경매' : '상담'
 
-        str += `<div class="col-md-4 margin">
+        str += `<div class="col-md-3 margin">
                             <div class="card">
                              <div><span class="badge progress-bar-success"
                                 style="background-color: #0a53be">${sellTypeText}<span>
