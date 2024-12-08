@@ -57,6 +57,7 @@ public class SecurityConfig {
                 // message: Refused to apply style from 'http://13.124.166.39:8080/auth/login' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
                 // 해결 못함
 
+                .antMatchers( "/swagger-ui/index.html**").permitAll()
                 //.antMatchers( "/swagger-ui/index.html**").hasRole("ADMIN")
 //                .antMatchers("/myPage/**").permitAll()
                 .anyRequest().authenticated();
