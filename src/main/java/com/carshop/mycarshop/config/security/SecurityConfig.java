@@ -90,7 +90,7 @@ public class SecurityConfig {
         return (web) -> web.ignoring()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                 //.antMatchers("/view/**")
-                .antMatchers("/mycarshopViewInfo/**", "/css/**", "/js/**", "/assets/**", "item/**")
+                //.antMatchers("/mycarshopViewInfo/**", "/css/**", "/js/**", "/assets/**", "item/**")
                 ;
     }
 
