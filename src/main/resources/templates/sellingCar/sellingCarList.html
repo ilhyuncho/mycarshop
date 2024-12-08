@@ -24,7 +24,7 @@
             <div  class="row mt-3">
               <div class="col">
 
-                <div class="input-group w-50">
+                <div class="input-group 25">
                   <label class="input-group-text" for="typeExt">판매 타입</label>
                     <select class="form-select" id="typeExt">
                       <option value="">-----</option>
@@ -63,7 +63,7 @@
                   </div>
                 </div>
 
-                <div class="input-group ">
+                <div class="input-group">
                   <label class="input-group-text">차량 종류</label>
                   <select class="form-select carTypeGroup1 carTypeSelect">
                     <option value="">제조사</option>
@@ -82,8 +82,8 @@
                 </div>
 
                 <div class="input-group-append">
-                  <button class="btn btn-outline-secondary searchBtn" type="submit">Search</button>
-                  <button class="btn btn-outline-secondary clearBtn" type="button">Clear</button>
+                  <button class="btn btn-primary searchBtn" type="submit">검색</button>
+                  <button class="btn btn-secondary clearBtn" type="button">선택 초기화</button>
                 </div>
 
               </div>
@@ -154,8 +154,18 @@
   // 차 선택 메뉴 항목 list 가져오기
   setListRefCarType()
 
+  // 차량 명 으로 검색 했을때
+  const requestType = [[${pageRequestDto.type}]]
+  const requestKeyword = [[${pageRequestDto.keyword}]]    // 차량 명
+
+  const formObj = new FormData();
+  if(requestType != null && requestKeyword != null){
+    formObj.append("type", requestType.toString());
+    formObj.append("keyword", requestKeyword.toString());
+  }
+
   // 판매 차량 list 가져오기
-  updateListSellingCar(1)
+  updateListSellingCar(1, formObj)
 
 
   // Search 파일 클릭
@@ -182,7 +192,7 @@
 
   }, false)
 
-  function updateListSellingCar(page){
+  function updateListSellingCar(page, addFormObj){
 
     const formObj = {
       page:page,
@@ -194,6 +204,13 @@
       typeGroup2:arrayCarTypeGroup[1].value,
       typeGroup3:arrayCarTypeGroup[2].value,
       typeGroup4:arrayCarTypeGroup[3].value,
+    }
+
+    if(addFormObj != null){
+      Object.assign(formObj, {
+        type:addFormObj.get('type'),
+        keyword:addFormObj.get('keyword'),
+      });
     }
 
     getListSellingCar(formObj).then(data=> {
@@ -260,7 +277,6 @@
 
   document.querySelectorAll(".carTypeSelect").forEach(function (item,idx){
     item.addEventListener('change', function(e){
-
       e.preventDefault()
       e.stopPropagation()
 
@@ -288,6 +304,7 @@
     });
   }, false)
 
+  // 차량 선택 selectbox 메뉴 항목 채우기
   function setListRefCarType(groupIndex = 0, parentMenuName= ''){
 
     getListRefCarType({groupIndex, parentMenuName}).then(data=> {
@@ -296,6 +313,7 @@
       console.error(e)
     })
   }
+  // 차량 선택 selectbox 메뉴 항목 초기화
   function initCarTypeMenu(tag){
 
     let option = document.createElement('option')
@@ -306,14 +324,7 @@
     tag.append(option);
   }
 
-  function setCarTypeMenu(groupIndex, tag, dto){
-
-    let option = document.createElement('option')
-    option.innerText = dto.typeName
-
-    tag.append(option);
-  }
-
+  // 차량 선택 selectbox 메뉴 항목 지정
   function printListRefCarType(groupIndex, dtoList, tag){
 
     if(dtoList && dtoList.length > 0){
@@ -335,6 +346,16 @@
     }
   }
 
+  // 차량 선택 selectbox 메뉴 항목 지정
+  function setCarTypeMenu(groupIndex, tag, dto){
+
+    let option = document.createElement('option')
+    option.innerText = dto.typeName
+
+    tag.append(option);
+  }
+
+  // 차량 연식 선택 화면 뷰 on/off
   function clickSelectBoxCarYears(){
     if( isCarYearsSelect.getAttribute("value") === 'hidden'){
       carYearsMinDiv.setAttribute("style","display:block");
@@ -346,67 +367,5 @@
     }
   }
 
-
-  // document.querySelectorAll(".carTypeSelect").forEach(function (item,idx){
-  //   item.addEventListener('click', function(e){
-  //
-  //     e.preventDefault()
-  //     e.stopPropagation()
-  //
-  //     if(idx >= 1){
-  //       const parentMenuName = arrayCarTypeGroup[idx-1].options[arrayCarTypeGroup[idx-1].selectedIndex].innerText;
-  //
-  //       console.log('click!!!!!!!!!!!!! : ' + parentMenuName + ', ' + idx)
-  //
-  //       if(parentMenuName !== '-----'){
-  //
-  //         console.log('click -> setListRefCarType: ' + parentMenuName + ', ' + idx)
-  //         setListRefCarType(idx, parentMenuName)
-  //       }
-  //     }
-  //   });
-  // }, false)
-
-  // function setSelectBoxSelected(){
-  //
-  //   // console.log('reqDtoTypeGroup1 : ' + reqDtoTypeGroup1)
-  //   // console.log('reqDtoTypeGroup2 : ' + reqDtoTypeGroup2)
-  //   // console.log('reqDtoTypeGroup3 : ' + reqDtoTypeGroup3)
-  //   // console.log('reqDtoTypeGroup4 : ' + reqDtoTypeGroup4)
-  //
-  //   for (let i = 0; i < document.querySelector(".carTypeGroup1").options.length; i++) {
-  //     if(reqDtoTypeGroup1 === arrayCarTypeGroup[0].options[i].innerHTML){
-  //       arrayCarTypeGroup[0].options[i].setAttribute("selected", true)
-  //     }
-  //   }
-  //
-  //   if(reqDtoTypeGroup2 !== null && reqDtoTypeGroup2.length !== 0){
-  //
-  //     console.log('reqDtoTypeGroup2 is not null : ' + reqDtoTypeGroup2)
-  //
-  //     const dto = {typeName:reqDtoTypeGroup2}
-  //     setCarTypeMenu(1, arrayCarTypeGroup[1], dto)
-  //     arrayCarTypeGroup[1].options[1].setAttribute("selected", true)
-  //     //arrayCarTypeGroup[1].setAttribute("disabled", true)
-  //   }
-  //   if(reqDtoTypeGroup3 !== null && reqDtoTypeGroup3.length !== 0){
-  //
-  //     console.log('reqDtoTypeGroup3 is not null')
-  //
-  //     const dto = {typeName:reqDtoTypeGroup3}
-  //     setCarTypeMenu(2, arrayCarTypeGroup[2], dto)
-  //     arrayCarTypeGroup[2].options[1].setAttribute("selected", true)
-  //     //arrayCarTypeGroup[2].setAttribute("disabled", true)
-  //   }
-  //   if(reqDtoTypeGroup4 !== null && reqDtoTypeGroup4.length !== 0){
-  //
-  //     console.log('reqDtoTypeGroup4 is not null')
-  //
-  //     const dto = {typeName:reqDtoTypeGroup4}
-  //     setCarTypeMenu(3, arrayCarTypeGroup[3], dto)
-  //     arrayCarTypeGroup[3].options[1].setAttribute("selected", true)
-  //     //arrayCarTypeGroup[3].setAttribute("disabled", true)
-  //   }
-  // }
 
 </script>
