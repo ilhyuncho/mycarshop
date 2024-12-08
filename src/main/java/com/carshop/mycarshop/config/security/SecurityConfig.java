@@ -52,7 +52,15 @@ public class SecurityConfig {
                 .antMatchers("/review/**").permitAll()
                 .antMatchers("/verify/email").permitAll()
                 .antMatchers("/reference/listRefCarType").permitAll()
-                .antMatchers("/swagger-ui/index.html**").permitAll()        // 임시로
+
+                .antMatchers(
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/swagger-ui.html",
+                        "/webjars/**",
+                        "/static/**")
+                .permitAll()
+             //  .antMatchers("/swagger-ui/index.html**").permitAll()        // 임시로
                 //.antMatchers( "/swagger-ui/index.html**").hasRole("ADMIN")
 //                .antMatchers("/myPage/**").permitAll()
                 .anyRequest().authenticated();
