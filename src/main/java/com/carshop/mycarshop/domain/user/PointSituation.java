@@ -15,7 +15,9 @@ public enum PointSituation {
     DAILY_LOGIN(2L, "매일 로그인"),
     REGISTER_CAR(3L, "내차 등록"),
     SELL_CAR(4L, "차 판매 등록"),
-    BUY_ITEM_WITH_POINT(5L, "상품 구매 포인트 사용");
+    BUY_ITEM_WITH_POINT(5L, "상품 구매 포인트 사용"),
+    CANCEL_ITEM_RETURN_POINT(6L, "상품 구매 포인트 환불")
+    ;
 
     private final Long type;
     private final String typeName;

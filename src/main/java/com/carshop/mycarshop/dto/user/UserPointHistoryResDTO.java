@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class UserPointHistoryResDTO {
 
     private String situationName;
-    private PointType pointType;
+    private String pointTypeName;
     private Integer pointValue;
     private LocalDate regDate;
 

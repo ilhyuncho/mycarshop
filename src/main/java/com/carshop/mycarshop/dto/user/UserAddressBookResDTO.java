@@ -1,6 +1,7 @@
 package com.carshop.mycarshop.dto.user;
 
 
+import com.carshop.mycarshop.common.util.Util;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,5 +26,9 @@ public class UserAddressBookResDTO {
     private String street;
     private String detailAddress;
     private String fullAddress;
+
+    public String getPhoneNumber(){
+        return Util.phoneNumber(this.recipientPhoneNumber);
+    }
 
 }

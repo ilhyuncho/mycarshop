@@ -44,11 +44,13 @@ public class UserPointHistorySearchImpl extends QuerydslRepositorySupport implem
                     case "c":
                         booleanBuilder.or(userPointHistory.pointType.eq(PointType.CONSUME));
                         break;
+                    case "r":
+                        booleanBuilder.or(userPointHistory.pointType.eq(PointType.RETURN));
+                        break;
                 }
             }
             query.where(booleanBuilder);
         }
-
 
         query.orderBy(userPointHistory.regDate.desc());
 

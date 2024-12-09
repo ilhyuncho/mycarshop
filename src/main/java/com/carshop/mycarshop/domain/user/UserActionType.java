@@ -6,7 +6,9 @@ public enum UserActionType {
     ACTION_REG_MY_CAR(2),               // 내 차량 등록
     ACTION_REG_SELLING_CAR(3),          // 차량 판매 등록
     ACTION_SELL_CAR(4),                 // 차량 판매 완료
-    ACTION_BUY_ITEM_WITH_POINT(5);      // 상품 구매시 포인트 사용
+    ACTION_BUY_ITEM_WITH_POINT(5),      // 상품 구매시 포인트 사용
+    ACTION_CANCEL_ITEM_WITH_POINT(6)    // 상품 구매 취소에 따른 포인트 환불
+    ;
 
     private final Integer type;
 

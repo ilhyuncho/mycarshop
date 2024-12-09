@@ -7,12 +7,13 @@ public enum DeliveryStatus {
     DELIVERY_COMPLETE(3, "배송 완료"),
     DELIVERY_CANCEL(4, "주문 취소");
 
-    private final Integer status;
+    private final Integer type;
     private final String name;
 
-    DeliveryStatus(Integer status, String name) {
-        this.status = status;
+    DeliveryStatus(Integer type, String name) {
+        this.type = type;
         this.name = name;
     }
+    public int getType(){return type;}
     public String getName(){return name;}
 }

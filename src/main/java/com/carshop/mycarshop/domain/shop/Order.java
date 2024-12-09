@@ -73,6 +73,15 @@ public class Order {
         return order;
     }
 
+    public void cancelOrder(){
+        if(this.useMPoint > 0)
+        {
+            this.user.addMPoint(this.useMPoint);
+        }
+
+        changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
+    }
+
     public void addOrderItem(OrderItem orderItem) {
         orderItemList.add(orderItem);
         orderItem.setOrder(this);

@@ -43,9 +43,10 @@
                 <div>
                   <strong class="opt-tit">타입</strong>
                   <select class="sel-tp01" id="searchType" style="width:100px;">
-                    <option value="gc" selected>All</option>
+                    <option value="gcr" selected>All</option>
                     <option value="g">획득</option>
                     <option value="c">소비</option>
+                    <option value="r">환불</option>
                   </select>
                 </div>
                 <div>
@@ -153,7 +154,7 @@
       console.error(e)
     })
   }
-  function printMyPoint(dtoList ) {    // 목록 출력
+  function printMyPoint(dtoList) {    // 목록 출력
     // 기존 행 삭제
     while (tableMyPoint.firstChild) {
       tableMyPoint.removeChild(tableMyPoint.firstChild);
@@ -179,8 +180,11 @@
     }
   }
   function makePointData(arr, dtoData){
+    console.log(dtoData)
+
     arr[0] = dtoData.situationName
-    arr[1] = dtoData.pointValue + ' ' + (dtoData.pointType.toString() === 'GAIN' ? '획득' : '차감')
+    // arr[1] = dtoData.pointValue + ' ' + (dtoData.pointType.toString() === 'GAIN' ? '획득' : '차감')
+    arr[1] = dtoData.pointValue + '    ' + (dtoData.pointTypeName)
     arr[2] = dtoData.regDate
   }
 

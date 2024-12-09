@@ -57,7 +57,10 @@ public class myInfoRestController {
 
         User user = userService.findUser(memberId);
 
-        return userAddressBookService.getAllUserAddressBookInfo(user);
+        List<UserAddressBookResDTO> listUserAddressBookInfo = userAddressBookService.getAllUserAddressBookInfo(user);
+
+        listUserAddressBookInfo.forEach(log::error);
+        return listUserAddressBookInfo;
     }
 
     @ApiOperation(value = "배송지 추가", notes = "")

@@ -169,12 +169,12 @@ function selectAddress(){
                 const isMainAddress = e.mainAddressCheck
 
                 _html += `<div class="dialog">
-                        <div class="dialog_inner">
-                             <input type="hidden" name="modalSelectIndex">
-                             <div class="input-group mb-3">
-                                <input type="checkbox" data-bs-target=${e.userAddressBookId} name="modalCheckAddress"
-                                    onchange="addressSelect( ${i}, this )"/>
-                                <h5>${e.deliveryName}`
+                            <div class="dialog_inner">
+                                 <input type="hidden" name="modalSelectIndex">
+                                 <div class="input-group mb-3">
+                                    <input type="checkbox" data-bs-target=${e.userAddressBookId} name="modalCheckAddress"
+                                        onchange="addressSelect( ${i}, this )"/>
+                                    <h5>${e.deliveryName}`
 
                 if(isMainAddress){
                     _html += `<i class="fa-solid fa-circle" style="color: blueviolet"></i>`
@@ -183,12 +183,11 @@ function selectAddress(){
                _html += `       </h5>
                              </div>
                              <div class="input-group mb-3">
-                               <p>${e.recipientName}/${e.recipientPhoneNumber}</p>
+                               <p>${e.recipientName} &nbsp;/&nbsp; ${e.phoneNumber}</p>
                                <p>${e.fullAddress}</p>
                              </div>
                              <hr class="my-4">
                         </div>`
-
             })
         }
         _html += '</div>'

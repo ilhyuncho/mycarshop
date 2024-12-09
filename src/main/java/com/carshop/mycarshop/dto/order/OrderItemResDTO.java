@@ -1,6 +1,7 @@
 package com.carshop.mycarshop.dto.order;
 
 
+import com.carshop.mycarshop.domain.shop.DeliveryStatus;
 import com.carshop.mycarshop.dto.ImageListDTO;
 import com.carshop.mycarshop.dto.shop.ItemOptionResDTO;
 import com.carshop.mycarshop.service.common.CommonUtils;
@@ -21,7 +22,7 @@ import java.util.List;
 public class OrderItemResDTO extends ImageListDTO {
     private Long orderId;
     private Long orderItemId;
-    private String deliveryStatus;
+    private DeliveryStatus deliveryStatus;
     private int orderCount;
     private Long shopItemId;
     private String itemName;

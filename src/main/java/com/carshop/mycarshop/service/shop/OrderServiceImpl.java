@@ -133,7 +133,7 @@ public class OrderServiceImpl implements OrderService {
                     .shopItemId(orderItem.getShopItem().getShopItemId())
                     .itemName(orderItem.getShopItem().getItemName())
                     .orderPrice(orderItem.getOrderPrice())
-                    .deliveryStatus(order.getDeliveryStatus().getName())
+                    .deliveryStatus(order.getDeliveryStatus())
                     .orderDate(order.getOrderTime().toLocalDate())
                     .isReviewWrite(review.isPresent())
                     .build();
@@ -258,8 +258,14 @@ public class OrderServiceImpl implements OrderService {
     public void cancelOrder(Long orderId) {
 
         Order order = getOrderInfo(orderId);
+        log.error("order : " + order);
 
-        order.changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
+        order.cancelOrder();
+
+        if(order.getUseMPoint() > 0){
+            userPointHistoryService.cancelUserPoint(order.getUser().getMemberId(), UserActionType.ACTION_CANCEL_ITEM_WITH_POINT,
+                    order.getUseMPoint());
+        }
     }
 
     @Override

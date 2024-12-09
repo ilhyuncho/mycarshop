@@ -53,8 +53,6 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
                     .checkValue(checkValue)
                     .build());
         }
-
-
     }
 
     @Override
@@ -67,6 +65,18 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
                 .pointType(PointType.CONSUME)
                 .pointSituation(PointSituation.BUY_ITEM_WITH_POINT)
                 .pointValue(consumePoint * -1)
+                .build());
+    }
+
+    @Override
+    public void cancelUserPoint(String memberId, UserActionType userActionType, int returnPoint) {
+        User user = userService.findUser(memberId);
+
+        userPointHistoryRepository.save(UserPointHistory.builder()
+                .user(user)
+                .pointType(PointType.RETURN)
+                .pointSituation(PointSituation.CANCEL_ITEM_RETURN_POINT)
+                .pointValue(returnPoint)
                 .build());
     }
 
@@ -132,23 +142,19 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
     }
 
     public static PointSituation convertPointSituation(UserActionType userActionType){
-        switch (userActionType) {
-            case ACTION_LOGIN:
-                return PointSituation.DAILY_LOGIN;
-            case ACTION_REG_MY_CAR:
-                return PointSituation.REGISTER_CAR;
-            case ACTION_REG_SELLING_CAR:
-                return PointSituation.SELL_CAR;
-            default:
-                return PointSituation.SITUATION_NONE;
-        }
+        return switch (userActionType) {
+            case ACTION_LOGIN -> PointSituation.DAILY_LOGIN;
+            case ACTION_REG_MY_CAR -> PointSituation.REGISTER_CAR;
+            case ACTION_REG_SELLING_CAR -> PointSituation.SELL_CAR;
+            default -> PointSituation.SITUATION_NONE;
+        };
     }
 
     private static UserPointHistoryResDTO entityToDTO(UserPointHistory userPointHistory) {
 
         return UserPointHistoryResDTO.builder()
                 .situationName(userPointHistory.getPointSituation().getTypeName())
-                .pointType(userPointHistory.getPointType())
+                .pointTypeName(userPointHistory.getPointType().getName())
                 .pointValue(userPointHistory.getPointType() == PointType.CONSUME ?
                         userPointHistory.getPointValue() * -1 : userPointHistory.getPointValue())
                 .regDate(userPointHistory.getRegDate().toLocalDate())

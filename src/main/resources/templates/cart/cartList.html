@@ -102,7 +102,7 @@
                                                     th:onclick="showDeliveryAddress()">추가</button>
                                         </div>
                                     </div>
-                                    <div id="recipientName" th:text="|${mainAddressInfo != null ? '(' + mainAddressInfo.recipientName + ') ' + mainAddressInfo.recipientPhoneNumber : ''}|"></div>
+                                    <div id="recipientName" th:text="|${mainAddressInfo != null ? '(' + mainAddressInfo.recipientName + ') ' + mainAddressInfo.getPhoneNumber() : ''}|"></div>
                                     <div id="fullAddress" th:text="|${mainAddressInfo != null ? mainAddressInfo.fullAddress : ''}|"></div>
                                 </div><!-- <div class="card-body">-->
 
@@ -191,7 +191,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary modalSelectBtn">선택</button>
-                    <button type="button" class="btn btn-outline-dark modalAddressListCloseBtn">Close</button>
+                    <button type="button" class="btn btn-outline-dark modalAddressListCloseBtn">닫기</button>
                 </div>
             </div>
         </div>
