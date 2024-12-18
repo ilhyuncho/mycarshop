@@ -136,6 +136,14 @@ public class ShopItem {
         }
         purchaseCount += count;
     }
+    public void minusPurchaseCount(int count) {
+        if(purchaseCount - count < 0){
+            purchaseCount = 0;
+        }
+        else{
+            purchaseCount -= count;
+        }
+    }
 
     public SortedMap<ItemOptionType, String> getMapItemOption(){
 

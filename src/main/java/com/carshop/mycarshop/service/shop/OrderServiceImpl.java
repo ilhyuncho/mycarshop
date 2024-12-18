@@ -262,6 +262,12 @@ public class OrderServiceImpl implements OrderService {
 
         order.cancelOrder();
 
+        // 상품 별 구매 수량 롤백
+        List<OrderItem> orderItemList = order.getOrderItemList();
+        orderItemList.forEach(orderItem-> {
+            orderItem.getShopItem().minusPurchaseCount(orderItem.getOrderCount());
+        });
+
         if(order.getUseMPoint() > 0){
             userPointHistoryService.cancelUserPoint(order.getUser().getMemberId(), UserActionType.ACTION_CANCEL_ITEM_WITH_POINT,
                     order.getUseMPoint());

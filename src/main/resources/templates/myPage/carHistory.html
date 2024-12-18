@@ -40,12 +40,12 @@
                 <table id="tableAll_temp">
                   <thead>
                   <tr>
+                    <th scope="col">날짜</th>
                     <th scope="col">결제 금액</th>
                     <th scope="col">누적 km</th>
                     <th scope="col">주유 량(L)</th>
                     <th scope="col">항목</th>
                     <th scope="col">장소</th>
-                    <th scope="col">Date</th>
                   </tr>
                   </thead>
                   <tbody id="tableAll">
@@ -59,18 +59,18 @@
                 <table id="tableGas_temp">
                   <thead>
                   <tr>
+                    <th scope="col">날짜</th>
                     <th scope="col">결제 금액</th>
                     <th scope="col">누적 km</th>
                     <th scope="col">주유 량(L)</th>
                     <th scope="col">장소</th>
-                    <th scope="col">Date</th>
                   </tr>
                   </thead>
                   <tbody id="tableGas">
                   </tbody>
                 </table>
               </div>
-              <div class="input-group mb-3">
+              <div class="input-group mb-3" style="margin-top:50px">
                 <button type="button" class="btn btn-primary addGasHistoryBtn">주유 기록</button>
               </div>
 
@@ -80,18 +80,18 @@
                 <table id="tableRepair_temp">
                   <thead>
                   <tr>
+                    <th scope="col">날짜</th>
                     <th scope="col">결제 금액</th>
                     <th scope="col">누적 km</th>
                     <th scope="col">항목</th>
                     <th scope="col">장소</th>
-                    <th scope="col">Date</th>
                   </tr>
                   </thead>
                   <tbody id="tableRepair">
                   </tbody>
                 </table>
               </div>
-              <div class="input-group mb-3">
+              <div class="input-group mb-3" style="margin-top:50px">
                 <button type="button" class="btn btn-primary addRepairHistoryBtn">정비 기록</button>
               </div>
             </div>
@@ -141,7 +141,7 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger sendGasHistoryBtn">추가</button>
+          <button type="button" class="btn btn-primary sendGasHistoryBtn">추가</button>
           <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
         </div>
       </div>
@@ -367,12 +367,12 @@
   }
 
   function makeHistoryData(arr, dtoData){
-    arr[0] = dtoData.replacePrice + '원'
-    arr[1] = dtoData.accumKm + ' km'
-    arr[2] = dtoData.gasLitter > 0 ? dtoData.gasLitter + ' 리터' : ''
-    arr[3] = dtoData.repairType === 'x' ? '' : dtoData.repairType
-    arr[4] = dtoData.replaceShop
-    arr[5] = dtoData.replaceDate
+    arr[0] = dtoData.replaceDate
+    arr[1] = dtoData.replacePrice + '원'
+    arr[2] = dtoData.accumKm + ' km'
+    arr[3] = dtoData.gasLitter > 0 ? dtoData.gasLitter + ' 리터' : ''
+    arr[4] = dtoData.repairType === 'x' ? '' : dtoData.repairType
+    arr[5] = dtoData.replaceShop
   }
 
   function printAllList(dtoList, tableRef ) {    // 목록 출력
