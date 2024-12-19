@@ -87,11 +87,11 @@ public class OrderServiceImpl implements OrderService {
 
             // 주문 타이틀 생성
             String itemNames = mapOrderItem.get(order).stream()
-                    .map(orderItem -> orderItem.getShopItem().getItemName())
-                    .reduce("", (a, b) -> a + b + ",")
+                    .map(orderItem -> orderItem.getShopItem().getItemTitle())
+                    .reduce("", (a, b) -> a + b + " ,")
                     .replaceFirst(".$", "");    // 정규 표현식을 활용한 마지막 문자 제거
             // . -> 모든 문자, $ -> 문자열의 끝
-            orderListResDTO.setItemName(itemNames);
+            orderListResDTO.setItemTitle(itemNames);
 
             // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
             mapOrderItem.get(order).forEach(orderItem -> {
@@ -132,6 +132,7 @@ public class OrderServiceImpl implements OrderService {
                     .orderCount(orderItem.getOrderCount())
                     .shopItemId(orderItem.getShopItem().getShopItemId())
                     .itemName(orderItem.getShopItem().getItemName())
+                    .itemTitle(orderItem.getShopItem().getItemTitle())
                     .orderPrice(orderItem.getOrderPrice())
                     .deliveryStatus(order.getDeliveryStatus())
                     .orderDate(order.getOrderTime().toLocalDate())

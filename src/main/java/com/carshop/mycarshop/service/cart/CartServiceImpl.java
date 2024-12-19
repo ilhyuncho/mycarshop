@@ -121,6 +121,7 @@ public class CartServiceImpl implements CartService {
                 .cartId(cart.getCartId())
                 .shopItemId(cart.getShopItem().getShopItemId())
                 .itemName(cart.getShopItem().getItemName())
+                .itemTitle(cart.getShopItem().getItemTitle())
                 .itemCount(cart.getItemCount())
                 .itemPrice(cart.getShopItem().getItemPrice().getOriginalPrice())
                 .discountPrice(CommonUtils.calcDiscountPrice(user, cart.getShopItem(), event))

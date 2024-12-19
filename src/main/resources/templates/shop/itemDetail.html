@@ -34,7 +34,7 @@
 
   <div class="d-flex">
     <div class="itemMainImgDiv">
-      <img class="rounded" style="width:200px; margin-right: 5rem" th:alt="${responseDTO.itemName}"
+      <img class="rounded" style="width:200px; margin-right: 5rem" th:alt="${responseDTO.itemTitle}"
            th:src="|/view/shopImage/${responseDTO.getMainImage().uuid}_${responseDTO.getMainImage().fileName}|">
     </div>
     <div class="wd50">
@@ -47,7 +47,7 @@
         품절
       </span>
 
-      <div class="h4" th:text="${responseDTO.itemName}"></div>
+      <div class="h4" th:text="${responseDTO.itemTitle}"></div>
       <hr class="my-4">
 
       <div class="text-right">

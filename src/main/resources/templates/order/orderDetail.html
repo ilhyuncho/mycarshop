@@ -39,7 +39,7 @@
                             <th scope="row">[[${dto.orderDate}]]</th>
                             <td>
                                 <a th:href="|@{'/shop/itemDetail/' + ${dto.shopItemId}}|"
-                                   class="text-decoration-none"> [[${dto.itemName}]]</a>
+                                   class="text-decoration-none"> [[${dto.itemTitle}]]</a>
                                 <div>
                                     <img th:src="|/view/shopImage/s_${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|"
                                          class="rounded itemMainImg" style="width:100px">

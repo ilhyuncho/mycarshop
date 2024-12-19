@@ -20,6 +20,7 @@ public class CartDetailResDTO extends ImageListDTO {
     private Long cartId;
     private Long shopItemId;
     private String itemName;
+    private String itemTitle;
     private Integer itemCount;
     private Integer itemPrice;
     private Integer discountPrice;

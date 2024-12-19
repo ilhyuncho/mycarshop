@@ -26,6 +26,7 @@ public class OrderItemResDTO extends ImageListDTO {
     private int orderCount;
     private Long shopItemId;
     private String itemName;
+    private String itemTitle;
     private int orderPrice;
     private int discountPrice;
     private LocalDate orderDate;

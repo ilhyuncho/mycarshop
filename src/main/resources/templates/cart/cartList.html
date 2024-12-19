@@ -46,7 +46,7 @@
                                 <input type="checkbox" class="checkbox" th:name="p_selected+${stat.index}" id="scales" checked />
                             </th>
                             <td><a th:href="|@{'/shop/itemDetail/' + ${dto.shopItemId}}|"
-                                    class="text-decoration-none"> [[${dto.itemName}]]</a>
+                                    class="text-decoration-none"> [[${dto.itemTitle}]]</a>
                                 <!-- 이미지 출력-->
                                 <img th:src="|/view/shopImage/s_${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|" style="width:100px"
                                      class="rounded itemMainImg">
