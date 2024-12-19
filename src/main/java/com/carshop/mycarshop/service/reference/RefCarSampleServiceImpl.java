@@ -36,8 +36,8 @@ public class RefCarSampleServiceImpl implements RefCarSampleService {
             }
         }
         else{
-            Optional<RefCarSample> byCarNumber = refCarSampleRepository.findByCarNumber(carNumber);
-            return entityToDTO(byCarNumber.get());
+            Optional<RefCarSample> refCarSample = refCarSampleRepository.findByCarNumber(carNumber);
+            return refCarSample.map(RefCarSampleServiceImpl::entityToDTO).orElse(null);
         }
     }
 

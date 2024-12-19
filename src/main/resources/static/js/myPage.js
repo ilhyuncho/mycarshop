@@ -1,8 +1,8 @@
 
 async function findMyCar(formObj) {
-   // console.log(formObj)
+    //console.log(formObj.carNumber)
 
-    const response = await axios.get(`/myPage/findMyCar`,{params: {carNumber:formObj.carNumber}})
+    const response = await axios.get(`/myPage/findMyCar`,{params:formObj})
 
    // console.log(response)
     return response.data

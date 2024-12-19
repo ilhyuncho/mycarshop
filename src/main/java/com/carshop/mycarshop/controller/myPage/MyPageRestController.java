@@ -53,7 +53,9 @@ public class MyPageRestController {
 
     @ApiOperation(value = "나의 차량 조회", notes = "")
     @GetMapping("/findMyCar")
-    public RefCarSampleDTO findMyCar(String carNumber, Principal principal){
+    public RefCarSampleDTO findMyCar(String carNumber){
+        //log.error("carNumber : " + carNumber);
+
         RefCarSampleDTO refCarSampleDTO = refCarSampleService.findMyCar(carNumber);
 
         log.error("return : " + refCarSampleDTO);
