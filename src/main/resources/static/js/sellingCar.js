@@ -23,8 +23,8 @@ async function getListSellingCar(formObj){
 }
 
 // 추천 차량 조회
-async function getRecommendSellingCar({page, size}){
-    const result = await axios.get(`/sellingCar/recommend`, {params: {page}})
+async function getRecommendSellingCar({page, size, memberName}){
+    const result = await axios.get(`/sellingCar/recommend`, {params: {memberName}})
 
     console.log('getRecommendSellingCar : ' + result.data)
     return result.data

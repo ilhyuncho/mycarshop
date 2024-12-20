@@ -12,7 +12,7 @@ public interface SellingCarService {
 
     SellingCarResDTO getSellingCarInfo(User user, Long sellingCarId);
     PageResponseDTO<SellingCarResDTO> getListSellingCar(PageRequestExtDTO pageRequestExtDT);
-    List<SellingCarResDTO> getListRecommend();
+    List<SellingCarResDTO> getListRecommend(String memberName);
 
     void registerSellingCar(User user, SellingCarRegDTO sellingCarRegDTO);
     void likeSellingCar(User user, SellingCarRegDTO sellingCarRegDTO);

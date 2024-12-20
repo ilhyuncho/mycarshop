@@ -56,7 +56,7 @@
           <span th:text="${#numbers.formatInteger(responseDTO.originalPrice,3,'COMMA')}"></span>원
         </div>
 
-        <div class="h5 text-danger text-left">
+        <div class="h6 text-danger text-left">
           <span th:text="|할인 금액 : |"></span>
           <input type="hidden" th:value="${responseDTO.discountPrice}" class="pDiscountPrice">
           <span th:text="${#numbers.formatInteger(responseDTO.discountPrice,3,'COMMA')}"></span>원

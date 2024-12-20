@@ -90,11 +90,10 @@ public class SellingCarRestController {
 
     @ApiOperation(value = "추천 차량 정보 전달", notes = "메인 화면, 최대 5개 표시")
     @GetMapping("/recommend")
-    public List<SellingCarResDTO> getRecommendSellingCar(){
+    public List<SellingCarResDTO> getRecommendSellingCar(String memberName){
 
-        List<SellingCarResDTO> listRecommend = sellingCarService.getListRecommend();
+        List<SellingCarResDTO> listRecommend = sellingCarService.getListRecommend(memberName);
 
-        log.error("getRecommendSellingCar()~~~~~~~~~~~~~");
         for (SellingCarResDTO sellingCarResDTO : listRecommend) {
             log.error(sellingCarResDTO);
         }

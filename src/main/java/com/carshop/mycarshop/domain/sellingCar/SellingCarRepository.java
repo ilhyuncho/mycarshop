@@ -12,9 +12,8 @@ public interface SellingCarRepository extends JpaRepository<SellingCar, Long>, S
 
     Page<SellingCar> findAllBySellingCarStatus(SellingCarStatus sellingCarStatus, Pageable pageable);
 
-
-    @Query(value = "SELECT * FROM SellingCars WHERE sellingCarStatus = 1 order by RAND() limit ?1",
+    @Query(value = "SELECT * FROM SellingCars WHERE sellingCarStatus = 1 AND uId <> ?2 order by RAND() limit ?1",
             nativeQuery = true)
-    List<SellingCar> findRecommendSellingCar(Integer limit);
+    List<SellingCar> findRecommendSellingCar(int limit, Long userId);
 
 }

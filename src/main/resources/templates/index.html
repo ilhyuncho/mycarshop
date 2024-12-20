@@ -96,6 +96,8 @@
   const greeting = [[${session.greeting}]]
   console.log("session.greeting : " +  greeting)
 
+  const memberName = [[${session.memberName}]] === null ? '' : [[${session.memberName}]]
+  console.log("session.memberName : " +  memberName)
 
   // 최초 페이지 로딩
   pageInit([[${#authorization.expression('isAuthenticated()')}]])
@@ -114,7 +116,7 @@
   function getMainPageInfo(page,size){
 
     // 추천 차량 정보 요청
-    getRecommendSellingCar({page, size}).then(data=> {
+    getRecommendSellingCar({page, size, memberName}).then(data=> {
       printList(data, RecommendCarList) // 목록 처리
 
     }).catch(e=>{
@@ -141,16 +143,16 @@
         const requiredPrice = makePriceCurrency(dto.requiredPrice)
         const sellTypeText = dto.sellType === 'SELL_AUCTION' ? '경매' : '상담'
 
-        content += `<div class="col-md-3 margin">
-                      <div class="card">
-                      <div>`
+        content += `<div class="col-md-3">
+                      <div class="card" style="height: 280px" >
+                         <div >`
         if(dto.sellType === 'SELL_AUCTION'){
-          content += `  <span class="badge progress-bar-success" style="background-color: #611adb">${sellTypeText}<span>`
+          content += `     <span class="badge progress-bar-success" style="background-color: #611adb">${sellTypeText}<span>`
         }
         else if(dto.sellType === 'SELL_CONSULT'){
-          content += `  <span class="badge progress-bar-success" style="background-color: #0dd52e">${sellTypeText}<span>`
+          content += `     <span class="badge progress-bar-success" style="background-color: #0dd52e">${sellTypeText}<span>`
         }
-        content += `  </div>
+        content += `     </div>
                         <a href="/sellingCar/view/${dto.sellingCarId}" class="text-decoration-none">
                           <img src="/view/carImage/${dto.mainImage.uuid}_${dto.mainImage.fileName}" width="200" >
                            <div class="card-body">

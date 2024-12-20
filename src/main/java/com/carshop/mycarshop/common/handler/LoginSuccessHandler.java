@@ -67,6 +67,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         //String message = "환영 합니다...";
 
         session.setAttribute("greeting", message);
+        session.setAttribute("memberName", authentication.getName());
         response.sendRedirect("/");
     }
 }

@@ -12,7 +12,8 @@
   <div class="row mt-3">
     <th:block th:each="item:${itemList}">
       <div class="col-md-3 margin">
-        <div class="card">
+        <div class="card" style="height: 350px;">
+          <div style="margin-top:5%;margin-left:5%;margin-right:5%">
           <a th:href="|@{'/shop/itemDetail/' + ${item.shopItemId}}|" class="text-decoration-none">
             <img th:src="|/view/shopImage/${item.mainImage.uuid}_${item.mainImage.fileName}|" th:width="180"
                  th:data-src="${item.mainImage.uuid}">
@@ -24,6 +25,7 @@
               <h6 class="card-title text-black" th:if="${item.isFreeDelivery}">무료배송</h6>
             </div>
           </a>
+          </div>
         </div>
       </div>
     </th:block>

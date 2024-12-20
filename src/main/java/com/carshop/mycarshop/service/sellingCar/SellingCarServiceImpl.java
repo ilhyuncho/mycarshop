@@ -19,6 +19,7 @@ import com.carshop.mycarshop.service.buyingCar.BuyingCarService;
 import com.carshop.mycarshop.service.car.CarService;
 import com.carshop.mycarshop.service.user.UserPointHistoryService;
 import com.carshop.mycarshop.service.user.UserSearchCarHistoryService;
+import com.carshop.mycarshop.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -41,6 +42,7 @@ public class SellingCarServiceImpl implements SellingCarService {
     private final UserPointHistoryService userPointHistoryService;
     private final BuyingCarService buyingCarService;
     private final CarService carService;
+    private final UserService userService;
 
     @Override
     public SellingCarResDTO getSellingCarInfo(User user, Long sellingCarId) {
@@ -113,9 +115,15 @@ public class SellingCarServiceImpl implements SellingCarService {
     }
 
     @Override
-    public List<SellingCarResDTO> getListRecommend(){
+    public List<SellingCarResDTO> getListRecommend(String memberName){
 
-        List<SellingCar> recommendSellingCar = sellingCarRepository.findRecommendSellingCar(4);
+        Long userId = 0L;
+        if(!memberName.isEmpty()){
+            User user = userService.findUser(memberName);
+            userId = user.getUserId();
+        }
+
+        List<SellingCar> recommendSellingCar = sellingCarRepository.findRecommendSellingCar(4, userId);
 
         return recommendSellingCar.stream()
                 .map(SellingCarServiceImpl::entityToDTO)
