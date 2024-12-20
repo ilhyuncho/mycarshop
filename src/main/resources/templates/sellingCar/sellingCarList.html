@@ -37,7 +37,7 @@
                   <label class="input-group-text" for="yearsMinSelect">
                     <a class= "updateAddress"  href="#" onclick="clickSelectBoxCarYears()">연식</a>
                   </label>
-                  <div class="carYearsMinDiv" style="display: none;" >
+                  <div class="carYearsDiv" style="display: none;" >
                     <input type="hidden" class="form-control isCarYearsSelect" th:value="hidden">
                       <label style="width: 100px" for="yearsMinSelect">
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example"
@@ -134,7 +134,7 @@
   const yearsMinSelect = document.getElementById("yearsMinSelect")
   const yearsMaxSelect = document.getElementById("yearsMaxSelect")
 
-  const carYearsMinDiv = document.querySelector(".carYearsMinDiv")
+  const carYearsDiv = document.querySelector(".carYearsDiv")
   const isCarYearsSelect = document.querySelector(".isCarYearsSelect")
 
   const tableSellingCar = document.getElementById("tableSellingCar");
@@ -358,11 +358,11 @@
   // 차량 연식 선택 화면 뷰 on/off
   function clickSelectBoxCarYears(){
     if( isCarYearsSelect.getAttribute("value") === 'hidden'){
-      carYearsMinDiv.setAttribute("style","display:block");
+      carYearsDiv.setAttribute("style","display:block");
       isCarYearsSelect.setAttribute("value", "show");
     }
     else{
-      carYearsMinDiv.setAttribute("style","display:none");
+      carYearsDiv.setAttribute("style","display:none");
       isCarYearsSelect.setAttribute("value", "hidden");
     }
   }
