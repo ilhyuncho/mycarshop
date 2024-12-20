@@ -92,6 +92,9 @@ public class SellingCarRestController {
     @GetMapping("/recommend")
     public List<SellingCarResDTO> getRecommendSellingCar(String memberName){
 
+        log.error("===================================");
+        log.error("===================================");
+        log.error("recommend() memberName :" + memberName);
         List<SellingCarResDTO> listRecommend = sellingCarService.getListRecommend(memberName);
 
         for (SellingCarResDTO sellingCarResDTO : listRecommend) {
