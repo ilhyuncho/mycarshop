@@ -35,3 +35,6 @@
 <img src="https://myprojectcih.s3.ap-northeast-2.amazonaws.com/project_struct.png" height="1000"/>
 
 </details>
+
+# AWS Structure
+<img src="https://myprojectcih.s3.ap-northeast-2.amazonaws.com/aws_structure.png" height="1000"/>
