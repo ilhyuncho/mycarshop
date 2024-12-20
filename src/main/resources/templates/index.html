@@ -104,7 +104,7 @@
 
 
 
-  getMainPageInfo()
+  getMainPageInfo(memberName)
 
   const eventDTO = [[${eventDTO}]]
   if(eventDTO != null && eventDTO.notiId > 0){
@@ -113,7 +113,7 @@
     eventModal.show()
   }
 
-  function getMainPageInfo(page,size){
+  function getMainPageInfo(memberName, page,size){
 
     // 추천 차량 정보 요청
     getRecommendSellingCar({page, size, memberName}).then(data=> {
