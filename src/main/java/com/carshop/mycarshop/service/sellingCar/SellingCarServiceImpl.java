@@ -121,6 +121,8 @@ public class SellingCarServiceImpl implements SellingCarService {
         if(memberName != null && !memberName.isEmpty()){
             User user = userService.findUser(memberName);
             userId = user.getUserId();
+
+            log.error("getListRecommend() user find : " + userId);
         }
 
         List<SellingCar> recommendSellingCar = sellingCarRepository.findRecommendSellingCar(4, userId);
