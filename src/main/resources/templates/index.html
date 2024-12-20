@@ -113,10 +113,14 @@
     eventModal.show()
   }
 
-  function getMainPageInfo(memberName, page,size){
+  function getMainPageInfo(memberName){
+
+    const formObj = {
+      memberName:memberName
+    }
 
     // 추천 차량 정보 요청
-    getRecommendSellingCar({page, size, memberName}).then(data=> {
+    getRecommendSellingCar(formObj).then(data=> {
       printList(data, RecommendCarList) // 목록 처리
 
     }).catch(e=>{
@@ -172,7 +176,7 @@
     e.preventDefault()
     e.stopPropagation()
 
-    getMainPageInfo()
+    getMainPageInfo(memberName)
 
   }, false)
 
