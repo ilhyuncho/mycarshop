@@ -118,7 +118,7 @@ public class SellingCarServiceImpl implements SellingCarService {
     public List<SellingCarResDTO> getListRecommend(String memberName){
 
         Long userId = 0L;
-        if(!memberName.isEmpty()){
+        if(memberName != null && !memberName.isEmpty()){
             User user = userService.findUser(memberName);
             userId = user.getUserId();
         }
