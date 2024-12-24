@@ -30,7 +30,7 @@ public class AdminShopController {
     private final FileHandler fileHandler;
 
     @GetMapping("/shopItem")
-    @ElapseLoggable // 커스텀 aspect 지정
+    @ElapseLoggable // 커스텀 aspect 지정    ( AOP - Logging2Aspect advice 호출 됨 )
     public String getShopItem(Model model){
 
         // 프로토타입 스코프 빈 테스트용 ( shopItemService 가 각각 생성되어 전달 됨

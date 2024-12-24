@@ -17,9 +17,14 @@ import java.util.Arrays;
 @Order(1)
 public class ArgumentLoggingAspect {
     // @Before 어드바이스는 코드 레벨에서 대상 객체의 메서드를 호출하지 않아도 된다.
-    // 프록시 객체가 어드바이스의 코드를 실행한 후 대상 객체의 메서드를 호출하므로 어드바이스에 ProceedingJoinPoint를 주입받을 필요 없다
+    // 프록시 객체가 어드바이스의 코드를 실행한 후 대상 객체의 메서드를 호출하므로
+    // 어드바이스에 ProceedingJoinPoint를 주입받을 필요 없다
 
-    @Before("execution(* *(com.carshop.mycarshop.dto.PageRequestDTO,..))")
+    // 용어 설명
+    // 위빙(Weaving) = Pointcut 으로 결정된 Target의 Joinpoint(어드바이스가 적용될수 있는 위치)에
+    // Advice( 부가 기능 로직 ) 를 적용하는 것.
+
+    @Before("execution(* *(com.carshop.mycarshop.dto.PageRequestDTO,..))")  // 포인트컷 표현식
     // PageRequestDTO 인자를 받는 모든 메서드가 대상
     public void printCourceRequestArgument(JoinPoint joinPoint) {
 

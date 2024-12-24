@@ -53,6 +53,7 @@ public class SecurityConfig {
                 .antMatchers("/verify/email").permitAll()
                 .antMatchers("/reference/listRefCarType").permitAll()
                 .antMatchers("/healthcheck").permitAll()
+                .antMatchers("/books").permitAll()
 
                 // aws 에 올린 서버에서 http://13.124.166.39:8080/swagger-ui/index.html 접속 했을때 오류 처리
                 // message: Refused to apply style from 'http://13.124.166.39:8080/auth/login' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "persistent_logins")
 @Getter
 @Setter
-public class PersistentLogins {
+public class PersistentLogins { // SpringSecurity의 로그인 기능 중 remember-me 기능 때문에
 
     @Id
     @Column(length = 64)
