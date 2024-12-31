@@ -33,7 +33,7 @@ public class ShopItem {
     private int purchaseCount;                // 구매 수량
     private boolean isFreeDelivery;           // 무료 배송 여부
 
-    @OneToMany(mappedBy = "shopItem", //
+    @OneToMany(mappedBy = "shopItem",       //
             cascade = {CascadeType.ALL}, // ShopItem 엔티티에서 하위 엔티티 객체들을 관리 하는 기능을 추가 해서 사용
             fetch = FetchType.LAZY,
             orphanRemoval = true        // 하위 엔티티가 참조가 더 이상 없는 상태면 삭제 처리 해준다
@@ -60,7 +60,7 @@ public class ShopItem {
         this.stockCount = stockCount;
     }
 
-    //ShopItem 엔티티 에서 ItemImage 엔티티 객체들을 모두 관리  begin---------------
+    //ShopItem 엔티티 에서 ItemImage (주인) 엔티티 객체들을 모두 관리  begin---------------
     public void addImage(String uuid, String fileName, Boolean isMainImage){
 
         ItemImage itemImage = ItemImage.builder()

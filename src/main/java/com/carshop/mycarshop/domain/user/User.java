@@ -30,7 +30,7 @@ public class User {
     private UserGradeType mGrade;     // 등급
     private Integer mPoint;     // 획득 포인트
 
-    @Embedded   // 임베디드 타입 (복합값)
+    @Embedded   // 임베디드 타입 (복합값) 을 사용 할때
     private Address address;
 
     @Embedded

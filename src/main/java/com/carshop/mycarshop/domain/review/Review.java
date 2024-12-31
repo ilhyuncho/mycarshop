@@ -26,8 +26,10 @@ public class Review extends BaseEntity {
     @Column(name="reviewId")
     private Long reviewId;
 
-    private String reviewText;
     private String reviewer;
+
+    @Lob            // long text
+    private String reviewText;
 
     private int score;
 

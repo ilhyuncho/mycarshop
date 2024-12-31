@@ -28,7 +28,7 @@ public class UserAddressBook {
     private String RecipientPhoneNumber;    // 받는 사람 전화번호
     private String deliveryRequest;         // 배송시 요청 사한
 
-    @Embedded   // 임베디드 타입 (복합값)
+    @Embedded   // 임베디드 타입 (복합값) 을 사용 할때
     private Address address;
     private Boolean isActive;               // 활성화 여부
 

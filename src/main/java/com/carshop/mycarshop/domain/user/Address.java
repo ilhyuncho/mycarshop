@@ -5,7 +5,7 @@ import lombok.*;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-@Embeddable
+@Embeddable         // 임베디드 타입 (복합값) - composite date type ( 복합적인 데이터 값들을 여러개 저장 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString

@@ -39,6 +39,7 @@ public class SellingCar extends BaseEntity {
     @JoinColumn(name="uId")
     private User user;
 
+    // sql 직접 명시 - columnDefinition 속성 이용
     //@Column(columnDefinition = "integer default 0", nullable = false)   // 근데 default 0이 적용이 안된다
     private Integer likeCount;          // 좋아요 횟수
 
