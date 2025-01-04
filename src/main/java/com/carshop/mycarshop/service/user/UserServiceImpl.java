@@ -2,6 +2,7 @@ package com.carshop.mycarshop.service.user;
 
 import com.carshop.mycarshop.common.exception.UserNotFoundException;
 import com.carshop.mycarshop.common.exception.member.MemberExceptions;
+import com.carshop.mycarshop.common.exception.member.MemberTaskException;
 import com.carshop.mycarshop.domain.member.Member;
 import com.carshop.mycarshop.domain.member.MemberRepository;
 import com.carshop.mycarshop.domain.user.User;
@@ -11,12 +12,12 @@ import com.carshop.mycarshop.dto.member.MemberJoinDTO;
 import com.carshop.mycarshop.dto.user.UserAddressReqDTO;
 import com.carshop.mycarshop.dto.user.UserDTO;
 import com.carshop.mycarshop.dto.user.UserPasswordReqDTO;
+import com.carshop.mycarshop.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Log4j2
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -38,11 +40,16 @@ public class UserServiceImpl implements UserService{
         User user = findUser(memberId);
         return entityToDTO(user);
     }
+
     @Override
-    public User registerUser(MemberJoinDTO memberJoinDTO) {
+    @Transactional(rollbackFor= MemberTaskException.class)
+    public User registerUser(MemberJoinDTO memberJoinDTO){
+
+        Member member = memberService.registerMember(memberJoinDTO);
+
         User user = User.builder()
                 .userName(memberJoinDTO.getMemberName())    // 유저 이름
-                .memberId(memberJoinDTO.getMemberId())
+                .member(member)
                 .mPoint(0)
                 .mGrade(UserGradeType.GRADE_A)
                 .build();
@@ -78,7 +85,7 @@ public class UserServiceImpl implements UserService{
         return UserDTO.builder()
                 .userID(user.getUserId())
                 .userName(user.getUserName())
-                .memberId(user.getMemberId())
+                .memberId(user.getMember().getMemberId())
                 .address(user.getAddress() != null ? user.getAddress().fullAddress() : null)
                 .billingAddress(user.getBillingAddress() != null ? user.getBillingAddress().fullAddress() : null)
                 .mPoint(user.getMPoint())

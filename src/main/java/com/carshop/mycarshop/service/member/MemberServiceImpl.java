@@ -11,11 +11,13 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Log4j2
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
@@ -26,7 +28,6 @@ public class MemberServiceImpl implements MemberService {
 
         boolean isExisted = memberRepository.existsById(memberJoinDTO.getMemberId());
         if(isExisted){
-            //throw new MemberIdExistException();
             throw MemberExceptions.DUPLICATE.get();
         }
 

@@ -1,7 +1,6 @@
 package com.carshop.mycarshop.domain.car;
 
 
-import com.carshop.mycarshop.common.validator.CarSizeConverter;
 import com.carshop.mycarshop.domain.common.BaseEntity;
 import com.carshop.mycarshop.domain.reference.RefCarInfo;
 import com.carshop.mycarshop.domain.sellingCar.SellType;
@@ -9,6 +8,7 @@ import com.carshop.mycarshop.domain.sellingCar.SellingCar;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarStatus;
 import com.carshop.mycarshop.domain.user.User;
 import com.carshop.mycarshop.dto.ImageDTO;
+import com.carshop.mycarshop.dto.reference.RefCarSampleDTO;
 import com.carshop.mycarshop.dto.sellingCar.SellingCarRegDTO;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
@@ -23,7 +23,7 @@ import java.util.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "user")
 @Table(name="cars")
 @Log4j2
 // 부모에게 상속받은 컬럼명 변경 시
@@ -44,7 +44,7 @@ public class Car extends BaseEntity {
     private String carColors;
 
     @Column(name="carKm", nullable = false)
-    private int carKm;
+    private int carKm = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="uId")
@@ -73,6 +73,31 @@ public class Car extends BaseEntity {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public static CarBuilder builder(User user, RefCarSampleDTO refCarSampleDTO, RefCarInfo refCarInfo) {
+        // 빌더의 파라미터 검증
+        if(user == null )
+            throw new IllegalArgumentException("필수 파라미터 누락");
+
+        // 필수 파라미터를 미리 빌드한 빌더 객체를 반환 (지연 빌더 원리)
+         return new CarBuilder()
+                .carNumber(refCarSampleDTO.getCarNumber())
+                .user(user)
+                .refCarInfo(refCarInfo)
+                .carColors(refCarSampleDTO.getCarColor())
+                .carYears(refCarSampleDTO.getCarYear())
+                .isActive(true);
+    }
+
+    @PostPersist
+    public void postPersist(){
+        // flush나 commit 을 호출해서 엔티티를 DB에 저장한 직후
+        log.error("Car-PostPersist() carId: " + carId);
+
+        // user 에 차량 추가
+        this.user.addMyCars(this);
+    }
+
 
     public void registerSellingCar(SellingCarRegDTO sellingCarRegDTO){
         SellType sellType = SellType.fromValue(sellingCarRegDTO.getSellType());
@@ -185,12 +210,8 @@ public class Car extends BaseEntity {
     public void prePersist(){
         // persist() 메소드를 호출해서 엔티티를 영속성 컨텍스트에 관리하기 직전에 호출
         log.error("Car-prePersist() carId: " + carId);
-    }
 
-    @PostPersist
-    public void postPersist(){
-        // flush나 commit 을 호출해서 엔티티를 DB에 저장한 직후
-        log.error("Car-PostPersist() carId: " + carId);
+
     }
     @PostLoad
     public void postLoad(){

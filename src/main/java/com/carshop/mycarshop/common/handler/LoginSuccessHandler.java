@@ -2,9 +2,10 @@ package com.carshop.mycarshop.common.handler;
 
 import com.carshop.mycarshop.common.message.MessageCode;
 import com.carshop.mycarshop.common.message.MessageHandler;
-import com.carshop.mycarshop.domain.member.MemberRole;
+import com.carshop.mycarshop.domain.user.User;
 import com.carshop.mycarshop.domain.user.UserActionType;
 import com.carshop.mycarshop.service.user.UserPointHistoryService;
+import com.carshop.mycarshop.service.user.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Log4j2
 @AllArgsConstructor
@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final UserPointHistoryService userPointHistoryService;
+    private final UserService userService;
 
     private final MessageHandler messageHandler;
 
@@ -38,7 +39,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         log.error("LoginSuccessHandler-onAuthenticationSuccess()~~~ : " + authentication.getName());
 
-        // 테스트
+        // 테스트 --begin
         Collection<? extends GrantedAuthority> authorities =
                 authentication.getAuthorities();
 
@@ -50,11 +51,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         }
 //        List<? extends GrantedAuthority> collect = authorities.stream().collect(Collectors.toList());
 //        collect.forEach(log::error);
+        // 테스트 --end
 
-
+        User user = userService.findUser(authentication.getName());
 
         // 포인트 획득 처리
-        userPointHistoryService.gainUserPoint(authentication.getName(), UserActionType.ACTION_LOGIN);
+        userPointHistoryService.gainUserPoint(user, UserActionType.ACTION_LOGIN);
 
         // 메인 페이지에서 출력
         HttpSession session = request.getSession();

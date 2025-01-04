@@ -31,9 +31,7 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
 
 
     @Override
-    public void gainUserPoint(String memberId, UserActionType userActionType, String...varCheckValue) {
-
-        User user = userService.findUser(memberId);
+    public void gainUserPoint(User user, UserActionType userActionType, String...varCheckValue) {
 
         String checkValue = Arrays.stream(varCheckValue)
                 .findFirst()
@@ -56,9 +54,7 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
     }
 
     @Override
-    public void consumeUserPoint(String memberId, UserActionType userActionType, int consumePoint){
-
-        User user = userService.findUser(memberId);
+    public void consumeUserPoint(User user, UserActionType userActionType, int consumePoint){
 
         userPointHistoryRepository.save(UserPointHistory.builder()
                 .user(user)
@@ -69,8 +65,7 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
     }
 
     @Override
-    public void cancelUserPoint(String memberId, UserActionType userActionType, int returnPoint) {
-        User user = userService.findUser(memberId);
+    public void cancelUserPoint(User user, UserActionType userActionType, int returnPoint) {
 
         userPointHistoryRepository.save(UserPointHistory.builder()
                 .user(user)

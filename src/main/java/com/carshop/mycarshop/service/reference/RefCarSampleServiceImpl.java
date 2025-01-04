@@ -41,7 +41,7 @@ public class RefCarSampleServiceImpl implements RefCarSampleService {
         }
     }
 
-    private static RefCarSampleDTO entityToDTO(RefCarSample refCarSample) {
+    public static RefCarSampleDTO entityToDTO(RefCarSample refCarSample) {
         if( refCarSample == null){
             return null;
         }

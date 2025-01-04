@@ -82,17 +82,11 @@ public class UserCarServiceImpl implements UserCarService {
         RefCarInfo refCarInfo = refCarInfoService.getRefCarInfo(refCarSampleDTO.getRefCarInfoId());
 
         // 차 등록
-        Car car = Car.builder().carNumber(refCarSampleDTO.getCarNumber())
-                .user(user)
-                .refCarInfo(refCarInfo)
-                .carColors(refCarSampleDTO.getCarColor())
-                .carYears(refCarSampleDTO.getCarYear())
-                .carKm(0)
-                .isActive(true)
-                .build();
+        Car car = Car.builder(user, refCarSampleDTO, refCarInfo)
+                     .build();
 
         // 포인트 획득 처리
-        userPointHistoryService.gainUserPoint(user.getMemberId(), UserActionType.ACTION_REG_MY_CAR, car.getCarNumber());
+        userPointHistoryService.gainUserPoint(user, UserActionType.ACTION_REG_MY_CAR, car.getCarNumber());
 
         return carRepository.save(car).getCarId();
     }
@@ -128,7 +122,7 @@ public class UserCarServiceImpl implements UserCarService {
         CarViewResDTO carViewResDTO = CarViewResDTO.writeCarViewDTOBuilder()
                 .carId(car.getCarId())
                 .userName(car.getUser().getUserName())
-                .memberId(car.getUser().getMemberId())
+                .memberId(car.getUser().getMember().getMemberId())
                 .carNumber(car.getCarNumber())
                 .carColors(car.getCarColors())
                 .carKm(car.getCarKm())

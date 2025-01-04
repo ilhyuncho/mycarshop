@@ -150,7 +150,7 @@ public class SellingCarServiceImpl implements SellingCarService {
         car.registerSellingCar(sellingCarRegDTO);
 
         // 포인트 획득 처리
-        userPointHistoryService.gainUserPoint(user.getMemberId(), UserActionType.ACTION_REG_SELLING_CAR, car.getCarNumber());
+        userPointHistoryService.gainUserPoint(user, UserActionType.ACTION_REG_SELLING_CAR, car.getCarNumber());
     }
     @Override
     public void likeSellingCar(User user, SellingCarRegDTO sellingCarRegDTO) {

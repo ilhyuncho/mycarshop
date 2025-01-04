@@ -72,7 +72,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
 
         Review review = Review.builder()
-                .reviewer(user.getMemberId())
+                .reviewer(user.getMember().getMemberId())
                 .reviewText(reviewWriteReqDTO.getReviewText())
                 .score(reviewWriteReqDTO.getScore())
                 .orderId(reviewWriteReqDTO.getOrderId())

@@ -24,7 +24,7 @@ public class Member extends BaseEntity {
     private boolean isDel;
 
     private boolean isSocial;
-    private boolean verified;       // 이메일 인증 유무
+    private boolean verified = true;       // 이메일 인증 유무
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default

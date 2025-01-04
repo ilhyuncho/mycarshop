@@ -5,10 +5,8 @@ import com.carshop.mycarshop.common.exception.member.MemberTaskException;
 import com.carshop.mycarshop.common.message.MessageCode;
 import com.carshop.mycarshop.common.message.MessageHandler;
 import com.carshop.mycarshop.common.util.Util;
-import com.carshop.mycarshop.domain.member.Member;
 import com.carshop.mycarshop.domain.user.User;
 import com.carshop.mycarshop.dto.member.MemberJoinDTO;
-import com.carshop.mycarshop.service.member.MemberService;
 import com.carshop.mycarshop.service.user.UserAlarmService;
 import com.carshop.mycarshop.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -33,7 +31,6 @@ import java.util.List;
 
 public class AuthController {
 
-    private final MemberService memberService;
     private final UserService userService;
     private final UserAlarmService userAlarmService;
     private final MessageHandler messageHandler;
@@ -65,11 +62,10 @@ public class AuthController {
         }
 
         try{
-            Member member = memberService.registerMember(memberJoinDTO);
             User user = userService.registerUser(memberJoinDTO);
 
             // 유저 등록 이후 이메일 인증 이벤트 발생
-            eventPublisher.publishEvent(new UserRegistrationEvent(member));
+            eventPublisher.publishEvent(new UserRegistrationEvent(user.getMember()));
 
             // 알림 등록---------------------------------------
             // Locale 메시지 정보 가져오기
@@ -80,11 +76,9 @@ public class AuthController {
 
             userAlarmService.registerAlarm(user, messageTitle, messageContent);
 
-        }catch (MemberService.MemberIdExistException ex){
-            redirectAttributes.addFlashAttribute("error", "memberId");
-            return "redirect:/auth/register";
-        }catch (MemberTaskException ex){
-            //log.error("MemberTaskException()~~~~~~~~~~~~~ : " + ex.getMsg() + "," + ex.getCode());
+        }
+        catch (MemberTaskException ex){
+            log.error("MemberTaskException()~~~~~~~~~~~~~ : " + ex.getMsg() + "," + ex.getCode());
             redirectAttributes.addFlashAttribute("error", ex.getMsg());
             return "redirect:/auth/register";
         }

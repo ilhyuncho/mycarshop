@@ -1,6 +1,5 @@
 package com.carshop.mycarshop.domain.reference;
 
-import com.carshop.mycarshop.domain.car.CarSize;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,7 +21,7 @@ public class RefCarSample {
 
     private String carNumber;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "refCarInfoId")      // 주 테이블(RefCarSample)에 외래 키
     private RefCarInfo refCarInfo;
 

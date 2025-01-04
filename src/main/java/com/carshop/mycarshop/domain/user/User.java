@@ -1,6 +1,8 @@
 package com.carshop.mycarshop.domain.user;
 
 import com.carshop.mycarshop.domain.car.Car;
+import com.carshop.mycarshop.domain.common.BaseEntity;
+import com.carshop.mycarshop.domain.member.Member;
 import com.carshop.mycarshop.dto.user.UserAddressReqDTO;
 import lombok.*;
 
@@ -13,19 +15,20 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "ownCars")
-@Table(name="users")
-public class User {
+@ToString(exclude = {"ownCars", "member"})
+@Table(name = "users")
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="uId")
+    @Column(name = "uId")
     private Long userId;
 
-    @Column(name="userName", length = 10, nullable = false)
+    @Column(name = "userName", length = 10, nullable = false)
     private String userName;
 
-    @Column(name="memberId", nullable = false)
-    private String memberId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_ID", unique = true)
+    private Member member;
 
     private UserGradeType mGrade;     // 등급
     private Integer mPoint;     // 획득 포인트
@@ -34,11 +37,11 @@ public class User {
     private Address address;
 
     @Embedded
-    @AttributeOverride(name = "city.zipcode", column = @Column(name="billing_zipcode"))  // 임베드된 클래스의 프로퍼티 매핑을 재정의
-    @AttributeOverride(name = "city.country", column = @Column(name="billing_coutry"))
-    @AttributeOverride(name = "city.cityName", column = @Column(name="billing_cityName"))
-    @AttributeOverride(name = "street", column = @Column(name="billing_street"))
-    @AttributeOverride(name = "detailAddress", column = @Column(name="billing_detailAddress"))
+    @AttributeOverride(name = "city.zipcode", column = @Column(name = "billing_zipcode"))  // 임베드된 클래스의 프로퍼티 매핑을 재정의
+    @AttributeOverride(name = "city.country", column = @Column(name = "billing_coutry"))
+    @AttributeOverride(name = "city.cityName", column = @Column(name = "billing_cityName"))
+    @AttributeOverride(name = "street", column = @Column(name = "billing_street"))
+    @AttributeOverride(name = "detailAddress", column = @Column(name = "billing_detailAddress"))
     private Address billingAddress;
 
 
@@ -62,12 +65,11 @@ public class User {
 
     public void addMyCars(Car car){
 
-        if( !ownCars.contains(car) ){
+        if(!ownCars.contains(car)){
             ownCars.add(car);
         }
         car.setUser(this);
     }
-
     public void addMPoint(Integer point){
         this.mPoint += point;
     }

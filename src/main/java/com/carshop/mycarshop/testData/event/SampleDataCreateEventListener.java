@@ -4,6 +4,7 @@ package com.carshop.mycarshop.testData.event;
 import com.carshop.mycarshop.common.util.Util;
 import com.carshop.mycarshop.domain.car.Car;
 import com.carshop.mycarshop.domain.car.CarRepository;
+import com.carshop.mycarshop.domain.cart.CartRepository;
 import com.carshop.mycarshop.domain.member.Member;
 import com.carshop.mycarshop.domain.member.MemberRepository;
 import com.carshop.mycarshop.domain.member.MemberRole;
@@ -12,15 +13,17 @@ import com.carshop.mycarshop.domain.reference.RefCarInfoRepository;
 import com.carshop.mycarshop.domain.reference.RefCarSample;
 import com.carshop.mycarshop.domain.reference.RefCarSampleRepository;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarStatus;
+import com.carshop.mycarshop.domain.shop.OrderItemRepository;
+import com.carshop.mycarshop.domain.shop.OrderRepository;
 import com.carshop.mycarshop.domain.user.*;
 import com.carshop.mycarshop.dto.sellingCar.SellingCarRegDTO;
+import com.carshop.mycarshop.service.reference.RefCarSampleServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,45 +42,43 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
     private final UserAlarmRepository userAlarmRepository;
     private final UserPointHistoryRepository userPointHistoryRepository;
     private final UserAddressBookRepository userAddressBookRepository;
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final CartRepository cartRepository;
     private final RefCarInfoRepository refCarInfoRepository;
     private final RefCarSampleRepository refCarSampleRepository;
 
     private final CarRepository carRepository;
     private final PasswordEncoder passwordEncoder;
+
+
+
+    public void initUserData(){
+        log.error("initUserData() call!!!");
+
+        userAlarmRepository.deleteAll();
+        orderItemRepository.deleteAll();
+        orderRepository.deleteAll();
+        userAddressBookRepository.deleteAll();
+        userPointHistoryRepository.deleteAll();
+        carRepository.deleteAll();
+        cartRepository.deleteAll();
+        userRepository.deleteAll();
+        memberRepository.deleteAll();
+    }
+
     @Override
-    @Transactional
     public void onApplicationEvent(SampleMemberCreateEvent event) {
 
         int createMemberCount = event.getCreateMemberCount();
 
         log.error("(SampleDataCreateEventListener) onApplicationEvent()!!!!!!!!");
 
-        if(memberRepository.count() != createMemberCount || userRepository.count() != createMemberCount){
+        if(memberRepository.count() < createMemberCount || userRepository.count() < createMemberCount){
 
-            memberRepository.deleteAll();
-            userRepository.deleteAll();
+            initUserData();
 
-            log.error("member, user데이터 생성!!!!!!!!!!!!!!");
-
-            // member 생성
-            IntStream.rangeClosed(1, createMemberCount).forEach(i -> {
-
-                Member member = Member.builder()
-                        .memberId("member" + i)
-                        .memberPw(passwordEncoder.encode("1111"))
-                        .email("email" + i + "@naver.com")
-                        .verified(true)
-                        .build();
-                member.addRole(MemberRole.USER);
-
-                if (i >= 8) {
-                    member.addRole(MemberRole.ADMIN);
-                }
-                memberRepository.save(member);
-            });
-
-            // 참조 테이블 먼저 삭제
-            //userPointHistoryRepository.deleteAll();
+            log.error("member, user 데이터 생성!!!!!!!!!!!!!!");
 
             // zip-code 생성  ( Stream 활용 테스트 겸 )
             IntStream randomStream = Util.createRandomStream(2, 100000, 999999);
@@ -89,8 +90,24 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
                     .peek(log::error)
                     .toList();
 
-            // User 생성
+            // member 생성
             IntStream.rangeClosed(1, createMemberCount).forEach(i -> {
+                log.error("memberRepository. start : ");
+                Member member = Member.builder()
+                        .memberId("member" + i)
+                        .memberPw(passwordEncoder.encode("1111"))
+                        .email("email" + i + "@naver.com")
+                        .verified(true)
+                        .build();
+                member.addRole(MemberRole.USER);
+
+                if (i >= 8) {
+                    member.addRole(MemberRole.ADMIN);
+                }
+                log.error("memberRepository. start2 : ");
+                memberRepository.save(member);
+
+                log.error("memberRepository.save : " + member);
 
                 City city = new City(listZipcode.get(0), "부천시", "대한민국");
                 Address address = Address.builder()
@@ -106,8 +123,9 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
                         .detailAddress("101dong404ho")
                         .build();
 
+                // User 생성
                 User user = User.builder()
-                        .memberId("member" + i)
+                        .member(member)
                         .userName("김민수" + i)
                         .address(address)
                         .billingAddress(address1)
@@ -116,6 +134,8 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
                         .build();
 
                 Long userId = userRepository.save(user).getUserId();
+
+                log.error("userRepository.save : " + user);
 
                 // 배송 주소록 추가
                 UserAddressBook userAddressBook = UserAddressBook.builder()
@@ -130,6 +150,8 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
                         .build();
                 userAddressBookRepository.save(userAddressBook);
 
+                log.error("userAddressBookRepository.save : " + userAddressBook);
+
                 // 알림 추가
                 UserAlarm userAlarm = UserAlarm.builder()
                         .user(user)
@@ -143,39 +165,28 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
 
                     if(refCarSample.isPresent()){
                         RefCarSample refCarSampleData = refCarSample.get();
-                        Long refCarInfoId = refCarSampleData.getRefCarInfo().getRefCarInfoId();
+                        RefCarInfo refCarInfo = refCarSampleData.getRefCarInfo();
 
-                        Optional<RefCarInfo> refCarInfo = refCarInfoRepository.findById(refCarInfoId);
+                        Car car = Car.builder(user, RefCarSampleServiceImpl.entityToDTO(refCarSampleData), refCarInfo)
+                                .build();
 
-                        refCarInfo.ifPresent(info -> {
+                        List<String> listImage = new ArrayList<>();
+                        listImage.add("1111_carin.png");
+                        listImage.add("2222_carin2.png");
 
-                            Car car = Car.builder()
-                                    .carNumber(refCarSampleData.getCarNumber())
-                                    .user(user)
-                                    .refCarInfo(info)
-                                    .carColors(refCarSampleData.getCarColor())
-                                    .carYears(refCarSampleData.getCarYear())
-                                    .carKm(refCarSampleData.getCarKm())
-                                    .isActive(true)
-                                    .build();
+                        car.resetImages(listImage, "carin.png");
 
-                            List<String> listImage = new ArrayList<>();
-                            listImage.add("1111_carin.png");
-                            listImage.add("2222_carin2.png");
+                        // 차량 판매 등록
+                        // SellType sellType = SellType.fromValue("auctionType");
+                        SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
+                                .sellingCarStatus(SellingCarStatus.PROCESSING)
+                                .sellType("auctionType")
+                                .requiredPrice(1000000)
+                                .build();
+                        car.registerSellingCar(sellingCarRegDTO);
 
-                            car.resetImages(listImage, "carin.png");
+                        carRepository.save(car);
 
-                            // 차량 판매 등록
-                            // SellType sellType = SellType.fromValue("auctionType");
-                            SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
-                                    .sellingCarStatus(SellingCarStatus.PROCESSING)
-                                    .sellType("auctionType")
-                                    .requiredPrice(1000000)
-                                    .build();
-                            car.registerSellingCar(sellingCarRegDTO);
-
-                            carRepository.save(car);
-                        });
                     }
                 }
                 else if(i == 8){
@@ -183,44 +194,42 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
 
                     if(refCarSample.isPresent()) {
                         RefCarSample refCarSampleData = refCarSample.get();
-                        Long refCarInfoId = refCarSampleData.getRefCarInfo().getRefCarInfoId();
+                        RefCarInfo refCarInfo = refCarSampleData.getRefCarInfo();
 
-                        Optional<RefCarInfo> refCarInfo = refCarInfoRepository.findById(refCarInfoId);
+                        Car car = Car.builder(user, RefCarSampleServiceImpl.entityToDTO(refCarSampleData), refCarInfo)
+                                .build();
 
-                        refCarInfo.ifPresent(info -> {
+                        List<String> listImage = new ArrayList<>();
+                        listImage.add("3333_carin3.png");
 
-                            Car car = Car.builder()
-                                    .carNumber(refCarSampleData.getCarNumber())
-                                    .user(user)
-                                    .refCarInfo(info)
-                                    .carColors(refCarSampleData.getCarColor())
-                                    .carYears(refCarSampleData.getCarYear())
-                                    .carKm(0)
-                                    .isActive(true)
-                                    .build();
+                        car.resetImages(listImage, "carin3.png");
 
-                            List<String> listImage = new ArrayList<>();
-                            listImage.add("3333_carin3.png");
+                        // 차량 판매 등록
+                        // SellType sellType = SellType.fromValue("auctionType");
+                        SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
+                                .sellingCarStatus(SellingCarStatus.PROCESSING)
+                                .sellType("consultType")
+                                .requiredPrice(500_000)
+                                .build();
+                        car.registerSellingCar(sellingCarRegDTO);
 
-                            car.resetImages(listImage, "carin3.png");
-
-                            // 차량 판매 등록
-                            // SellType sellType = SellType.fromValue("auctionType");
-                            SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
-                                    .sellingCarStatus(SellingCarStatus.PROCESSING)
-                                    .sellType("consultType")
-                                    .requiredPrice(500_000)
-                                    .build();
-                            car.registerSellingCar(sellingCarRegDTO);
-
-                            carRepository.save(car);
-
-                        });
-
+                        carRepository.save(car);
                     }
                 }
 
             });
+
+            // 참조 테이블 먼저 삭제
+            //userPointHistoryRepository.deleteAll();
+
+
+
+            // User 생성
+//            IntStream.rangeClosed(1, createMemberCount).forEach(i -> {
+//
+//
+//
+//            });
 
         }
     }

@@ -124,7 +124,7 @@ public class OrderServiceImpl implements OrderService {
 
         List<OrderItemResDTO> listOrderItemResDTO = listOrderItem.stream().map(orderItem -> {
             // 리뷰 작성 유무 확인
-            Optional<Review> review = reviewRepository.findByOrderItemIdAndReviewer(orderItem.getOrderItemId(), user.getMemberId());
+            Optional<Review> review = reviewRepository.findByOrderItemIdAndReviewer(orderItem.getOrderItemId(), user.getMember().getMemberId());
 
             OrderItemResDTO itemDTO = OrderItemResDTO.builder()
                     .orderId(orderItem.getOrder().getOrderId())
@@ -248,7 +248,7 @@ public class OrderServiceImpl implements OrderService {
 
         // 포인트 사용 이력 저장
         if(orderReqDTO.getUseMPoint() > 0){
-            userPointHistoryService.consumeUserPoint(user.getMemberId(), UserActionType.ACTION_BUY_ITEM_WITH_POINT,
+            userPointHistoryService.consumeUserPoint(user, UserActionType.ACTION_BUY_ITEM_WITH_POINT,
                     orderReqDTO.getUseMPoint());
         }
 
@@ -259,8 +259,6 @@ public class OrderServiceImpl implements OrderService {
     public void cancelOrder(Long orderId) {
 
         Order order = getOrderInfo(orderId);
-        log.error("order : " + order);
-
         order.cancelOrder();
 
         // 상품 별 구매 수량 롤백
@@ -270,8 +268,7 @@ public class OrderServiceImpl implements OrderService {
         });
 
         if(order.getUseMPoint() > 0){
-            userPointHistoryService.cancelUserPoint(order.getUser().getMemberId(), UserActionType.ACTION_CANCEL_ITEM_WITH_POINT,
-                    order.getUseMPoint());
+            userPointHistoryService.cancelUserPoint(order.getUser(), UserActionType.ACTION_CANCEL_ITEM_WITH_POINT, order.getUseMPoint());
         }
     }
 

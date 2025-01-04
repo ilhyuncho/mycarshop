@@ -10,9 +10,9 @@ import com.carshop.mycarshop.dto.user.UserPointHistoryResDTO;
 
 public interface UserPointHistoryService {
 
-    void gainUserPoint(String memberId, UserActionType userActionType, String... varCheckValue);
-    void consumeUserPoint(String memberId, UserActionType userActionType, int consumePoint);
-    void cancelUserPoint(String memberId, UserActionType userActionType, int consumePoint);
+    void gainUserPoint(User user, UserActionType userActionType, String... varCheckValue);
+    void consumeUserPoint(User user, UserActionType userActionType, int consumePoint);
+    void cancelUserPoint(User user, UserActionType userActionType, int consumePoint);
 
     RefPointSituation checkMissionIncomplete(User user, UserActionType userActionType, String checkValue);
 

@@ -1,7 +1,11 @@
 package com.carshop.mycarshop.testData;
 
 import com.carshop.mycarshop.common.util.Util;
+import com.carshop.mycarshop.domain.buyingCar.BuyingCarRepository;
+import com.carshop.mycarshop.domain.car.CarRepository;
 import com.carshop.mycarshop.domain.reference.*;
+import com.carshop.mycarshop.domain.sellingCar.SellingCar;
+import com.carshop.mycarshop.domain.sellingCar.SellingCarRepository;
 import com.carshop.mycarshop.testData.builder.RefCarInfoBuilder;
 import com.carshop.mycarshop.testData.event.SampleMemberCreateEvent;
 import lombok.AllArgsConstructor;
@@ -11,6 +15,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -21,13 +26,16 @@ import java.util.stream.IntStream;
 
 @Component
 @Log4j2
-@Profile({"aws","test"})    // 이 클래스는 프로파일이 활성화될 때만 로드 된다.
+@Profile({"aws","test","testRepli"})    // 이 클래스는 프로파일이 활성화될 때만 로드 된다.
 @AllArgsConstructor
+@Transactional
 public class RefCarDataLoader {
 
     private final RefCarInfoRepository refCarInfoRepository;
-
     private final RefCarSampleRepository refCarSampleRepository;
+    private final SellingCarRepository sellingCarRepository;
+    private final BuyingCarRepository buyingCarRepository;
+    private final CarRepository carRepository;
 
     private final ApplicationEventPublisher eventPublisher;
 
@@ -42,19 +50,30 @@ public class RefCarDataLoader {
             "열", "웅", "분", "변", "양", "출", "타", "흥", "겸", "곤", "번", "식", "란", "더", "손", "술", "훔", "반", "빈", "실", "직", "흠",
             "흔", "악", "람", "뜸", "권", "복", "심", "헌", "엽", "학", "개", "롱", "평", "늘", "늬", "랑", "얀", "향"};
 
+    private void initCarInfoData(){
+        buyingCarRepository.deleteAll();
+        sellingCarRepository.deleteAll();
+        carRepository.deleteAll();
+        refCarSampleRepository.deleteAll();
+        refCarInfoRepository.deleteAll();
+    }
     @EventListener(ApplicationReadyEvent.class) // 애플리케이션 시작 단계가 완료되면 발생한다.
+    @Transactional(readOnly = false)
     public void loadRefCarData() {
 
         log.error("(ApplicationReadyEvent) loadRefCarData()!!!!!!!!");
 
         RefCarInfoBuilder refCarInfoBuilder = new RefCarInfoBuilder();
 
+
         List<RefCarInfo> listRefCarSample = refCarInfoRepository.findAll();
 
-        if(refCarInfoBuilder.listRefCarInfo.size() != listRefCarSample.size()){
+        if(refCarInfoBuilder.listRefCarInfo.size() != listRefCarSample.size()
+            || listRefCarSample.size() == 0){
 
             log.error("1. RefCarInfo saveAll()~~~~~~~~~~~~~");
-            refCarInfoRepository.deleteAll();
+
+            initCarInfoData();
 
             refCarInfoRepository.saveAll(refCarInfoBuilder.listRefCarInfo);
         }
@@ -138,7 +157,6 @@ public class RefCarDataLoader {
                             .carColor(mapColor.get(randomColor))
                             .regDate(LocalDate.of(randomYear,randomMonth,randomDate))
                             .build();
-
                     refCarSampleRepository.save(refCarSample);
                 }
             });
