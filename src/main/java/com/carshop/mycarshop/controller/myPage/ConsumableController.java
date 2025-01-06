@@ -46,13 +46,12 @@ public class ConsumableController {
 
         User user = userService.findUser(memberId);
 
-        RefCarConsumable refCarConsumable =
-                carConsumableService.getRefCarConsumableInfo(refConsumableId);
-
         List<CarConsumableDetailResDTO> listDTO = carConsumableService.getConsumableDetail(carId, refConsumableId);
 
-        model.addAttribute("listDTO", listDTO);
-        model.addAttribute("repairName", refCarConsumable.getName());
+        if(listDTO.size() > 0) {
+            model.addAttribute("listDTO", listDTO);
+            model.addAttribute("repairName", listDTO.get(0).getRepairName());
+        }
 
         return "consumable/history";
     }

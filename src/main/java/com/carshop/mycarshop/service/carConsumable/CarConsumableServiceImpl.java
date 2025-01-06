@@ -45,6 +45,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
     // 해당 차의 소모품 교환 내역별 최신 값 get
     public Map<RefCarConsumable, Optional<CarConsumable>> getMapRecentConsumableInfo(Car car){
+
         // 1. RefConsumableId 별로 그룹핑
         // 2. 그룹별 ReplaceDate 가 가장 최신인 값 추출
         return carConsumableRepository.findByCar(car).stream()
@@ -52,7 +53,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                         Collectors.maxBy(Comparator.comparing(CarConsumable::getReplaceDate))));
     }
 
-    public List<RefCarConsumable> getLitRefCarConsumableInfo(){
+    public List<RefCarConsumable> getAllRefCarConsumableInfo(){
         return refCarConsumableRepository.findAll()
                 .stream()
                 .sorted(Comparator.comparing(RefCarConsumable::getViewOrder))
@@ -68,7 +69,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         Map<RefCarConsumable, Optional<CarConsumable>> mapCarConsumable = getMapRecentConsumableInfo(car);
 
         // 전체 ref 소모품 종류 get
-        List<RefCarConsumable> listRefCarConsumable = getLitRefCarConsumableInfo();
+        List<RefCarConsumable> listRefCarConsumable = getAllRefCarConsumableInfo();
 
         return listRefCarConsumable.stream()
                 .filter(refCarConsumable -> !refCarConsumable.getName().equals("주유"))
@@ -90,15 +91,12 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     @Override
     public List<CarConsumableDetailResDTO> getConsumableDetail(Long carId, Long refConsumableId){   // 소모품 히스토리 리스트
 
-        Car car = carService.getCarInfo(carId);
-
-        RefCarConsumable refCarConsumable = getRefCarConsumableInfo(refConsumableId);
-
-        return carConsumableRepository.findByCarAndRefCarConsumable(car, refCarConsumable)
+        return carConsumableRepository.findByCarAndRefCarConsumable(carId, refConsumableId)
                 .stream()
                 .map(CarConsumableServiceImpl::entityToDetailDTO)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public CarConsumableDetailResDTO getConsumableInfo(Long consumableId) {
@@ -106,14 +104,6 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         CarConsumable carConsumable = getCarConsumableInfo(consumableId);
 
         return entityToDetailDTO(carConsumable);
-    }
-
-    // 같은 날짜로 등록된 내역이 있는지 체크
-    public Boolean isExistCarConsumableHistory(Car car, RefCarConsumable refCarConsumable, LocalDate date){
-        return carConsumableRepository.findByCarAndRefCarConsumable(car, refCarConsumable)
-                .stream()
-                .anyMatch(carConsumable -> carConsumable.getReplaceDate()
-                        .equals(date));
     }
 
     @Override
@@ -200,19 +190,4 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .replaceDate(carConsumable.getReplaceDate())
                 .build();
     }
-
-    //    @Override
-//    public List<HistoryCarResDTO> getListHistory(Long carId, ConsumableType consumableType) {
-//
-//        Car car = carService.getCarInfo(carId);
-//
-//        List<CarConsumable> listCarConsumable = new ArrayList<>(carConsumableRepository
-//                .findByCarAndConsumableType(car, consumableType));
-//
-//        return listCarConsumable.stream()
-//                .map(CarConsumableServiceImpl::entityToHistoryDTO)
-//                .sorted(Comparator.comparing(HistoryCarResDTO::getReplaceDate))
-//                .collect(Collectors.toList());
-//    }
-
 }

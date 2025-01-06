@@ -26,7 +26,7 @@ public class CarConsumable {
     private ConsumableType consumableType;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="REF_CONSUMABLE_ID")   // pk(외래키)가 RefCarConsumable 테이블(주테이블)에 생성
+    @JoinColumn(name="REF_CONSUMABLE_ID")   // pk(외래키)가 CarConsumable 테이블(주테이블)에 생성
     private RefCarConsumable refCarConsumable;
 
     private LocalDate replaceDate;      // 점검 날짜
