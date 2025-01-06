@@ -130,7 +130,7 @@ public class myInfoRestController {
         return user.getAddress();
     }
 
-    @ApiOperation(value = "기본 주소 추가", notes = "")
+    @ApiOperation(value = "기본 주소 추가 or 수정", notes = "")
     @PostMapping("/registerMainAddress")
     public Map<String,String> postRegisterMainAddress(@Valid @RequestBody UserAddressReqDTO userAddressReqDTO,
                                                       BindingResult bindingResult,

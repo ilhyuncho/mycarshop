@@ -1,12 +1,22 @@
 package com.carshop.mycarshop.config.MVCWeb;
 
 import com.carshop.mycarshop.common.Interceptor.LoggerInterceptor;
+import com.carshop.mycarshop.config.converter.SpringToIpPortConverter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebServerConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        WebMvcConfigurer.super.addFormatters(registry);
+
+        // 컨버터 등록
+        registry.addConverter(new SpringToIpPortConverter());   
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
