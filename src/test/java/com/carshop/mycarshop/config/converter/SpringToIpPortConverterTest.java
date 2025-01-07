@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,6 +31,7 @@ class SpringToIpPortConverterTest {
     void get1() throws Exception {
 
         mockMvc.perform(get("/converterIP/test/10.10.10:8080"))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string("10.10.10"));
 

@@ -66,8 +66,15 @@ public class UserCarServiceImpl implements UserCarService {
     @Override
     public Long registerMyCar(User user, String carNumber) {
 
-        // 유저의 기존 등록 차 정보 get
-        List<Projection.CarSummary> userCarList = carRepository.findByUser(user);
+        // 유저의 기존 등록 차 정보 get ( Projection용 메서드는 하나만 정의 후 전달 받은 프로젝션 타입으로 사용 )
+        List<Projection.CarSummary> userCarList = carRepository.findByUser(user, Projection.CarSummary.class);
+        //List<Projection.CarSummary2> userCarList = carRepository.findByUser(user, Projection.CarSummary2.class);
+
+        userCarList.forEach(a->{
+            log.error(a.getCarNumber());
+            log.error(a.getCarId());
+        });
+
         boolean isRegister = userCarList.stream()
                 .anyMatch(carSummary -> carSummary.getCarNumber().equals(carNumber));
 
