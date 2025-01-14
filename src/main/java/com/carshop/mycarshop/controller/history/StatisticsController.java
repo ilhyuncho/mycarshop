@@ -24,9 +24,7 @@ public class StatisticsController {
     @GetMapping
     public String statistics(@ModelAttribute("carId") Long carId, String memberId){
 
-        User user = userService.findUser(memberId);
-
-        log.error("statistics-get : " + carId);
+        userService.findUser(memberId);
 
         return "myPage/carStatistics";
     }

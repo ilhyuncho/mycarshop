@@ -58,7 +58,7 @@ public class ConsumableRestController {
                                                    BindingResult bindingResult,
                                                    Principal principal){
 
-        User user = userService.findUser(principal.getName());
+        userService.findUser(principal.getName());
 
         carConsumableService.modifyConsumable(carConsumableRegDTO);
 
@@ -72,7 +72,7 @@ public class ConsumableRestController {
     public Map<String,String> postRemoveConsumable(@PathVariable Long consumableId,
                                                    Principal principal ) {
 
-        User user = userService.findUser(principal.getName());
+        userService.findUser(principal.getName());
 
         carConsumableService.removeConsumable(consumableId);
 
@@ -80,6 +80,5 @@ public class ConsumableRestController {
         resultMap.put("result", "success");
         return resultMap;
     }
-
 
 }

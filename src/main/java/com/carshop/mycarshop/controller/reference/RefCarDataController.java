@@ -24,12 +24,7 @@ public class RefCarDataController {
     @GetMapping("/listRefCarType")
     public List<RefCarTypeDTO> getListRefCarType(int groupIndex, String parentMenuName){
 
-        log.error("listRefCarType()~~~~~~~" + groupIndex  + ", " + parentMenuName );
-
-        List<RefCarTypeDTO> listRefCarTypeDTO = refCarTypeService.getRefCarType(groupIndex, parentMenuName);
-
-        //listRefCarTypeDTO.forEach(log::error);
-        return listRefCarTypeDTO;
+        return refCarTypeService.getRefCarType(groupIndex, parentMenuName);
     }
 
 }

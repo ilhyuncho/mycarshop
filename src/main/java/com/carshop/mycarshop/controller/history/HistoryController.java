@@ -24,7 +24,7 @@ public class HistoryController {
     @GetMapping
     public String getCarHistory(@ModelAttribute("carId") Long carId, String memberId){
 
-        User user = userService.findUser(memberId);
+        userService.findUser(memberId);
 
         return "myPage/carHistory";
     }

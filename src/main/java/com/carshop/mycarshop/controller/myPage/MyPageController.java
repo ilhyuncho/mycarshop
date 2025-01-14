@@ -127,7 +127,7 @@ public class MyPageController {
     public String alarmInfo(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
                             Model model, Principal principal ){
 
-        User user = userService.findUser(principal.getName());
+        userService.findUser(principal.getName());
 
         return "myPage/alarmInfo";
     }

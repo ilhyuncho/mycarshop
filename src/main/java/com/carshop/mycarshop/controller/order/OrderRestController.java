@@ -28,12 +28,12 @@ public class OrderRestController {
 
     @ApiOperation(value = "상품 결제 처리", notes = "")
     @PostMapping("/add")
-    public String postAdd(@RequestBody OrderReqDTO orderReqDTO,
-                          Principal principal) throws ParseException {
+    public String postAdd(@RequestBody OrderReqDTO orderReqDTO, Principal principal){
 
         User user = userService.findUser(principal.getName());
 
         orderService.createOrder(user, orderReqDTO);
+
         return "shop/main";
     }
 
@@ -45,7 +45,6 @@ public class OrderRestController {
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
-
         return resultMap;
     }
 

@@ -44,7 +44,7 @@ public class HistoryRestController {
                                                  @PathVariable(name="carId") Long carId,
                                                  Principal principal){
 
-        User user = userService.findUser(principal.getName());
+        userService.findUser(principal.getName());
 
         // tip : Collections.singletonList - 전달하는 원소의 개수가 1개인 경우 Arrays.asList 대신에
         return carConsumableService.getListHistory(carId, Collections.singletonList(ConsumableType.fromValue(targetId)));

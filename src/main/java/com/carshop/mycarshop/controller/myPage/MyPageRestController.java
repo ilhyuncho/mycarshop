@@ -49,12 +49,8 @@ public class MyPageRestController {
     @ApiOperation(value = "나의 차량 조회", notes = "")
     @GetMapping("/findMyCar")
     public RefCarSampleDTO findMyCar(String carNumber){
-        //log.error("carNumber : " + carNumber);
 
-        RefCarSampleDTO refCarSampleDTO = refCarSampleService.findMyCar(carNumber);
-
-        log.error("return : " + refCarSampleDTO);
-        return refCarSampleDTO;
+        return refCarSampleService.findMyCar(carNumber);
     }
 
     @ApiOperation(value = "차 등록 (post)", notes = "")
@@ -77,7 +73,6 @@ public class MyPageRestController {
     @PostMapping("/carModify")
     public Map<String,String> postCarModify(@RequestBody CarInfoReqDTO carInfoReqDTO,
                                             Principal principal ){
-        log.error("car modify post...." + carInfoReqDTO);
 
         userCarService.modifyMyCar(carInfoReqDTO);
 

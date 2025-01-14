@@ -44,7 +44,7 @@ public class ConsumableController {
     public String history(@ModelAttribute("carId") Long carId, Long refConsumableId,
                           String memberId, Model model){
 
-        User user = userService.findUser(memberId);
+        userService.findUser(memberId);
 
         List<CarConsumableDetailResDTO> listDTO = carConsumableService.getConsumableDetail(carId, refConsumableId);
 
@@ -58,8 +58,7 @@ public class ConsumableController {
 
     @ApiOperation(value = "소모품 내역 수정 페이지", notes = "")
     @GetMapping("/modify")
-    public String modify(@ModelAttribute("consumableId") Long consumableId,
-                         Model model){
+    public String modify(@ModelAttribute("consumableId") Long consumableId, Model model){
 
         CarConsumableDetailResDTO consumableInfo = carConsumableService.getConsumableInfo(consumableId);
 

@@ -32,7 +32,7 @@ public class AlarmRestController {
     public UserAlarmDTO getAlarmDetail(@PathVariable(name="alarmId") Long alarmId
             , Principal principal){
 
-        User user = userService.findUser(principal.getName());
+        userService.findUser(principal.getName());
 
         return userAlarmService.getAlarmInfo(alarmId);
     }

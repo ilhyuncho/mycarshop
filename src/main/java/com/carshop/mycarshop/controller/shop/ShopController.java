@@ -26,7 +26,6 @@ public class ShopController {
 
     private final UserService userService;
     private final ShopItemService shopItemService;
-    private final ReviewService reviewService;
 
     @ApiOperation(value = "악세서리 샵 메인", notes = "회원, 비회원 접근 가능")
     @GetMapping("/main")
@@ -48,8 +47,7 @@ public class ShopController {
     @ApiOperation(value = "악세서리 샵 아이템 선택시", notes = "회원, 비회원 접근 가능")
     @GetMapping("/itemDetail/{shopItemId}")
     public String shopItemDetail(@PathVariable("shopItemId") Long shopItemId,
-                                 Model model,
-                                 Principal principal){
+                                 Model model, Principal principal){
 
         User user = null;
         if( principal != null){

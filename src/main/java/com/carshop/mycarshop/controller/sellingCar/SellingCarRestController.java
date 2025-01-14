@@ -62,7 +62,7 @@ public class SellingCarRestController {
                                                    BindingResult bindingResult,
                                                    Principal principal){
 
-        User user = userService.findUser(principal.getName());
+        userService.findUser(principal.getName());
 
         sellingCarService.updateSellingCar(sellingCarRegDTO);
 
@@ -74,9 +74,6 @@ public class SellingCarRestController {
     @ApiOperation(value = "판매 차량 리스트 정보 전달", notes = "판매 차량 리스트 화면")
     @GetMapping("/listSearch")
     public PageResponseDTO<SellingCarResDTO> getListSellingCar(PageRequestExtDTO pageRequestExtDT){
-
-        log.error("pageRequestExtDT : " + pageRequestExtDT);
-
         return sellingCarService.getListSellingCar(pageRequestExtDT);
     }
 
@@ -84,16 +81,7 @@ public class SellingCarRestController {
     @GetMapping("/recommend")
     public List<SellingCarResDTO> getRecommendSellingCar(String memberName){
 
-        log.error("===================================");
-        log.error("===================================");
-        log.error("recommend() memberName :" + memberName);
-        List<SellingCarResDTO> listRecommend = sellingCarService.getListRecommend(memberName);
-
-        for (SellingCarResDTO sellingCarResDTO : listRecommend) {
-            log.error(sellingCarResDTO);
-        }
-
-        return listRecommend;
+        return sellingCarService.getListRecommend(memberName);
     }
 
     @ApiOperation(value = "최근 본 차량 정보 전달", notes = "메인 화면")

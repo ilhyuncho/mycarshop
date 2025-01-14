@@ -24,7 +24,6 @@ import java.security.Principal;
 @RequestMapping("/sellingCar")
 @RequiredArgsConstructor
 @Log4j2
-
 public class SellingCarController {
 
     private final CarService carService;

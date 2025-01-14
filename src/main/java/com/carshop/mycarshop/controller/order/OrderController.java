@@ -46,8 +46,6 @@ public class OrderController {
 
         model.addAttribute("responseDTO", orderAll);
 
-        log.error(orderAll);
-
         return "order/orderList";
     }
 

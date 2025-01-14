@@ -32,11 +32,11 @@ public class StatisticsRestController {
 
     @ApiOperation(value = "내차 통계 내역 조회", notes = "")
     @GetMapping("/get")
-    public List<StatisticsResDTO> get(@Valid StatisticsReqDTO satisticsReqDTO,
+    public List<StatisticsResDTO> getCarStatistics(@Valid StatisticsReqDTO satisticsReqDTO,
                                       BindingResult bindingResult,
                                       Principal principal){
 
-        User user = userService.findUser(principal.getName());
+        userService.findUser(principal.getName());
 
         List<StatisticsResDTO> listDto = new ArrayList<>();
 
@@ -55,11 +55,11 @@ public class StatisticsRestController {
 
     @ApiOperation(value = "내차 통계 총 내역 조회", notes = "")
     @GetMapping("/total")
-    public StatisticsTotalResDTO total(@Valid StatisticsReqDTO satisticsReqDTO,
+    public StatisticsTotalResDTO getTotalCarStatistics(@Valid StatisticsReqDTO satisticsReqDTO,
                                        BindingResult bindingResult,
                                        Principal principal){
 
-        User user = userService.findUser(principal.getName());
+        userService.findUser(principal.getName());
 
         return carStatisticsService.getStatisticsTotal(satisticsReqDTO);
     }
