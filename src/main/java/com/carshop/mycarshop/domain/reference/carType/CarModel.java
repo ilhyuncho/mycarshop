@@ -15,6 +15,20 @@ public enum CarModel implements Operation{
     CAR_MODEL_K7(5, "K7", "기아"),
     CAR_MODEL_K8(6, "K8", "기아"),
     CAR_MODEL_SPORTAGE(7, "스포티지", "기아"),
+
+
+    CAR_MODEL_A_CLASS(8, "A-CLASS", "벤츠"),
+    CAR_MODEL_C_CLASS(9, "C-CLASS", "벤츠"),
+    CAR_MODEL_E_CLASS(10, "E-CLASS", "벤츠"),
+    CAR_MODEL_S_CLASS(11, "S-CLASS", "벤츠"),
+    CAR_MODEL_3_SERIES(12, "3-SERIES", "BMW"),
+    CAR_MODEL_5_SERIES(13, "5-SERIES", "BMW"),
+    CAR_MODEL_7_SERIES(14, "7-SERIES", "BMW"),
+    CAR_MODEL_X5(15, "X5", "BMW"),
+    CAR_MODEL_MODEL_3(16, "MODEL3", "테슬라"),
+    CAR_MODEL_MODEL_S(17, "MODELS", "테슬라"),
+    CAR_MODEL_MODEL_Y(18, "MODELY", "테슬라"),
+
     ;
 
     private final Integer type;

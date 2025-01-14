@@ -23,7 +23,7 @@ public class RefCarTypeServiceImpl implements RefCarTypeService {
         if(carTypeGroup != null){
             List<RefCarTypeDTO> listRefCarTypeDTO = CarTypeGroup.buildMetaDetailTypeDto(carTypeGroup.getTypeClass(), parentMenuName);
 
-            log.error("listRefCarTypeDTO : " + listRefCarTypeDTO);
+            listRefCarTypeDTO.forEach(log::error);
             return listRefCarTypeDTO;
         }
 

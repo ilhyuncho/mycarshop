@@ -27,6 +27,6 @@ public class RefCarType extends BaseEntity {
 
     private int parentTypeId;
     private int order;
-    private int carYearStart;   // 해당 모델 시작 연도
-    private int carYearEnd;     // 해당 모델 시작 마지막 연도
+    //private int carYearStart;   // 해당 모델 시작 연도
+    //private int carYearEnd;     // 해당 모델 시작 마지막 연도
 }
