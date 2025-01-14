@@ -35,12 +35,7 @@ public class SellingCarRestController {
     @PostMapping("/register")
     public Map<String,String> postRegisterSellingCar(@Valid @RequestBody SellingCarRegDTO sellingCarRegDTO,
                                                      BindingResult bindingResult,
-                                                     Principal principal ) throws BindException {
-
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
+                                                     Principal principal ){
 
         User user = userService.findUser(principal.getName());
 
@@ -65,11 +60,8 @@ public class SellingCarRestController {
     @PostMapping("/modify")
     public Map<String,String> postModifySellingCar(@Valid @RequestBody SellingCarRegDTO sellingCarRegDTO,
                                                    BindingResult bindingResult,
-                                                   Principal principal) throws BindException {
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
+                                                   Principal principal){
+
         User user = userService.findUser(principal.getName());
 
         sellingCarService.updateSellingCar(sellingCarRegDTO);
@@ -117,13 +109,7 @@ public class SellingCarRestController {
     @PostMapping("/like")
     public Map<String,String> postlike(@Valid @RequestBody SellingCarRegDTO sellingCarRegDTO,
                                        BindingResult bindingResult,
-                                       Principal principal) throws BindException {
-        log.error("postlike post...." + sellingCarRegDTO);
-
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
+                                       Principal principal){
 
         User user = userService.findUser(principal.getName());
 

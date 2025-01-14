@@ -30,12 +30,7 @@ public class AdminShopRestController {
     @ApiOperation(value = "[상품] 데이터 넣기", notes = "관리자 접근")
     @PostMapping("/registerShopItem")
     public ResponseEntity<Map<String, String>> postRegisterShopItem(@Valid @RequestBody ShopItemReqDTO shopItemReqDTO,
-                                                                    BindingResult bindingResult) throws BindException {
-
-        if(bindingResult.hasErrors()) {
-            log.error("bindingResult.hasErrors()~~~");
-            throw new BindException(bindingResult);
-        }
+                                                                    BindingResult bindingResult){
 
         Long ItemId = shopItemService.registerItem(shopItemReqDTO);
 
@@ -49,12 +44,7 @@ public class AdminShopRestController {
     @ApiOperation(value = "[상품] 데이터 수정", notes = "관리자 접근")
     @PostMapping("/modifyShopItem")
     public ResponseEntity<Map<String, String>> postShopItemModify(@Valid @RequestBody ShopItemReqDTO shopItemReqDTO,
-                                                                  BindingResult bindingResult) throws BindException {
-
-        if(bindingResult.hasErrors()) {
-            log.error("bindingResult.hasErrors()~~~");
-            throw new BindException(bindingResult);
-        }
+                                                                  BindingResult bindingResult){
 
         shopItemService.modifyItem(shopItemReqDTO);
 
@@ -66,12 +56,7 @@ public class AdminShopRestController {
     @ApiOperation(value = "[상품] 이미지 순서 변경", notes = "관리자 접근")
     @PostMapping("/modifyImageOrder")
     public ResponseEntity<Map<String, String>> postImageOrderModify(@Valid @RequestBody ImageOrderReqDTO imageOrderReqDTO,
-                                                                    BindingResult bindingResult) throws BindException {
-
-        if(bindingResult.hasErrors()) {
-            log.error("bindingResult.hasErrors()~~~");
-            throw new BindException(bindingResult);
-        }
+                                                                    BindingResult bindingResult){
 
         shopItemService.modifyImageOrder(imageOrderReqDTO);
 

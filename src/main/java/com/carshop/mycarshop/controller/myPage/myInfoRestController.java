@@ -67,11 +67,7 @@ public class myInfoRestController {
     @PostMapping("/registerDeliveryAddress")
     public Map<String,String> postRegisterDeliveryAddress(@Valid @RequestBody UserAddressBookReqDTO userAddressBookReqDTO,
                                                           BindingResult bindingResult,
-                                                          Principal principal ) throws BindException {
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
+                                                          Principal principal){
         User user = userService.findUser(principal.getName());
 
         userAddressBookService.registerAddressBook(user, userAddressBookReqDTO);
@@ -85,11 +81,7 @@ public class myInfoRestController {
     @PostMapping("/modifyDeliveryAddress")
     public Map<String,String> postModifyDeliveryAddress(@Valid @RequestBody UserAddressBookReqDTO userAddressBookReqDTO,
                                                         BindingResult bindingResult,
-                                                        Principal principal ) throws BindException {
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
+                                                        Principal principal){
 
         User user = userService.findUser(principal.getName());
 
@@ -134,11 +126,7 @@ public class myInfoRestController {
     @PostMapping("/registerMainAddress")
     public Map<String,String> postRegisterMainAddress(@Valid @RequestBody UserAddressReqDTO userAddressReqDTO,
                                                       BindingResult bindingResult,
-                                                      Principal principal) throws BindException {
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
+                                                      Principal principal){
 
         User user = userService.registerMainAddress(principal.getName(), userAddressReqDTO);
 
@@ -152,11 +140,7 @@ public class myInfoRestController {
     @PostMapping("/changePassword")
     public Map<String,String> postChangePassword(@Valid @RequestBody UserPasswordReqDTO userPasswordReqDTO,
                                                  BindingResult bindingResult,
-                                                 Principal principal) throws BindException {
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
+                                                 Principal principal){
 
         userService.changePassword(principal.getName(), userPasswordReqDTO);
 

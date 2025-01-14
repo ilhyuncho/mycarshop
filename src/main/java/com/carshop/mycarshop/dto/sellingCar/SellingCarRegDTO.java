@@ -3,6 +3,8 @@ package com.carshop.mycarshop.dto.sellingCar;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarStatus;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -10,6 +12,7 @@ import lombok.*;
 @ToString
 public class SellingCarRegDTO {
 
+    @NotNull
     private Long carId;
     private String sellType;
     private int requiredPrice;

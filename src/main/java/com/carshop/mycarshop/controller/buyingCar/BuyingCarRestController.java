@@ -45,11 +45,7 @@ public class BuyingCarRestController {
     @PostMapping("/offer")
     public Map<String,String> postOffer(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
                                         BindingResult bindingResult,
-                                        Principal principal ) throws BindException {
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
+                                        Principal principal){
 
         User offerUser = userService.findUser(principal.getName());
 

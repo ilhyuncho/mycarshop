@@ -8,6 +8,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 
 import java.util.Arrays;
 
@@ -26,7 +28,7 @@ public class ArgumentLoggingAspect {
 
     @Before("execution(* *(com.carshop.mycarshop.dto.PageRequestDTO,..))")  // 포인트컷 표현식
     // PageRequestDTO 인자를 받는 모든 메서드가 대상
-    public void printCourceRequestArgument(JoinPoint joinPoint) {
+    public void printPageRequestDTOArgument(JoinPoint joinPoint) {
 
         String argumentValue = Arrays.stream(joinPoint.getArgs())
                 .filter(obj-> PageRequestDTO.class.equals(obj.getClass()))  // 인자 중 같은 클래스 타입인 객체만 필터링
@@ -38,6 +40,24 @@ public class ArgumentLoggingAspect {
 
         log.error(joinPoint.getSignature().toShortString());
         log.error("Argument info : {}", argumentValue);
+    }
+
+    @Before("execution(!String *(.., @javax.validation.Valid (*), ..))")
+    // BindingResult valid
+    public void printBindingResultArgument(JoinPoint joinPoint) throws BindException {
+
+        //log.error("BindingResult~~~~~~~~~");
+        Object[] args = joinPoint.getArgs();
+        for (Object arg : args) {
+            //log.error("getClass : " + arg.getClass());
+            if (arg instanceof BindingResult) {
+                BindingResult bindingResult = (BindingResult) arg;
+                if (bindingResult.hasErrors()) {
+                    log.error("(Aspect)throw new BindException~~~~~~~~~");
+                    throw new BindException(bindingResult);
+                }
+            }
+        }
     }
 
 }

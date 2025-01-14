@@ -33,11 +33,8 @@ public class ConsumableRestController {
     @PostMapping("/register")
     public Map<String,String> postRegisterConsumable(@Validated @RequestBody CarConsumableRegDTO carConsumableRegDTO,
                                                      BindingResult bindingResult,
-                                                     Principal principal ) throws BindException {
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
+                                                     Principal principal ){
+
         User user = userService.findUser(principal.getName());
 
         Map<String, String> resultMap = new HashMap<>();
@@ -59,11 +56,8 @@ public class ConsumableRestController {
     @PostMapping("/modify")
     public Map<String,String> postModifyConsumable(@Valid @RequestBody CarConsumableRegDTO carConsumableRegDTO,
                                                    BindingResult bindingResult,
-                                                   Principal principal ) throws BindException {
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
+                                                   Principal principal){
+
         User user = userService.findUser(principal.getName());
 
         carConsumableService.modifyConsumable(carConsumableRegDTO);

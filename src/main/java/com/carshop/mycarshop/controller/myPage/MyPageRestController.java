@@ -37,12 +37,7 @@ public class MyPageRestController {
     @PostMapping("/updateCarKm")
     public Map<String,String> postUpdateCarKm(@Valid @RequestBody CarKmUpdateReqDTO carKmUpdateReqDTO,
                                               BindingResult bindingResult,
-                                              Principal principal ) throws BindException {
-
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
+                                              Principal principal){
 
         userCarService.modifyMyCarKm(carKmUpdateReqDTO);
         Map<String, String> resultMap = new HashMap<>();

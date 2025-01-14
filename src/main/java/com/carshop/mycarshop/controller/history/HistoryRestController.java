@@ -54,11 +54,7 @@ public class HistoryRestController {
     @PostMapping("/addHistory")
     public Map<String,String> postAddGasHistory(@Valid @RequestBody CarConsumableRegDTO carConsumableRegDTO,
                                                 BindingResult bindingResult,
-                                                Principal principal ) throws BindException {
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
+                                                Principal principal){
 
         carConsumableService.registerConsumable(carConsumableRegDTO);
 
