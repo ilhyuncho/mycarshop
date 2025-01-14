@@ -31,8 +31,7 @@ public class UserAlarmServiceImpl implements UserAlarmService {
         UserAlarm userAlarm = userAlarmRepository.findById(alarmId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 알림 정보가 존재하지않습니다"));
 
-        if(!userAlarm.isAlarmCheck())
-        {
+        if(!userAlarm.isAlarmCheck()){
             userAlarm.readAlarm();      // 읽음으로 표시
         }
 
@@ -64,14 +63,13 @@ public class UserAlarmServiceImpl implements UserAlarmService {
     public boolean isNewAlarm(User user) {
 
         Long newCount = userAlarmRepository.countByUserAndAlarmCheck(user, false);
-
         return newCount > 0;
     }
 
     @Override
     public void registerAlarm(User user, String alarmTitle, String alarmContent) {
 
-        log.error("registerAlarm() " + alarmTitle + "," + alarmContent);
+        //log.error("registerAlarm() " + alarmTitle + "," + alarmContent);
         UserAlarm userAlarm = UserAlarm.builder()
                 .user(user)
                 .alarmTitle(alarmTitle)

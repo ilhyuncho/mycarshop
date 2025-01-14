@@ -27,7 +27,6 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
 
     private final UserPointHistoryRepository userPointHistoryRepository;
     private final RefPointSituationRepository refPointSituationRepository;
-    private final UserService userService;
 
 
     @Override
@@ -97,7 +96,7 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
                         .orElseThrow(() -> new NoSuchElementException("해당 미션 정보가 존재하지않습니다"));
             }
 
-            listUserPointHistory.forEach(log::error);
+            //listUserPointHistory.forEach(log::error);
         }
         return null;
     }

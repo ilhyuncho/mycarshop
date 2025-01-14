@@ -72,9 +72,9 @@ public class UserServiceImpl implements UserService{
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberExceptions.NOT_FOUND::get);
 
-        boolean matches = passwordEncoder.matches(userPasswordReqDTO.getCurrentPassword(), member.getMemberPw());
+        boolean isMatches = passwordEncoder.matches(userPasswordReqDTO.getCurrentPassword(), member.getMemberPw());
 
-        if(matches){
+        if(isMatches){
             member.changePassword(passwordEncoder.encode(userPasswordReqDTO.getNewPassword()));
         }
         else{

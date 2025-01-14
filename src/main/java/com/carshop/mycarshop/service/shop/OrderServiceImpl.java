@@ -259,6 +259,7 @@ public class OrderServiceImpl implements OrderService {
     public void cancelOrder(Long orderId) {
 
         Order order = getOrderInfo(orderId);
+
         order.cancelOrder();
 
         // 상품 별 구매 수량 롤백

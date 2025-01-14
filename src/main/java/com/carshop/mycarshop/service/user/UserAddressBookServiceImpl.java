@@ -111,7 +111,6 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
             initMainAddress(listUserAddressBook);
         }
 
-
         UserAddressBook userAddressBook = getUserAddressBook(userAddressBookReqDTO.getUserAddressBookId());
         // 수정 대상이 [기본 배송지] 인데 미지정 상태로 변경을 원할 경우
         if(userAddressBook.getIsMainAddress() && !userAddressBookReqDTO.getMainAddressCheck()) {
@@ -149,7 +148,7 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
     }
 
     private static void initMainAddress(List<UserAddressBook> listUserAddressBook){
-        // 기존 [기본 배송지] 설정을 false로 변경
+        // 기존 [기본 배송지] 설정을 false 로 변경
         listUserAddressBook.stream()
                 .filter(UserAddressBook::getIsMainAddress)
                 .forEach(userAddressBook -> {
@@ -160,7 +159,7 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
     private static Boolean isSameDeliveryName(List<UserAddressBook> listUserAddressBook,
                                               UserAddressBookReqDTO userAddressBookReqDTO){
 
-        // UserAddressBookId() 가 다르면서 배송지명이 같은게 있는지 체크
+        // UserAddressBookId 가 다르면서 배송지명이 같은게 있는지 체크
         return listUserAddressBook.stream()
                 .filter(addressBook -> !Objects.equals(addressBook.getUserAddressBookId(),
                         userAddressBookReqDTO.getUserAddressBookId()))

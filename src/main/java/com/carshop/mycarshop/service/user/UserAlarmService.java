@@ -7,10 +7,7 @@ import com.carshop.mycarshop.dto.user.UserAlarmDTO;
 
 public interface UserAlarmService {
     UserAlarmDTO getAlarmInfo(Long alarmId);
-
     PageResponseDTO<UserAlarmDTO> getListAlarm(PageRequestDTO pageRequestDTO, User user);
-
     boolean isNewAlarm(User user);
-
     void registerAlarm(User user, String alarmTitle, String alarmContent);
 }

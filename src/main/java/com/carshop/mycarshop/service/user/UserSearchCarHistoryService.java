@@ -9,6 +9,5 @@ import java.util.List;
 public interface UserSearchCarHistoryService {
 
     void insertSearchCarHistory(User user, SellingCar sellingCar);
-
     List<SellingCarResDTO> getSearchCarHistory(User user);
 }

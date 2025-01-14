@@ -144,8 +144,6 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         // 아이템 옵션 udpate
         shopItem.updateItemOption(shopItemReqDTO.getItemOptionList());
-
-        //shopItemRepository.save(shopItem);
     }
 
     @Override

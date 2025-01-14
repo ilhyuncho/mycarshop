@@ -38,6 +38,7 @@ public class SellingCarServiceImpl implements SellingCarService {
 
     private final SellingCarRepository sellingCarRepository;
     private final UserLikeRepository userLikeRepository;
+
     private final UserSearchCarHistoryService userSearchCarHistoryService;
     private final UserPointHistoryService userPointHistoryService;
     private final BuyingCarService buyingCarService;
@@ -121,8 +122,6 @@ public class SellingCarServiceImpl implements SellingCarService {
         if(memberName != null && !memberName.isEmpty()){
             User user = userService.findUser(memberName);
             userId = user.getUserId();
-
-            log.error("getListRecommend() user find : " + userId);
         }
 
         List<SellingCar> recommendSellingCar = sellingCarRepository.findRecommendSellingCar(4, userId);
@@ -141,6 +140,7 @@ public class SellingCarServiceImpl implements SellingCarService {
 
     @Override
     public void registerSellingCar(User user, SellingCarRegDTO sellingCarRegDTO) {
+
         Car car = carService.getCarInfo(sellingCarRegDTO.getCarId());
 
         if(car.getImageSet().size() == 0){

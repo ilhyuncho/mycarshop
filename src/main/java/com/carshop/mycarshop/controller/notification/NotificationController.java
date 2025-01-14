@@ -30,10 +30,10 @@ public class NotificationController {
     @ApiOperation(value = "뉴스&이벤트 상세 페이지로 이동", notes = "고객 접근")
     @GetMapping("/show/{pathName}/{notiId}")
     public String show(@PathVariable("notiId") Long notiId,
-                       @PathVariable("pathName") String pathName,
-                       Model model) {
+                       @PathVariable("pathName") String pathName, Model model) {
 
-        NotiResDTO eventInfo = notificationService.getNotiInfo(notiId); // 굳이 title, image외에는 필요 없어서 notificationRepository 를 통해 get
+        // 굳이 title, image 외에는 필요 없어서 notificationRepository 를 통해 get
+        NotiResDTO eventInfo = notificationService.getNotiInfo(notiId);
 
         model.addAttribute("responseDTO", eventInfo);
         model.addAttribute("targetId", pathName);

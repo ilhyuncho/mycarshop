@@ -9,7 +9,6 @@ import com.carshop.mycarshop.dto.user.UserPointHistoryReqDTO;
 import com.carshop.mycarshop.dto.user.UserPointHistoryResDTO;
 
 public interface UserPointHistoryService {
-
     void gainUserPoint(User user, UserActionType userActionType, String... varCheckValue);
     void consumeUserPoint(User user, UserActionType userActionType, int consumePoint);
     void cancelUserPoint(User user, UserActionType userActionType, int consumePoint);
