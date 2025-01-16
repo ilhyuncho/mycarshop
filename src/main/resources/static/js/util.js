@@ -12,6 +12,10 @@ function stringToDateFormat(stringData){
 function makePriceCurrency(data){
     return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '원'
 }
+function makeComma(data){
+    return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
+
 
 const maskingName = (value) => {
     if (value.length === 2) {

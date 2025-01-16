@@ -231,6 +231,7 @@
       for(const dto of dtoList){
 
         const requiredPrice = makePriceCurrency(dto.requiredPrice)
+        const carKm = makeComma(dto.carKm)
 
         content += `<tr class="memList">`;
         content += `  <th scope="row" class="col-md-3">`
@@ -257,7 +258,7 @@
         content += `  </th>`
         content += `<td>${dto.carDetailModel}</td>`
         content += `<td>${dto.carYears}년형</td>`
-        content += `<td>${dto.carKm}km</td>`
+        content += `<td>${carKm}km</td>`
         content += `<td>${requiredPrice}</td>`
         content += `<td>${dto.expiredDate}</td>`
         content += `</tr>`;

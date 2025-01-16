@@ -145,6 +145,8 @@
     if(dtoList && dtoList.length > 0){
       for(const dto of dtoList){
         const requiredPrice = makePriceCurrency(dto.requiredPrice)
+        const carKm = makeComma(dto.carKm)
+
         const sellTypeText = dto.sellType === 'SELL_AUCTION' ? '경매' : '상담'
 
         content += `<div class="col-md-3">
@@ -161,7 +163,7 @@
                           <img src="/view/carImage/${dto.mainImage.uuid}_${dto.mainImage.fileName}" width="200" >
                            <div class="card-body">
                                 <h6 class="card-title">(${dto.carCompany}) ${dto.carDetailModel}</h6>
-                                <h6 class="card-title">${dto.carYears}년형 ${dto.carKm}km</h6>
+                                <h6 class="card-title">${dto.carYears}년형 ${carKm}km</h6>
                                 <h5 class="card-title text-danger">${requiredPrice}</h5>
                           </div>
                        </a>
