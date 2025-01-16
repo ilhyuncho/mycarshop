@@ -11,12 +11,10 @@ import java.util.List;
 public interface ShopItemService {
 
     ShopItemExtandDTO getItemInfo(Long itemId, User user);
-
     List<ShopItemExtandDTO> getAllItems();
     List<ShopItemResDTO> getAllItemsForShop();
 
     Long registerItem(ShopItemReqDTO shopItemReqDTO);
-
     void modifyItem(ShopItemReqDTO shopItemReqDTO);
     void modifyImageOrder(ImageOrderReqDTO imageOrderReqDTO);
 

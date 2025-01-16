@@ -25,6 +25,7 @@ public class NotificationImage {
     private String fileName;
 
     private int imageOrder;
+
     private Boolean isMainImage;
 
     @ManyToOne(fetch = FetchType.LAZY)

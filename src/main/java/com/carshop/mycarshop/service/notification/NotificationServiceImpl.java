@@ -182,9 +182,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         NewsNotification newsNotification = dtoToNewsEntity(newsDTO);
 
-        NewsNotification saveItem = newsNotificationRepository.save(newsNotification);
-
-        return saveItem.getNotiId();
+        return newsNotificationRepository.save(newsNotification).getNotiId();
     }
 
     @Override

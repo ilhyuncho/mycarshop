@@ -44,5 +44,4 @@ public enum EventType {
         return new ArrayList<>(typeMap.values());
     }
 
-
 }
