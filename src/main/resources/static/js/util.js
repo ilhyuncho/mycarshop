@@ -17,6 +17,7 @@ function makeComma(data){
 }
 
 
+
 const maskingName = (value) => {
     if (value.length === 2) {
         return value.replace(/(?<=.{1})./gi, '*');
