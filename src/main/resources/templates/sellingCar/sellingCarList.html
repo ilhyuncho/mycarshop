@@ -97,6 +97,7 @@
                 <th scope="col">차량 항목</th>
                 <th scope="col">모델명</th>
                 <th scope="col">연식</th>
+                <th scope="col">km</th>
                 <th scope="col">희망 가격</th>
                 <th scope="col">판매 종료 시간</th>
               </tr>
@@ -256,6 +257,7 @@
         content += `  </th>`
         content += `<td>${dto.carDetailModel}</td>`
         content += `<td>${dto.carYears}년형</td>`
+        content += `<td>${dto.carKm}km</td>`
         content += `<td>${requiredPrice}</td>`
         content += `<td>${dto.expiredDate}</td>`
         content += `</tr>`;

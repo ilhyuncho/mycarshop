@@ -20,7 +20,9 @@ public class SellingCarResDTO extends ImageListDTO {
     private Long carId;
     private String carNumber;
     private String carDetailModel;
+    private String carCompany;
     private Integer carYears;
+    private int carKm;
     private Boolean isLike;
     private Integer requiredPrice;
     private Long sellingCarId;

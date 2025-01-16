@@ -38,7 +38,7 @@
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarYears</span>
-            <input type="text" class="form-control" th:value="${responseDTO.carYears}" name="carYears" readonly>
+            <input type="text" class="form-control" th:value="|${responseDTO.carYears}년형|" name="carYears" readonly>
           </div>
 
           <div class="input-group mb-3">
@@ -259,7 +259,6 @@
 
   const modalRequirePrice = document.querySelector(".modalRequirePrice")
   const modifyCarName = document.querySelector(".modifyCarName")
-  const currCarKm = document.querySelector(".currCarKm")
   const updateKmValue = document.querySelector(".updateKmValue")
   const modifySellingCarBtn = document.querySelector(".modifySellingCarBtn")
   const sellingStatus = document.querySelector(".sellingStatus")
@@ -272,6 +271,7 @@
   const sellingCarId = [[${responseDTO.sellingCarId}]]
   const carNumber = [[${responseDTO.carNumber}]]
   const listFileNames = [[${responseDTO.fileNames}]]
+  const currCarKm = [[${responseDTO.carKm}]]
 
   // 최초 페이지 로딩
   pageInit([[${#authorization.expression('isAuthenticated()')}]])
@@ -360,11 +360,15 @@
       alert('차량 판매시 최소 한장의 대표 사진을 등록해야 합니다')
       return
     }
-    if(sellTypeValue === 'auctionType' && modalRequirePrice.value < 10000)
-    {
+    if(sellTypeValue === 'auctionType' && modalRequirePrice.value < 10000){
       alert('경매 최소 가격은 10000원 이상입니다')
       return
     }
+    if(currCarKm <= 0){
+      alert('현재 누적 km 수를 등록해야 합니다')
+      return
+    }
+
     const requiredPrice = modalRequirePrice.value.replaceAll(",","")
 
     const formObj = {
@@ -452,7 +456,7 @@
     e.stopPropagation()
     e.preventDefault()
 
-    updateKmValue.setAttribute("placeholder",currCarKm.value )
+    updateKmValue.setAttribute("placeholder",currCarKm.toString() )
     updateKmModal.show()
   }, false)
 

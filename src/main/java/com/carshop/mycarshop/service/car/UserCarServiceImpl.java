@@ -70,10 +70,10 @@ public class UserCarServiceImpl implements UserCarService {
         List<Projection.CarSummary> userCarList = carRepository.findByUser(user, Projection.CarSummary.class);
         //List<Projection.CarSummary2> userCarList = carRepository.findByUser(user, Projection.CarSummary2.class);
 
-        userCarList.forEach(a->{
-            log.error(a.getCarNumber());
-            log.error(a.getCarId());
-        });
+//        userCarList.forEach(a->{
+//            log.error(a.getCarNumber());
+//            log.error(a.getCarId());
+//        });
 
         boolean isRegister = userCarList.stream()
                 .anyMatch(carSummary -> carSummary.getCarNumber().equals(carNumber));
