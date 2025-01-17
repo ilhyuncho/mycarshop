@@ -21,6 +21,8 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     // Projection용 메서드는 하나만 정의 후 전달 받은 프로젝션 타입으로 사용
     <T> List<T> findByUser(User user, Class<T> type);
 
+    Optional<Car> findByCarNumber(String carNumber);
+
 //    @Query("select c from Car c inner join fetch c.carTemps where c.carId = :carId")
 //    Car findCarWithCarTemps(@Param("carId") Long carid);
     @Query(value = "SELECT carTemp FROM carTemps WHERE carId = ?1",

@@ -67,20 +67,13 @@ public class UserCarServiceImpl implements UserCarService {
     public Long registerMyCar(User user, String carNumber) {
 
         // 유저의 기존 등록 차 정보 get ( Projection용 메서드는 하나만 정의 후 전달 받은 프로젝션 타입으로 사용 )
-        List<Projection.CarSummary> userCarList = carRepository.findByUser(user, Projection.CarSummary.class);
-        //List<Projection.CarSummary2> userCarList = carRepository.findByUser(user, Projection.CarSummary2.class);
+        // List<Projection.CarSummary> userCarList = carRepository.findByUser(user, Projection.CarSummary.class);
+        // List<Projection.CarSummary2> userCarList = carRepository.findByUser(user, Projection.CarSummary2.class);
+        // boolean isRegister = userCarList.stream()
+        // .anyMatch(carSummary -> carSummary.getCarNumber().equals(carNumber));
 
-//        userCarList.forEach(a->{
-//            log.error(a.getCarNumber());
-//            log.error(a.getCarId());
-//        });
-
-        boolean isRegister = userCarList.stream()
-                .anyMatch(carSummary -> carSummary.getCarNumber().equals(carNumber));
-
-        if(isRegister){
-            throw new AlreadyRegisterException("이미 등록된 차량입니다.");
-        }
+        carRepository.findByCarNumber(carNumber)
+                .ifPresent(m -> {throw new AlreadyRegisterException("이미 등록된 차량입니다.");});
 
         // 등록 하려는 차 정보 get
         RefCarSampleDTO refCarSampleDTO = refCarSampleService.findMyCar(carNumber);
@@ -107,8 +100,6 @@ public class UserCarServiceImpl implements UserCarService {
 
         // 차량 이미지 파일 재설정
         car.resetImages(carInfoReqDTO.getFileNames(), carInfoReqDTO.getMainImageFileName());
-
-        carRepository.save(car);
     }
 
     @Override

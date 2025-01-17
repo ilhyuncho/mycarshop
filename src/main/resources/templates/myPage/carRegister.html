@@ -30,14 +30,14 @@
           <div class="input-group mb-3">
             <span class="input-group-text">차량 번호 입력</span>
             <label>
-              <input type="text" class="form-control carNumber" placeholder="(예)123마4567">
+              <input type="text" class="form-control carNumber" placeholder="(test)입력 안해도됨">
             </label>
           </div>
 
           <div class="my-4">
             <div class="float-end">
               <button type="submit" class="btn btn-primary findBtn">찾기(번호 입력x 클릭시 랜덤 번호 리턴)</button>
-              <button type="reset" class="btn btn-secondary">Reset</button>
+              <button type="reset" class="btn btn-secondary resetBtn">Reset</button>
             </div>
           </div>
         </div><!-- <div class="card-body">-->
@@ -140,6 +140,14 @@
       console.log(e)
     })
   }, false)
+
+  document.querySelector(".resetBtn").addEventListener("click", function(e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    carNumber.value = ''
+
+  },false)
 
   // [모달창] 내차 등록 요청
   document.querySelector(".carRegisterBtn").addEventListener("click", function(e){

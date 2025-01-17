@@ -34,7 +34,7 @@ public class Car extends BaseEntity {
     @Column(name="carId")
     private Long carId;
 
-    @Column(name="carNumber", length = 50, nullable = false)
+    @Column(name="carNumber", length = 50, nullable = false, unique = true)
     private String carNumber;
 
     @Column(name="carYears", nullable = false)
