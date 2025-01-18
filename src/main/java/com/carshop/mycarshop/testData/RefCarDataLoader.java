@@ -4,9 +4,11 @@ import com.carshop.mycarshop.common.util.Util;
 import com.carshop.mycarshop.domain.buyingCar.BuyingCarRepository;
 import com.carshop.mycarshop.domain.car.CarRepository;
 import com.carshop.mycarshop.domain.reference.*;
-import com.carshop.mycarshop.domain.sellingCar.SellingCar;
+import com.carshop.mycarshop.domain.reference.carType.CarDetailModel;
+import com.carshop.mycarshop.domain.reference.carType.CarFuel;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarRepository;
 import com.carshop.mycarshop.testData.builder.RefCarInfoBuilder;
+import com.carshop.mycarshop.testData.builder.RefCarOptionBuilder;
 import com.carshop.mycarshop.testData.event.SampleMemberCreateEvent;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,10 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.IntStream;
 
 @Component
@@ -64,7 +63,7 @@ public class RefCarDataLoader {
         log.error("(ApplicationReadyEvent) loadRefCarData()!!!!!!!!");
 
         RefCarInfoBuilder refCarInfoBuilder = new RefCarInfoBuilder();
-
+        RefCarOptionBuilder refCarOptionBuilder = new RefCarOptionBuilder();
 
         List<RefCarInfo> listRefCarSample = refCarInfoRepository.findAll();
 
@@ -75,7 +74,21 @@ public class RefCarDataLoader {
 
             initCarInfoData();
 
+            // refCarInfo save
             refCarInfoRepository.saveAll(refCarInfoBuilder.listRefCarInfo);
+
+            // 차량 별 옵션 셋팅
+            List<RefCarInfo> savedRefCarSample = refCarInfoRepository.findAll();
+
+            savedRefCarSample.forEach(refCarSample -> {
+                Set<RefCarOption> setRefCarOptions = refCarOptionBuilder.mapRefCarOption.
+                        get(CarDetailModel.fromValue(refCarSample.getCarDetailModel()));
+
+                if(setRefCarOptions != null){
+                    refCarSample.setRefCarOptions(setRefCarOptions);
+                }
+            });
+
         }
 
         // 차량 샘플 데이터 100개 생성
@@ -143,18 +156,19 @@ public class RefCarDataLoader {
 
                     int randomCarYear = new Random().nextInt(car.getCarYearStart(), car.getCarYearEnd()+1);
 
+                    CarFuel carFuel = CarFuel.FUEL_GASOLINE;
+                    if(!car.getFuel().isEmpty()){
+                        int skipIndex = new Random().nextInt(car.getFuel().size());
+                        carFuel = car.getFuel().stream().skip(skipIndex).findFirst().get();
+                    }
+
                     RefCarSample refCarSample = RefCarSample.builder()
                             .carNumber(listCarNumber.get(a-1))
                             .refCarInfo(car)
-//                        .carModel(car.getCarModel())
-//                        .carGrade(car.getCarGrade())
-//                        .company(car.getCompany())
-//                        .companyNation(car.getCompanyNation())
-//                        .carOption(car.getCarOption())
-
                             .carYear(randomCarYear)
                             .carKm(randomKm)
                             .carColor(mapColor.get(randomColor))
+                            .fuelType(carFuel)
                             .regDate(LocalDate.of(randomYear,randomMonth,randomDate))
                             .build();
                     refCarSampleRepository.save(refCarSample);

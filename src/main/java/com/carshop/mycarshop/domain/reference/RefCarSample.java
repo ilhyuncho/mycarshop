@@ -1,5 +1,6 @@
 package com.carshop.mycarshop.domain.reference;
 
+import com.carshop.mycarshop.domain.reference.carType.CarFuel;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,16 +26,11 @@ public class RefCarSample {
     @JoinColumn(name = "refCarInfoId")      // 주 테이블(RefCarSample)에 외래 키
     private RefCarInfo refCarInfo;
 
-//    private String carModel;
-//    @Enumerated(EnumType.STRING)
-//    private CarSize carGrade;        // 등급 ( 소형, 중형, 대형.. )
-//    private String company;
-//    private String companyNation;
-
-
     private String carOption;       // 옵션
     private String carColor;
-    private Integer carYear;      // 출시 연도
+    private Integer carYear;        // 출시 연도
     private Integer carKm;          // 주행거리
+    @Enumerated(EnumType.STRING)
+    private CarFuel fuelType;       // 연료 타입
     private LocalDate regDate;      // 최초 등록 날짜
 }

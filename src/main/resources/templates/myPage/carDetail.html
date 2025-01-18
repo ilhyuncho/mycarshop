@@ -18,44 +18,48 @@
           <!--            dto 값 출력 부분-->
           <div class="input-group mb-3">
             <span class="input-group-text">CarID</span>
-            <input type="text" class="form-control" th:value="${responseDTO.carId}" readonly>
+            <label><input type="text" class="form-control" th:value="${responseDTO.carId}" readonly></label>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarNumber</span>
-            <input type="text" class="form-control" th:value="${responseDTO.carNumber}" readonly>
+            <label><input type="text" class="form-control" th:value="${responseDTO.carNumber}" readonly></label>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarGrade</span>
-            <input type="text" class="form-control" th:value="${responseDTO.carGrade}" readonly>
+            <label><input type="text" class="form-control" th:value="${responseDTO.carGrade}" readonly></label>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarModel</span>
-            <input type="text" class="form-control" th:value="${responseDTO.carDetailModel}" readonly>
+            <label><input type="text" class="form-control" th:value="${responseDTO.carDetailModel}" readonly></label>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarYears</span>
-            <input type="text" class="form-control" th:value="|${responseDTO.carYears}년형|" name="carYears" readonly>
+            <label><input type="text" class="form-control" th:value="|${responseDTO.carYears}년형|" name="carYears" readonly></label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">CarFuel</span>
+            <label> <input type="text" class="form-control" th:value="${responseDTO.carFuel.name}" name="carFuel" readonly></label>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarColors</span>
-            <input type="text" class="form-control" th:value="${responseDTO.carColors}" name="carColors" readonly>
+            <label><input type="text" class="form-control" th:value="${responseDTO.carColors}" name="carColors" readonly></label>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarKm</span>
-            <input type="text" class="form-control currCarKm" th:value="${responseDTO.carKm +' km'} " name="carKm" readonly>
+            <label><input type="text" class="form-control currCarKm" th:value="${responseDTO.carKm + ' km'} " name="carKm" readonly></label>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">누적 주행거리</span>
             <button type="button" class="btn btn-primary updateKmBtn">갱신</button>
           </div>
-
 
 
           <input type="hidden" name="sellingCarId" th:value="${responseDTO.sellingCarId}">

@@ -198,6 +198,7 @@ public class SellingCarServiceImpl implements SellingCarService {
                 .carDetailModel(sellingCar.getCar().getRefCarInfo().getCarDetailModel())
                 .carYears(sellingCar.getCar().getCarYears())
                 .carKm(sellingCar.getCar().getCarKm())
+                .carFuel(sellingCar.getCar().getCarFuel())
                 .sellingCarId(sellingCar.getSellingCarId())
                 .viewCount(sellingCar.getViewCount())
                 .sellType(sellingCar.getSellType())

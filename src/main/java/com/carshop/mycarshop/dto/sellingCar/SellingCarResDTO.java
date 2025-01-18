@@ -1,6 +1,7 @@
 package com.carshop.mycarshop.dto.sellingCar;
 import com.carshop.mycarshop.common.util.Util;
 import com.carshop.mycarshop.domain.buyingCar.BuyCarStatus;
+import com.carshop.mycarshop.domain.reference.carType.CarFuel;
 import com.carshop.mycarshop.domain.sellingCar.SellType;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarStatus;
 import com.carshop.mycarshop.dto.ImageListDTO;
@@ -23,6 +24,7 @@ public class SellingCarResDTO extends ImageListDTO {
     private String carCompany;
     private Integer carYears;
     private int carKm;
+    private CarFuel carFuel;
     private Boolean isLike;
     private Integer requiredPrice;
     private Long sellingCarId;
@@ -39,4 +41,5 @@ public class SellingCarResDTO extends ImageListDTO {
     public boolean isExpired(){
         return Util.isTimeOver(expiredDate);
     }
+    public String getCarFuel() {return carFuel.getName();}
 }

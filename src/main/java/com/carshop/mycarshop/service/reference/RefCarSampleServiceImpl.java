@@ -50,6 +50,7 @@ public class RefCarSampleServiceImpl implements RefCarSampleService {
                 .carNumber(refCarSample.getCarNumber())
                 .carColor(refCarSample.getCarColor())
                 .carKm(refCarSample.getCarKm())
+                .carFuel(refCarSample.getFuelType())
                 .carYear(refCarSample.getCarYear())
                 .carDetailModel(refCarSample.getRefCarInfo().getCarDetailModel())
                 .company(refCarSample.getRefCarInfo().getCompany())

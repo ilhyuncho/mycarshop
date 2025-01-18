@@ -124,6 +124,7 @@ public class UserCarServiceImpl implements UserCarService {
                 .carNumber(car.getCarNumber())
                 .carColors(car.getCarColors())
                 .carKm(car.getCarKm())
+                .carFuel(car.getCarFuel())
                 .carGrade(car.getRefCarInfo().getCarGrade().getValue())
                 .carDetailModel(car.getRefCarInfo().getCarDetailModel())
                 .carYears(car.getCarYears())

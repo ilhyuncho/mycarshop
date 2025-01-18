@@ -1,5 +1,6 @@
 package com.carshop.mycarshop.dto.car;
 
+import com.carshop.mycarshop.domain.reference.carType.CarFuel;
 import com.carshop.mycarshop.domain.sellingCar.SellType;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarStatus;
 import com.carshop.mycarshop.dto.ImageListDTO;
@@ -37,13 +38,16 @@ public class CarViewResDTO extends ImageListDTO {        // 내차 정보 로딩
     @NotNull
     private int     carKm;
 
+    @NotNull
+    private CarFuel carFuel;
+
     private Long sellingCarId;
     private SellingCarStatus sellingCarStatus;
     private SellType sellType;                      // 차량 판매 방식
 
     @Builder(builderMethodName = "writeCarViewDTOBuilder")
     public CarViewResDTO(Long carId, String userName, String memberId, String carNumber, String carGrade, String carDetailModel, int carYears,
-                         String carColors, int carKm) {
+                         String carColors, int carKm, CarFuel carFuel) {
         this.carId = carId;
         this.userName = userName;
         this.memberId = memberId;
@@ -53,5 +57,6 @@ public class CarViewResDTO extends ImageListDTO {        // 내차 정보 로딩
         this.carYears = carYears;
         this.carColors = carColors;
         this.carKm = carKm;
+        this.carFuel = carFuel;
     }
 }

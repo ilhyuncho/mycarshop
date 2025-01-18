@@ -43,113 +43,65 @@ public class RefCarTypeInfoBuilder {
 
     // GROUP 4
     static RefCarType refCarType27 = RefCarType.builder().typeId(27).groupIndex(4).typeName("쏘나타 디 엣지").parentTypeId(9).order(1).build();
-            //.carYearStart(2023).carYearEnd(2025).build();
     static RefCarType refCarType28 = RefCarType.builder().typeId(28).groupIndex(4).typeName("쏘나타 하이브리드").parentTypeId(9).order(2).build();
-            //.carYearStart(2019).carYearEnd(2023).build();
     static RefCarType refCarType29 = RefCarType.builder().typeId(29).groupIndex(4).typeName("LF 쏘나타").parentTypeId(9).order(3).build();
-           // .carYearStart(2002).carYearEnd(2008).build();
     static RefCarType refCarType30 = RefCarType.builder().typeId(30).groupIndex(4).typeName("더 뉴 투싼").parentTypeId(10).order(1).build();
-         //  .carYearStart(2023).carYearEnd(2025).build();
     static RefCarType refCarType31 = RefCarType.builder().typeId(31).groupIndex(4).typeName("올 뉴 투싼").parentTypeId(10).order(2).build();
-           // .carYearStart(2015).carYearEnd(2020).build();
     static RefCarType refCarType32 = RefCarType.builder().typeId(32).groupIndex(4).typeName("투싼").parentTypeId(10).order(3).build();
-            //.carYearStart(2004).carYearEnd(2009).build();
 
     static RefCarType refCarType33 = RefCarType.builder().typeId(33).groupIndex(4).typeName("더 뉴 아반떼").parentTypeId(11).order(1).build();
-           // .carYearStart(2023).carYearEnd(2025).build();
     static RefCarType refCarType34 = RefCarType.builder().typeId(34).groupIndex(4).typeName("아반떼 AD").parentTypeId(11).order(2).build();
-          //  .carYearStart(2015).carYearEnd(2018).build();
-    static RefCarType refCarType35 = RefCarType.builder().typeId(35).groupIndex(4).typeName("더 뉴 아반떼").parentTypeId(11).order(3).build();
-            //.carYearStart(2013).carYearEnd(2015).build();
+    static RefCarType refCarType35 = RefCarType.builder().typeId(35).groupIndex(4).typeName("올 뉴 아반떼").parentTypeId(11).order(3).build();
 
 
     static RefCarType refCarType36 = RefCarType.builder().typeId(36).groupIndex(4).typeName("k5 DH").parentTypeId(12).order(1).build();
-          //  .carYearStart(2010).carYearEnd(2015).build();
     static RefCarType refCarType37 = RefCarType.builder().typeId(37).groupIndex(4).typeName("NEW k5").parentTypeId(12).order(2).build();
-           // .carYearStart(2015).carYearEnd(2020).build();
     static RefCarType refCarType38 = RefCarType.builder().typeId(38).groupIndex(4).typeName("ALL NEW k5").parentTypeId(12).order(3).build();
-           // .carYearStart(2020).carYearEnd(2025).build();
 
     static RefCarType refCarType39 = RefCarType.builder().typeId(39).groupIndex(4).typeName("k7 AH").parentTypeId(13).order(1).build();
-          //  .carYearStart(2009).carYearEnd(2014).build();
     static RefCarType refCarType40 = RefCarType.builder().typeId(40).groupIndex(4).typeName("NEW k7").parentTypeId(13).order(2).build();
-           // .carYearStart(2014).carYearEnd(2019).build();
     static RefCarType refCarType41 = RefCarType.builder().typeId(41).groupIndex(4).typeName("ALL NEW k7").parentTypeId(13).order(3).build();
-          //  .carYearStart(2019).carYearEnd(2025).build();
 
     static RefCarType refCarType42 = RefCarType.builder().typeId(42).groupIndex(4).typeName("k8 SD").parentTypeId(14).order(1).build();
-          //  .carYearStart(2022).carYearEnd(2015).build();
 
     static RefCarType refCarType43 = RefCarType.builder().typeId(43).groupIndex(4).typeName("스포티지").parentTypeId(15).order(1).build();
-           // .carYearStart(2000).carYearEnd(2010).build();
     static RefCarType refCarType44 = RefCarType.builder().typeId(44).groupIndex(4).typeName("THE NEW 스포티지").parentTypeId(15).order(2).build();
-          //  .carYearStart(2010).carYearEnd(2017).build();
     static RefCarType refCarType45 = RefCarType.builder().typeId(45).groupIndex(4).typeName("ALL NEW 스포티지").parentTypeId(15).order(3).build();
-          //  .carYearStart(2017).carYearEnd(2025).build();
 
     static RefCarType refCarType46 = RefCarType.builder().typeId(46).groupIndex(4).typeName("A-CLASS 5세대").parentTypeId(16).order(1).build();
-           // .carYearStart(2010).carYearEnd(2015).build();
     static RefCarType refCarType47 = RefCarType.builder().typeId(47).groupIndex(4).typeName("A-CLASS 6세대").parentTypeId(16).order(2).build();
-           // .carYearStart(2015).carYearEnd(2021).build();
     static RefCarType refCarType48 = RefCarType.builder().typeId(48).groupIndex(4).typeName("A-CLASS 7세대").parentTypeId(16).order(3).build();
-          //  .carYearStart(2021).carYearEnd(2025).build();
 
     static RefCarType refCarType49 = RefCarType.builder().typeId(49).groupIndex(4).typeName("C-CLASS 4세대").parentTypeId(16).order(1).build();
-           // .carYearStart(2012).carYearEnd(2016).build();
     static RefCarType refCarType50 = RefCarType.builder().typeId(50).groupIndex(4).typeName("C-CLASS 5세대").parentTypeId(16).order(2).build();
-           // .carYearStart(2016).carYearEnd(2021).build();
     static RefCarType refCarType51 = RefCarType.builder().typeId(51).groupIndex(4).typeName("C-CLASS 6세대").parentTypeId(16).order(3).build();
-           // .carYearStart(2021).carYearEnd(2025).build();
 
     static RefCarType refCarType52 = RefCarType.builder().typeId(52).groupIndex(4).typeName("E-CLASS 7세대").parentTypeId(16).order(1).build();
-           // .carYearStart(2008).carYearEnd(2013).build();
     static RefCarType refCarType53 = RefCarType.builder().typeId(53).groupIndex(4).typeName("E-CLASS 8세대").parentTypeId(16).order(2).build();
-           // .carYearStart(2013).carYearEnd(2018).build();
     static RefCarType refCarType54 = RefCarType.builder().typeId(54).groupIndex(4).typeName("E-CLASS 9세대").parentTypeId(16).order(3).build();
-          //  .carYearStart(2018).carYearEnd(2025).build();
 
     static RefCarType refCarType55 = RefCarType.builder().typeId(55).groupIndex(4).typeName("S-CLASS 7세대").parentTypeId(16).order(1).build();
-           // .carYearStart(2008).carYearEnd(2012).build();
     static RefCarType refCarType56 = RefCarType.builder().typeId(56).groupIndex(4).typeName("S-CLASS 8세대").parentTypeId(16).order(2).build();
-            //.carYearStart(2012).carYearEnd(2019).build();
     static RefCarType refCarType57 = RefCarType.builder().typeId(57).groupIndex(4).typeName("S-CLASS 9세대").parentTypeId(16).order(3).build();
-          //  .carYearStart(2019).carYearEnd(2025).build();
 
     static RefCarType refCarType58 = RefCarType.builder().typeId(58).groupIndex(4).typeName("3-SERIES 5세대").parentTypeId(16).order(1).build();
-           // .carYearStart(2011).carYearEnd(2017).build();
     static RefCarType refCarType59 = RefCarType.builder().typeId(59).groupIndex(4).typeName("3-SERIES 6세대").parentTypeId(16).order(2).build();
-            //.carYearStart(2017).carYearEnd(2025).build();
     static RefCarType refCarType60 = RefCarType.builder().typeId(60).groupIndex(4).typeName("3-SERIES 7세대").parentTypeId(16).order(3).build();
-           // .carYearStart(2024).carYearEnd(2025).build();
 
     static RefCarType refCarType61 = RefCarType.builder().typeId(61).groupIndex(4).typeName("5-SERIES 6세대").parentTypeId(16).order(1).build();
-           // .carYearStart(2012).carYearEnd(2016).build();
     static RefCarType refCarType62 = RefCarType.builder().typeId(62).groupIndex(4).typeName("5-SERIES 7세대").parentTypeId(16).order(2).build();
-           // .carYearStart(2016).carYearEnd(2022).build();
     static RefCarType refCarType63 = RefCarType.builder().typeId(63).groupIndex(4).typeName("5-SERIES 8세대").parentTypeId(16).order(3).build();
-           // .carYearStart(2022).carYearEnd(2025).build();
 
     static RefCarType refCarType64 = RefCarType.builder().typeId(64).groupIndex(4).typeName("7-SERIES 4세대").parentTypeId(16).order(1).build();
-           // .carYearStart(2008).carYearEnd(2013).build();
     static RefCarType refCarType65 = RefCarType.builder().typeId(65).groupIndex(4).typeName("7-SERIES 5세대").parentTypeId(16).order(2).build();
-          //  .carYearStart(2013).carYearEnd(2019).build();
     static RefCarType refCarType66 = RefCarType.builder().typeId(66).groupIndex(4).typeName("7-SERIES 6세대").parentTypeId(16).order(3).build();
-          //  .carYearStart(2019).carYearEnd(2025).build();
 
     static RefCarType refCarType67 = RefCarType.builder().typeId(67).groupIndex(4).typeName("X5 1세대").parentTypeId(16).order(1).build();
-           // .carYearStart(2016).carYearEnd(2023).build();
     static RefCarType refCarType68 = RefCarType.builder().typeId(68).groupIndex(4).typeName("X5 2세대").parentTypeId(16).order(2).build();
-           // .carYearStart(2023).carYearEnd(2025).build();
 
     static RefCarType refCarType69 = RefCarType.builder().typeId(69).groupIndex(4).typeName("MODEL3 1세대").parentTypeId(16).order(1).build();
-          //  .carYearStart(2023).carYearEnd(2025).build();
     static RefCarType refCarType70 = RefCarType.builder().typeId(70).groupIndex(4).typeName("MODELS 1세대").parentTypeId(16).order(2).build();
-           // .carYearStart(2022).carYearEnd(2025).build();
     static RefCarType refCarType71 = RefCarType.builder().typeId(71).groupIndex(4).typeName("MODELY 1세대").parentTypeId(16).order(3).build();
-           // .carYearStart(2023).carYearEnd(2025).build();
-
-
-
 
 
     public List<RefCarType> listRefCarType = new ArrayList<>();

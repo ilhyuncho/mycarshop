@@ -19,37 +19,42 @@
           <form th:action="@{/myPage/carModify}" method="post" id="f1">
             <div class="input-group mb-3">
               <span class="input-group-text">CarID</span>
-              <input type="text" class="form-control carId" th:value="${responseDTO.carId}" name="carId" readonly>
+              <label><input type="text" class="form-control carId" th:value="${responseDTO.carId}" name="carId" readonly disabled></label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarNumber</span>
-              <input type="text" class="form-control carNumber" th:value="${responseDTO.carNumber}" name="carNumber" readonly>
+              <label><input type="text" class="form-control carNumber" th:value="${responseDTO.carNumber}" name="carNumber" readonly disabled></label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarGrade</span>
-              <input type="text" class="form-control carGrade" th:value="${responseDTO.carGrade}" name="carGrade" readonly>
+              <label><input type="text" class="form-control carGrade" th:value="${responseDTO.carGrade}" name="carGrade" readonly disabled></label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarModel</span>
-              <input type="text" class="form-control carModel" th:value="${responseDTO.carDetailModel}" name="carModel" readonly>
+              <label><input type="text" class="form-control carModel" th:value="${responseDTO.carDetailModel}" name="carModel" readonly disabled></label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarYears</span>
-              <input type="text" class="form-control carYears" th:value="${responseDTO.carYears}" name="carYears">
+              <label><input type="text" class="form-control carYears" th:value="${responseDTO.carYears}" name="carYears" readonly disabled></label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">CarFuel</span>
+              <label><input type="text" class="form-control" th:value="${responseDTO.carFuel.name}" name="carFuel" readonly disabled></label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarColors</span>
-              <input type="text" class="form-control carColors" th:value="${responseDTO.carColors}" name="carColors">
+              <label><input type="text" class="form-control carColors" th:value="${responseDTO.carColors}" name="carColors"></label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarKm</span>
-              <input type="text" class="form-control carKm" th:value="${responseDTO.carKm}" name="carKm" >
+              <label><input type="text" class="form-control carKm" th:value="${responseDTO.carKm}" name="carKm"></label>
             </div>
 
             <!-- 첨부 파일 새로 등록-->
