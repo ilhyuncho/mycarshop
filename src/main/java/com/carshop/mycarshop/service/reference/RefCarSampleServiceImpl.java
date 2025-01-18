@@ -56,7 +56,7 @@ public class RefCarSampleServiceImpl implements RefCarSampleService {
                 .company(refCarSample.getRefCarInfo().getCompany())
                 .companyNation(refCarSample.getRefCarInfo().getCompanyNation())
                 .regDate(refCarSample.getRegDate())
-                .carGrade(refCarSample.getRefCarInfo().getCarGrade())
+                .carSize(refCarSample.getRefCarInfo().getCarSize())
                 .build();
     }
 }

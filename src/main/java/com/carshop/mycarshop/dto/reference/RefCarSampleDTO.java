@@ -18,7 +18,7 @@ public class RefCarSampleDTO {
     private String carNumber;
     private String carDetailModel;
     @Enumerated(EnumType.STRING)
-    private CarSize carGrade;        // 등급 ( 소형, 중형, 대형.. )
+    private CarSize carSize;        // 등급 ( 소형, 중형, 대형.. )
     private String company;
     private String companyNation;
 

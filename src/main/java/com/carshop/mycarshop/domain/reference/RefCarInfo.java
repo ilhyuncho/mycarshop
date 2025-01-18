@@ -31,7 +31,7 @@ public class RefCarInfo extends BaseEntity {
     private String company;
     private String companyNation;
 
-    private CarSize carGrade;        // 등급 ( 소형, 중형, 대형.. )
+    private CarSize carSize;        // 등급 ( 소형, 중형, 대형.. )
     private int carYearStart;        // 해당 모델 시작 연도
     private int carYearEnd;          // 해당 모델 시작 마지막 연도
 

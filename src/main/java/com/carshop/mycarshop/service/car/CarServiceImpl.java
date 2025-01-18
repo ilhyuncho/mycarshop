@@ -39,7 +39,7 @@ public class CarServiceImpl implements CarService {
                 .carNumber(car.getCarNumber())
                 .carColors(car.getCarColors())
                 .carKm(car.getCarKm())
-                .carGrade(car.getRefCarInfo().getCarGrade().getValue())
+                .carSize(car.getRefCarInfo().getCarSize().getValue())
                 .carDetailModel(car.getRefCarInfo().getCarDetailModel())
                 .carYears(car.getCarYears())
                 .userName(car.getUser().getUserName())

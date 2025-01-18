@@ -24,7 +24,7 @@ public class CarViewResDTO extends ImageListDTO {        // 내차 정보 로딩
     @Pattern(regexp = "[0-9]{2,3}[가-힣][0-9]{4}$")
     private String  carNumber;
 
-    private String carGrade;
+    private String carSize;
 
     @NotEmpty
     private String  carDetailModel;
@@ -46,13 +46,13 @@ public class CarViewResDTO extends ImageListDTO {        // 내차 정보 로딩
     private SellType sellType;                      // 차량 판매 방식
 
     @Builder(builderMethodName = "writeCarViewDTOBuilder")
-    public CarViewResDTO(Long carId, String userName, String memberId, String carNumber, String carGrade, String carDetailModel, int carYears,
+    public CarViewResDTO(Long carId, String userName, String memberId, String carNumber, String carSize, String carDetailModel, int carYears,
                          String carColors, int carKm, CarFuel carFuel) {
         this.carId = carId;
         this.userName = userName;
         this.memberId = memberId;
         this.carNumber = carNumber;
-        this.carGrade = carGrade;
+        this.carSize = carSize;
         this.carDetailModel = carDetailModel;
         this.carYears = carYears;
         this.carColors = carColors;
