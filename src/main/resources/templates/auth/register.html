@@ -20,7 +20,7 @@
                         <div class="card shadow-lg border-0 rounded-lg mt-5">
                             <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Account</h3></div>
                             <div class="card-body">
-                                <form action="/auth/register" method="post">
+                                <form action="/auth/register" onsubmit="return register();" method="post">
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 mb-md-0">
@@ -93,5 +93,12 @@
     // }
     if(error){
         alert(error)
+    }
+
+
+    function register(){
+        // 보통 전달 값 검증 할때
+        console.log("action이 처리되기에 앞서 submit 이벤트에 대한 처리")
+        return true;
     }
 </script>
