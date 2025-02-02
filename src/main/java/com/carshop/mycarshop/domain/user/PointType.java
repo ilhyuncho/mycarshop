@@ -1,7 +1,7 @@
 package com.carshop.mycarshop.domain.user;
 
 public enum PointType {
-    TYPE_NONE(0, "기본"),
+    NONE(0, "기본 타입"),
     GAIN(1, "획득"),
     CONSUME(2, "소비"),
     RETURN(3, "환불")

@@ -26,7 +26,7 @@ async function getListSellingCar(formObj){
 async function getRecommendSellingCar(formObj){
     const result = await axios.get(`/sellingCar/recommend`, {params: formObj})
 
-    console.log('getRecommendSellingCar : ' + result.data)
+   // console.log('getRecommendSellingCar : ' + result.data)
     return result.data
 }
 
@@ -34,7 +34,7 @@ async function getRecommendSellingCar(formObj){
 async function getRecentlySeenSellingCar({page, size}){
     const result = await axios.get(`/sellingCar/recentlySeenCar`, {params: {page}})
 
-    console.log(result.data)
+  //  console.log(result.data)
     return result.data
 }
 
