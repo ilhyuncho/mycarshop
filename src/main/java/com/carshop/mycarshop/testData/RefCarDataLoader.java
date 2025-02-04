@@ -71,8 +71,8 @@ public class RefCarDataLoader {
         log.error("listRefCarInfo.size() : " + listRefCarInfo.size());
 
 
-        //if(refCarInfoBuilder.listRefCarInfo.size() != listRefCarInfo.size()
-        //    || listRefCarInfo.size() == 0){
+        if(refCarInfoBuilder.listRefCarInfo.size() != listRefCarInfo.size()
+            || listRefCarInfo.size() == 0){
 
             log.error("1. RefCarInfo saveAll()~~~~~~~~~~~~~");
 
@@ -94,7 +94,7 @@ public class RefCarDataLoader {
 
             });
 
-       // }
+        }
 
         // 차량 샘플 데이터 100개 생성
         loadRefCarSampleData();
