@@ -8,10 +8,7 @@ import com.carshop.mycarshop.domain.cart.CartRepository;
 import com.carshop.mycarshop.domain.member.Member;
 import com.carshop.mycarshop.domain.member.MemberRepository;
 import com.carshop.mycarshop.domain.member.MemberRole;
-import com.carshop.mycarshop.domain.reference.RefCarInfo;
-import com.carshop.mycarshop.domain.reference.RefCarInfoRepository;
-import com.carshop.mycarshop.domain.reference.RefCarSample;
-import com.carshop.mycarshop.domain.reference.RefCarSampleRepository;
+import com.carshop.mycarshop.domain.reference.*;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarStatus;
 import com.carshop.mycarshop.domain.shop.OrderItemRepository;
 import com.carshop.mycarshop.domain.shop.OrderRepository;
@@ -45,8 +42,9 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final CartRepository cartRepository;
-    private final RefCarInfoRepository refCarInfoRepository;
+
     private final RefCarSampleRepository refCarSampleRepository;
+
 
     private final CarRepository carRepository;
     private final PasswordEncoder passwordEncoder;
@@ -92,7 +90,7 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
 
             // member 생성
             IntStream.rangeClosed(1, createMemberCount).forEach(i -> {
-                log.error("memberRepository. start : ");
+
                 Member member = Member.builder()
                         .memberId("member" + i)
                         .memberPw(passwordEncoder.encode("1111"))
@@ -104,10 +102,8 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
                 if (i >= 8) {
                     member.addRole(MemberRole.ADMIN);
                 }
-                log.error("memberRepository. start2 : ");
-                memberRepository.save(member);
 
-                log.error("memberRepository.save : " + member);
+                memberRepository.save(member);
 
                 City city = new City(listZipcode.get(0), "부천시", "대한민국");
                 Address address = Address.builder()
@@ -135,8 +131,6 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
 
                 Long userId = userRepository.save(user).getUserId();
 
-                log.error("userRepository.save : " + user);
-
                 // 배송 주소록 추가
                 UserAddressBook userAddressBook = UserAddressBook.builder()
                         .user(user)
@@ -149,8 +143,6 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
                         .isActive(true)
                         .build();
                 userAddressBookRepository.save(userAddressBook);
-
-                log.error("userAddressBookRepository.save : " + userAddressBook);
 
                 // 알림 추가
                 UserAlarm userAlarm = UserAlarm.builder()
@@ -205,7 +197,6 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
                         car.resetImages(listImage, "carin3.png");
 
                         // 차량 판매 등록
-                        // SellType sellType = SellType.fromValue("auctionType");
                         SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
                                 .sellingCarStatus(SellingCarStatus.PROCESSING)
                                 .sellType("consultType")
@@ -218,19 +209,6 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
                 }
 
             });
-
-            // 참조 테이블 먼저 삭제
-            //userPointHistoryRepository.deleteAll();
-
-
-
-            // User 생성
-//            IntStream.rangeClosed(1, createMemberCount).forEach(i -> {
-//
-//
-//
-//            });
-
         }
     }
 }

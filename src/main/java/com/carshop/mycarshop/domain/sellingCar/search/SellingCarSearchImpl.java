@@ -1,6 +1,5 @@
 package com.carshop.mycarshop.domain.sellingCar.search;
 
-import com.carshop.mycarshop.domain.reference.carType.CarCategory;
 import com.carshop.mycarshop.domain.sellingCar.QSellingCar;
 import com.carshop.mycarshop.domain.sellingCar.SellType;
 import com.carshop.mycarshop.domain.sellingCar.SellingCar;
@@ -94,12 +93,6 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
         this.getQuerydsl().applyPagination(pageable, query);
         List<SellingCar> list = query.fetch();
         long count = query.fetchCount();
-
-        log.error("count : " + count);
-
-        for (SellingCar car : list) {
-            log.error(car.getSellingCarId() + "," + car.getCar().getCarNumber());
-        }
 
         return new PageImpl<>(list, pageable, count);
     }
