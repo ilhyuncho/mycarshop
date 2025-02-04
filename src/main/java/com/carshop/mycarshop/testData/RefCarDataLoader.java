@@ -67,6 +67,9 @@ public class RefCarDataLoader {
         //RefCarOptionBuilder refCarOptionBuilder = new RefCarOptionBuilder();
 
         List<RefCarInfo> listRefCarInfo = refCarInfoRepository.findAll();
+        log.error("refCarInfoBuilder.listRefCarInfo.size : " + refCarInfoBuilder.listRefCarInfo.size());
+        log.error("listRefCarInfo.size() : " + listRefCarInfo.size());
+
 
         if(refCarInfoBuilder.listRefCarInfo.size() != listRefCarInfo.size()
             || listRefCarInfo.size() == 0){
@@ -111,7 +114,7 @@ public class RefCarDataLoader {
         if(listRefCarSample.size() != 100){
             refCarSampleRepository.deleteAll();
 
-            log.error("loadRefCarSampleData start~~~~~~~~~~~~~~~~~~");
+            log.error("loadRefCarSampleData start~~~~~~~~~~~~~~~~~~ listRefCarInfo.size : " + listRefCarInfo.size());
             // 차 색상 생성
             Map<Integer, String> mapColor = Map.of(0,"흰색",
                     1, "빨강색",
