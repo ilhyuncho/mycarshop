@@ -4,11 +4,9 @@ import com.carshop.mycarshop.common.util.Util;
 import com.carshop.mycarshop.domain.buyingCar.BuyingCarRepository;
 import com.carshop.mycarshop.domain.car.CarRepository;
 import com.carshop.mycarshop.domain.reference.*;
-import com.carshop.mycarshop.domain.reference.carType.CarDetailModel;
-import com.carshop.mycarshop.domain.reference.carType.CarFuel;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarRepository;
+import com.carshop.mycarshop.testData.builder.RefCarDataBuilder;
 import com.carshop.mycarshop.testData.builder.RefCarInfoBuilder;
-import com.carshop.mycarshop.testData.builder.RefCarOptionBuilder;
 import com.carshop.mycarshop.testData.event.SampleMemberCreateEvent;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Component
@@ -31,6 +30,7 @@ import java.util.stream.IntStream;
 public class RefCarDataLoader {
 
     private final RefCarInfoRepository refCarInfoRepository;
+    private final RefCarGradeRepository refCarGradeRepository;
     private final RefCarSampleRepository refCarSampleRepository;
     private final SellingCarRepository sellingCarRepository;
     private final BuyingCarRepository buyingCarRepository;
@@ -63,7 +63,8 @@ public class RefCarDataLoader {
         log.error("(ApplicationReadyEvent) loadRefCarData()!!!!!!!!");
 
         RefCarInfoBuilder refCarInfoBuilder = new RefCarInfoBuilder();
-        RefCarOptionBuilder refCarOptionBuilder = new RefCarOptionBuilder();
+        RefCarDataBuilder refCarDataBuilder = new RefCarDataBuilder();
+        //RefCarOptionBuilder refCarOptionBuilder = new RefCarOptionBuilder();
 
         List<RefCarInfo> listRefCarSample = refCarInfoRepository.findAll();
 
@@ -74,19 +75,20 @@ public class RefCarDataLoader {
 
             initCarInfoData();
 
-            // refCarInfo save
+            refCarGradeRepository.saveAll(refCarDataBuilder.listRefGrade);
             refCarInfoRepository.saveAll(refCarInfoBuilder.listRefCarInfo);
 
             // 차량 별 옵션 셋팅
-            List<RefCarInfo> savedRefCarSample = refCarInfoRepository.findAll();
+            List<RefCarInfo> savedRefCarInfo = refCarInfoRepository.findAll();
+            List<RefCarGrade> savedRefCarGrade = refCarGradeRepository.findAll();
 
-            savedRefCarSample.forEach(refCarSample -> {
-                Set<RefCarOption> setRefCarOptions = refCarOptionBuilder.mapRefCarOption.
-                        get(CarDetailModel.fromValue(refCarSample.getCarDetailModel()));
+            savedRefCarInfo.forEach(refCarInfo -> {
 
-                if(setRefCarOptions != null){
-                    refCarSample.setRefCarOptions(setRefCarOptions);
-                }
+                savedRefCarGrade.stream()
+                        .filter(refCarGrade -> {
+                            return refCarGrade.getCarDetailModel().getName().equals(refCarInfo.getCarDetailModel());})
+                        .forEach(refCarInfo::addRefCarGrade);
+
             });
 
         }
@@ -120,7 +122,7 @@ public class RefCarDataLoader {
 
             // 차 정보 생성
             //RefCarInfoBuilder carBuilder = new RefCarInfoBuilder();
-            RefCarInfoBuilder carBuilder = new RefCarInfoBuilder();
+            // RefCarInfoBuilder carBuilder = new RefCarInfoBuilder();
 
             // 임의로 차 넘버 생성  ( Stream 활용 테스트 겸 )
             IntStream randomStream = Util.createRandomStream(100, 100_0000, 999_9999);
@@ -141,37 +143,47 @@ public class RefCarDataLoader {
                 int randomYear = new Random().nextInt(30) + 1990;
                 int randomMonth = new Random().nextInt(11) + 1;
                 int randomDate = new Random().nextInt(28) + 1;
-
                 int randomKm = new Random().nextInt(200000) + 1000;
                 int randomColor= new Random().nextInt(mapColor.size());
-
-
-//                int carInfoIndex = new Random().nextInt(carBuilder.carInfoList.size());
-//                CarInfo car = carBuilder.carInfoList.get(carInfoIndex);
 
                 if(listRefCarInfo.size() > 0 ){
                     int carInfoIndex = new Random().nextInt(listRefCarInfo.size());
 
-                    RefCarInfo car = listRefCarInfo.get(carInfoIndex);
+                    // RefCarInfo 정보 get
+                    RefCarInfo refCarInfo = listRefCarInfo.get(carInfoIndex);
+                    int randomCarYear = new Random().nextInt(refCarInfo.getCarYearStart(), refCarInfo.getCarYearEnd()+1);
 
-                    int randomCarYear = new Random().nextInt(car.getCarYearStart(), car.getCarYearEnd()+1);
+                    // 여기서~~~~~~~
+                    if(refCarInfo.getRefCarGradeSet().size() > 0){
+                        RefCarGrade refCarGrade = refCarInfo.getRefCarGradeSet().stream()
+                                .skip(new Random().nextInt(refCarInfo.getRefCarGradeSet().size()))
+                                .findFirst().get();
 
-                    CarFuel carFuel = CarFuel.FUEL_GASOLINE;
-                    if(!car.getFuel().isEmpty()){
-                        int skipIndex = new Random().nextInt(car.getFuel().size());
-                        carFuel = car.getFuel().stream().skip(skipIndex).findFirst().get();
+                        if(refCarGrade.getCarTrimSet().size() > 0) {
+                            RefCarTrim refCarTrim = refCarGrade.getCarTrimSet().stream()
+                                    .skip(new Random().nextInt(refCarGrade.getCarTrimSet().size()))
+                                    .findFirst().get();
+
+                            RefCarSample refCarSample = RefCarSample.builder()
+                                    .carNumber(listCarNumber.get(a - 1))
+                                    .refCarInfo(refCarInfo)
+                                    .carYear(randomCarYear)
+                                    .carKm(randomKm)
+                                    .carColor(mapColor.get(randomColor))
+
+                                    .refCarGrade(refCarGrade)
+                                    .refCarTrim(refCarTrim)
+                                    .carFuelType(refCarGrade.getCarFuelType())
+
+                                    .regDate(LocalDate.of(randomYear, randomMonth, randomDate))
+                                    .build();
+                            refCarSampleRepository.save(refCarSample);
+                        }
+
                     }
-
-                    RefCarSample refCarSample = RefCarSample.builder()
-                            .carNumber(listCarNumber.get(a-1))
-                            .refCarInfo(car)
-                            .carYear(randomCarYear)
-                            .carKm(randomKm)
-                            .carColor(mapColor.get(randomColor))
-                            .fuelType(carFuel)
-                            .regDate(LocalDate.of(randomYear,randomMonth,randomDate))
-                            .build();
-                    refCarSampleRepository.save(refCarSample);
+                    else{
+                        log.error("refCarInfo refCarGrade is null!!! " + refCarInfo.getRefCarInfoId() + " , "+ refCarInfo.getCarDetailModel());
+                    }
                 }
             });
 

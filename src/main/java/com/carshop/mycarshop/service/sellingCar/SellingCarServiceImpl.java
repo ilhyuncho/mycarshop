@@ -188,6 +188,7 @@ public class SellingCarServiceImpl implements SellingCarService {
         }
     }
     public static SellingCarResDTO entityToDTO(SellingCar sellingCar) {
+
         SellingCarResDTO sellingCarResDTO = SellingCarResDTO.builder()
                 .carId(sellingCar.getCar().getCarId())
                 .requiredPrice(sellingCar.getRequiredPrice())
@@ -198,7 +199,11 @@ public class SellingCarServiceImpl implements SellingCarService {
                 .carDetailModel(sellingCar.getCar().getRefCarInfo().getCarDetailModel())
                 .carYears(sellingCar.getCar().getCarYears())
                 .carKm(sellingCar.getCar().getCarKm())
-                .carFuel(sellingCar.getCar().getCarFuel())
+
+                .carGradeName(sellingCar.getCar().getRefCarGrade().getName())
+                .carGradeNameDesc(sellingCar.getCar().getRefCarGrade().getNameDesc())
+                .carFuelType(sellingCar.getCar().getCarFuelType())
+
                 .sellingCarId(sellingCar.getSellingCarId())
                 .viewCount(sellingCar.getViewCount())
                 .sellType(sellingCar.getSellType())

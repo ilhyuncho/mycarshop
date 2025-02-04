@@ -26,12 +26,15 @@ public class RefCarSampleServiceImpl implements RefCarSampleService {
             List<RefCarSample> listCarSample = refCarSampleRepository.findAll();
 
             if(listCarSample.size() > 0){
-                int skipIndex = new Random().nextInt(listCarSample.size() - 1);
-                RefCarSample refCarSample = listCarSample.stream().skip(skipIndex).findFirst().get();
+
+                RefCarSample refCarSample = listCarSample.stream()
+                        .skip(new Random().nextInt(listCarSample.size()))
+                        .findFirst().get();
 
                 return entityToDTO(refCarSample);
             }
             else{
+                log.error("RefCarSample Data is Invalid!!!!!!!!!!!!");
                 return null;
             }
         }
@@ -45,12 +48,17 @@ public class RefCarSampleServiceImpl implements RefCarSampleService {
         if( refCarSample == null){
             return null;
         }
+
         return RefCarSampleDTO.builder()
                 .refCarInfoId(refCarSample.getRefCarInfo().getRefCarInfoId())
                 .carNumber(refCarSample.getCarNumber())
                 .carColor(refCarSample.getCarColor())
                 .carKm(refCarSample.getCarKm())
-                .carFuel(refCarSample.getFuelType())
+
+                .refCarGrade(refCarSample.getRefCarGrade())
+                .refCarTrim(refCarSample.getRefCarTrim())
+                .carFuelType(refCarSample.getCarFuelType())
+
                 .carYear(refCarSample.getCarYear())
                 .carDetailModel(refCarSample.getRefCarInfo().getCarDetailModel())
                 .company(refCarSample.getRefCarInfo().getCompany())

@@ -2,7 +2,6 @@ package com.carshop.mycarshop.domain.reference;
 
 import com.carshop.mycarshop.domain.car.CarSize;
 import com.carshop.mycarshop.domain.common.BaseEntity;
-import com.carshop.mycarshop.domain.reference.carType.CarFuel;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.annotations.BatchSize;
@@ -31,16 +30,11 @@ public class RefCarInfo extends BaseEntity {
     private String company;
     private String companyNation;
 
-    private CarSize carSize;        // 등급 ( 소형, 중형, 대형.. )
+    private CarSize carSize;        // 크기 ( 소형, 중형, 대형.. )
+
     private int carYearStart;        // 해당 모델 시작 연도
     private int carYearEnd;          // 해당 모델 시작 마지막 연도
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "RefCarFuelInfos", joinColumns = @JoinColumn(name = "refCarInfoId"))
-    @Builder.Default
-    private Set<CarFuel> fuel = new HashSet<>();
-
-    //private String carOption;
     @OneToMany(mappedBy = "refCarInfo", // RefCarOption의 RefCarInfo변수
             cascade = {CascadeType.ALL}, // RefCarInfo 엔티티에서 하위 엔티티 객체들을 관리 하는 기능을 추가 해서 사용
             fetch = FetchType.LAZY,
@@ -48,14 +42,10 @@ public class RefCarInfo extends BaseEntity {
     )
     @Builder.Default
     @BatchSize(size=20) // N번에 해당하는 쿼리를 모아서 한번에 실행, (N+1문제 해결)
-    private Set<RefCarOption> refCarOptionSet = new HashSet<>();
+    private Set<RefCarGrade> refCarGradeSet = new HashSet<>();
 
-    public void setRefCarOptions(Set<RefCarOption> refCarOptionSet){
-
-        this.refCarOptionSet = refCarOptionSet;
-        refCarOptionSet.forEach( carOption -> {
-            carOption.refCarInfo = this;
-        });
+    public void addRefCarGrade(RefCarGrade refCarGrade){
+        refCarGradeSet.add(refCarGrade);
+        refCarGrade.setRefCarInfo(this);
     }
-
 }

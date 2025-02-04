@@ -23,9 +23,9 @@ public class RefCarOption extends BaseEntity {
 
     private String optionName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "refCarInfoId")
-    RefCarInfo refCarInfo;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "refCarInfoId")
+//    RefCarInfo refCarInfo;
 
     private String optionDesc;
 }

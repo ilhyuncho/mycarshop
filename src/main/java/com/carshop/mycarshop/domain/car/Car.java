@@ -2,8 +2,10 @@ package com.carshop.mycarshop.domain.car;
 
 
 import com.carshop.mycarshop.domain.common.BaseEntity;
+import com.carshop.mycarshop.domain.reference.RefCarGrade;
 import com.carshop.mycarshop.domain.reference.RefCarInfo;
-import com.carshop.mycarshop.domain.reference.carType.CarFuel;
+import com.carshop.mycarshop.domain.reference.RefCarTrim;
+import com.carshop.mycarshop.domain.reference.carType.CarFuelType;
 import com.carshop.mycarshop.domain.sellingCar.SellType;
 import com.carshop.mycarshop.domain.sellingCar.SellingCar;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarStatus;
@@ -47,8 +49,15 @@ public class Car extends BaseEntity {
     @Column(name="carKm", nullable = false)
     private int carKm = 0;
 
-    @Column(name="carFuel", nullable = false)
-    private CarFuel carFuel;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "refCarGradeId")      // 주 테이블(Car)에 외래 키
+    private RefCarGrade refCarGrade;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "refCarTrimId")      // 주 테이블(Car)에 외래 키
+    private RefCarTrim refCarTrim;
+
+    private CarFuelType carFuelType;        // 차량 엔진 타입
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="uId")
@@ -90,7 +99,11 @@ public class Car extends BaseEntity {
                 .refCarInfo(refCarInfo)
                 .carColors(refCarSampleDTO.getCarColor())
                 .carYears(refCarSampleDTO.getCarYear())
-                .carFuel(refCarSampleDTO.getCarFuel())
+
+                .refCarGrade(refCarSampleDTO.getRefCarGrade())
+                .refCarTrim(refCarSampleDTO.getRefCarTrim())
+                .carFuelType(refCarSampleDTO.getCarFuelType())
+
                 .isActive(true);
     }
 

@@ -2,7 +2,9 @@ package com.carshop.mycarshop.dto.reference;
 
 
 import com.carshop.mycarshop.domain.car.CarSize;
-import com.carshop.mycarshop.domain.reference.carType.CarFuel;
+import com.carshop.mycarshop.domain.reference.RefCarGrade;
+import com.carshop.mycarshop.domain.reference.RefCarTrim;
+import com.carshop.mycarshop.domain.reference.carType.CarFuelType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,7 +28,16 @@ public class RefCarSampleDTO {
     private String carColor;
     private Integer carYear;        // 출시 연도
     private Integer carKm;          // 주행거리
-    private CarFuel carFuel;        // 연료 타입
+
+    private String gradeName;
+    private String gradeDesc;
+    private String trimName;
+    private String trimNameDesc;
+
+    private RefCarGrade refCarGrade;      // 등급 타입
+    private RefCarTrim refCarTrim;      // 등급 타입
+    private CarFuelType carFuelType;
+
     private LocalDate regDate;      // 최초 등록 날짜
 
 }
