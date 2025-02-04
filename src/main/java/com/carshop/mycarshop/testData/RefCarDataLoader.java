@@ -66,10 +66,10 @@ public class RefCarDataLoader {
         RefCarDataBuilder refCarDataBuilder = new RefCarDataBuilder();
         //RefCarOptionBuilder refCarOptionBuilder = new RefCarOptionBuilder();
 
-        List<RefCarInfo> listRefCarSample = refCarInfoRepository.findAll();
+        List<RefCarInfo> listRefCarInfo = refCarInfoRepository.findAll();
 
-        if(refCarInfoBuilder.listRefCarInfo.size() != listRefCarSample.size()
-            || listRefCarSample.size() == 0){
+        if(refCarInfoBuilder.listRefCarInfo.size() != listRefCarInfo.size()
+            || listRefCarInfo.size() == 0){
 
             log.error("1. RefCarInfo saveAll()~~~~~~~~~~~~~");
 
@@ -111,7 +111,7 @@ public class RefCarDataLoader {
         if(listRefCarSample.size() != 100){
             refCarSampleRepository.deleteAll();
 
-            log.error("loadRefCarSampleData start");
+            log.error("loadRefCarSampleData start~~~~~~~~~~~~~~~~~~");
             // 차 색상 생성
             Map<Integer, String> mapColor = Map.of(0,"흰색",
                     1, "빨강색",
@@ -177,13 +177,14 @@ public class RefCarDataLoader {
 
                                     .regDate(LocalDate.of(randomYear, randomMonth, randomDate))
                                     .build();
+                            log.error("refCarSampleRepository.save~~~~~");
                             refCarSampleRepository.save(refCarSample);
                         }
 
                     }
-                    else{
-                        log.error("refCarInfo refCarGrade is null!!! " + refCarInfo.getRefCarInfoId() + " , "+ refCarInfo.getCarDetailModel());
-                    }
+                    //else{
+                      //  log.error("refCarInfo refCarGrade is null!!! " + refCarInfo.getRefCarInfoId() + " , "+ refCarInfo.getCarDetailModel());
+                   // }
                 }
             });
 
