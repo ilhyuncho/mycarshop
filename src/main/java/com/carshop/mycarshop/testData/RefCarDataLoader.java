@@ -180,7 +180,7 @@ public class RefCarDataLoader {
 
                                     .regDate(LocalDate.of(randomYear, randomMonth, randomDate))
                                     .build();
-                            log.error("refCarSampleRepository.save~~~~~");
+                          //  log.error("refCarSampleRepository.save~~~~~");
                             refCarSampleRepository.save(refCarSample);
                         }
 
