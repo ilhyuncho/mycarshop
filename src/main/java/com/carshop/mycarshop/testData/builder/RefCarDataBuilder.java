@@ -15,6 +15,10 @@ public class RefCarDataBuilder {
     static RefCarTrim refCarTrim1 = RefCarTrim.builder().name("프레스티지").nameDesc("프레스티지").build();
     static RefCarTrim refCarTrim2 = RefCarTrim.builder().name("스마트").nameDesc("스마트").build();
     static RefCarTrim refCarTrim3 = RefCarTrim.builder().name("모던").nameDesc("모던").build();
+    static RefCarTrim refCarTrim4 = RefCarTrim.builder().name("프리미엄").nameDesc("프리미엄").build();
+    static RefCarTrim refCarTrim5 = RefCarTrim.builder().name("인스퍼레이션").nameDesc("인스퍼레이션").build();
+    static RefCarTrim refCarTrim6 = RefCarTrim.builder().name("노블레스").nameDesc("노블레스").build();
+    static RefCarTrim refCarTrim7 = RefCarTrim.builder().name("시그니처").nameDesc("시그니처").build();
 
     // 벤츠
     static RefCarTrim refCarTrim10001 = RefCarTrim.builder().name("e200 아방가르드").nameDesc("e200 아방가르드").build();
@@ -97,6 +101,24 @@ public class RefCarDataBuilder {
     static RefCarGrade refCarGrade15 = new RefCarGrade("2.0", "2.0 LPG", CarFuelType.FUEL_LPG,
             CarDetailModel.CAR_DETAIL_MODEL_SONATA_LF, Set.of(refCarTrim1, refCarTrim2, refCarTrim3));
 
+    // 투싼
+    static RefCarGrade refCarGrade21 = new RefCarGrade("1.6", "1.6 가솔린", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_TUCSON, Set.of(refCarTrim4, refCarTrim5));
+    static RefCarGrade refCarGrade22 = new RefCarGrade("2.0", "2.0d 디젤", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_TUCSON, Set.of(refCarTrim4, refCarTrim5));
+
+    // 더 뉴 투싼
+    static RefCarGrade refCarGrade23 = new RefCarGrade("1.6", "1.6 가솔린", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_TUCSON_THE_NEW, Set.of(refCarTrim4, refCarTrim5));
+    static RefCarGrade refCarGrade24 = new RefCarGrade("2.0", "2.0d 디젤", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_TUCSON_THE_NEW, Set.of(refCarTrim4, refCarTrim5));
+
+    // 올 뉴 투싼
+    static RefCarGrade refCarGrade25 = new RefCarGrade("1.6", "1.6 가솔린", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_TUCSON_ALL_NEW, Set.of(refCarTrim4, refCarTrim5));
+    static RefCarGrade refCarGrade26 = new RefCarGrade("2.0", "2.0d 디젤", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_TUCSON_ALL_NEW, Set.of(refCarTrim4, refCarTrim5));
+
     // 아반테 AD
     static RefCarGrade refCarGrade101 = new RefCarGrade("1.6", "1.6 가솔린", CarFuelType.FUEL_GASOLINE,
             CarDetailModel.CAR_DETAIL_MODEL_AVANTE_AD, Set.of(refCarTrim1, refCarTrim2, refCarTrim3));
@@ -169,6 +191,65 @@ public class RefCarDataBuilder {
     static RefCarGrade refCarGrade1035 = new RefCarGrade("2.0 2WD", "2.0 LPG ", CarFuelType.FUEL_LPG,
             CarDetailModel.CAR_DETAIL_MODEL_SPORTAGE_DH, Set.of(refCarTrim1, refCarTrim2, refCarTrim3));
 
+    // THE NEW 스포티지
+    static RefCarGrade refCarGrade1041 = new RefCarGrade("1.6 2WD", "1.6 터보", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_SPORTAGE_THE_NEW, Set.of(refCarTrim1, refCarTrim2, refCarTrim3));
+    static RefCarGrade refCarGrade1042 = new RefCarGrade("1.6 4WD", "1.6 터보", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_SPORTAGE_THE_NEW, Set.of(refCarTrim1, refCarTrim2, refCarTrim3));
+    static RefCarGrade refCarGrade1043 = new RefCarGrade("2.0d 2WD", "2.0d 디젤", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_SPORTAGE_THE_NEW, Set.of(refCarTrim1, refCarTrim2, refCarTrim3));
+    static RefCarGrade refCarGrade1044 = new RefCarGrade("2.0d 4WD", "2.0d 디젤", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_SPORTAGE_THE_NEW, Set.of(refCarTrim1, refCarTrim2, refCarTrim3));
+    static RefCarGrade refCarGrade1045 = new RefCarGrade("2.0 2WD", "2.0 LPG ", CarFuelType.FUEL_LPG,
+            CarDetailModel.CAR_DETAIL_MODEL_SPORTAGE_THE_NEW, Set.of(refCarTrim1, refCarTrim2, refCarTrim3));
+
+    // THE NEW 스포티지
+    static RefCarGrade refCarGrade1051 = new RefCarGrade("1.6 2WD", "1.6 터보", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_SPORTAGE_ALL_NEW, Set.of(refCarTrim1, refCarTrim2, refCarTrim3));
+    static RefCarGrade refCarGrade1052 = new RefCarGrade("1.6 4WD", "1.6 터보", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_SPORTAGE_ALL_NEW, Set.of(refCarTrim1, refCarTrim2, refCarTrim3));
+    static RefCarGrade refCarGrade1053 = new RefCarGrade("2.0d 2WD", "2.0d 디젤", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_SPORTAGE_ALL_NEW, Set.of(refCarTrim1, refCarTrim2, refCarTrim3));
+    static RefCarGrade refCarGrade1054 = new RefCarGrade("2.0d 4WD", "2.0d 디젤", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_SPORTAGE_ALL_NEW, Set.of(refCarTrim1, refCarTrim2, refCarTrim3));
+    static RefCarGrade refCarGrade1055 = new RefCarGrade("2.0 2WD", "2.0 LPG ", CarFuelType.FUEL_LPG,
+            CarDetailModel.CAR_DETAIL_MODEL_SPORTAGE_ALL_NEW, Set.of(refCarTrim1, refCarTrim2, refCarTrim3));
+
+    // K8
+    static RefCarGrade refCarGrade1061 = new RefCarGrade("2.5 2WD", "2.5 터보", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_K8_SD, Set.of(refCarTrim6, refCarTrim7));
+    static RefCarGrade refCarGrade1062 = new RefCarGrade("3.5 4WD", "3.5 터보", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_K8_SD, Set.of(refCarTrim6, refCarTrim7));
+
+    // K7 AH
+    static RefCarGrade refCarGrade1071 = new RefCarGrade("2.0", "2.0 가솔린", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_K7_AH, Set.of(refCarTrim1, refCarTrim6, refCarTrim7));
+    static RefCarGrade refCarGrade1072 = new RefCarGrade("2.5", "2.5d 디젤", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_K7_AH, Set.of(refCarTrim1, refCarTrim6, refCarTrim7));
+    static RefCarGrade refCarGrade1073 = new RefCarGrade("2.0", "2.0 하이브리드", CarFuelType.FUEL_HYBRID,
+            CarDetailModel.CAR_DETAIL_MODEL_K7_AH, Set.of(refCarTrim1, refCarTrim6, refCarTrim7));
+    static RefCarGrade refCarGrade1074 = new RefCarGrade("2.0", "2.0 LPG", CarFuelType.FUEL_LPG,
+            CarDetailModel.CAR_DETAIL_MODEL_K7_AH, Set.of(refCarTrim1, refCarTrim6, refCarTrim7));
+
+    // NEW K7
+    static RefCarGrade refCarGrade1081 = new RefCarGrade("2.0", "2.0 가솔린", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_K7_NEW, Set.of(refCarTrim1, refCarTrim6, refCarTrim7));
+    static RefCarGrade refCarGrade1082 = new RefCarGrade("2.5", "2.5d 디젤", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_K7_NEW, Set.of(refCarTrim1, refCarTrim6, refCarTrim7));
+    static RefCarGrade refCarGrade1083 = new RefCarGrade("2.0", "2.0 하이브리드", CarFuelType.FUEL_HYBRID,
+            CarDetailModel.CAR_DETAIL_MODEL_K7_NEW, Set.of(refCarTrim1, refCarTrim6, refCarTrim7));
+    static RefCarGrade refCarGrade1084 = new RefCarGrade("2.0", "2.0 LPG", CarFuelType.FUEL_LPG,
+            CarDetailModel.CAR_DETAIL_MODEL_K7_NEW, Set.of(refCarTrim1, refCarTrim6, refCarTrim7));
+
+    // ALL NEW K7
+    static RefCarGrade refCarGrade1091 = new RefCarGrade("2.0", "2.0 가솔린", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_K7_ALL_NEW, Set.of(refCarTrim1, refCarTrim6, refCarTrim7));
+    static RefCarGrade refCarGrade1092 = new RefCarGrade("2.5", "2.5d 디젤", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_K7_ALL_NEW, Set.of(refCarTrim1, refCarTrim6, refCarTrim7));
+    static RefCarGrade refCarGrade1093 = new RefCarGrade("2.0", "2.0 하이브리드", CarFuelType.FUEL_HYBRID,
+            CarDetailModel.CAR_DETAIL_MODEL_K7_ALL_NEW, Set.of(refCarTrim1, refCarTrim6, refCarTrim7));
+    static RefCarGrade refCarGrade1094 = new RefCarGrade("2.0", "2.0 LPG", CarFuelType.FUEL_LPG,
+            CarDetailModel.CAR_DETAIL_MODEL_K7_ALL_NEW, Set.of(refCarTrim1, refCarTrim6, refCarTrim7));
 
 
     // 벤츠 - E-CLASS 5세대
@@ -202,21 +283,66 @@ public class RefCarDataBuilder {
             CarDetailModel.CAR_DETAIL_MODEL_E_CLASS_7G, Set.of(refCarTrim10007, refCarTrim10008));
 
     // 벤츠 - C-CLASS 4세대
-    static RefCarGrade refCarGrade10101 = new RefCarGrade("e200", "e200", CarFuelType.FUEL_GASOLINE,
+    static RefCarGrade refCarGrade10101 = new RefCarGrade("c200", "c200", CarFuelType.FUEL_GASOLINE,
             CarDetailModel.CAR_DETAIL_MODEL_C_CLASS_4G, Set.of(refCarTrim10001));
-    static RefCarGrade refCarGrade10102 = new RefCarGrade("e300", "e300", CarFuelType.FUEL_GASOLINE,
+    static RefCarGrade refCarGrade10102 = new RefCarGrade("c300", "c300", CarFuelType.FUEL_GASOLINE,
             CarDetailModel.CAR_DETAIL_MODEL_C_CLASS_4G, Set.of(refCarTrim10002, refCarTrim10003, refCarTrim10004));
     // 벤츠 - C-CLASS 5세대
-    static RefCarGrade refCarGrade10111 = new RefCarGrade("e200", "e200", CarFuelType.FUEL_GASOLINE,
+    static RefCarGrade refCarGrade10111 = new RefCarGrade("c200", "c200", CarFuelType.FUEL_GASOLINE,
             CarDetailModel.CAR_DETAIL_MODEL_C_CLASS_5G, Set.of(refCarTrim10001));
-    static RefCarGrade refCarGrade10112 = new RefCarGrade("e300", "e300", CarFuelType.FUEL_GASOLINE,
+    static RefCarGrade refCarGrade10112 = new RefCarGrade("c300", "c300", CarFuelType.FUEL_GASOLINE,
             CarDetailModel.CAR_DETAIL_MODEL_C_CLASS_5G, Set.of(refCarTrim10002, refCarTrim10003, refCarTrim10004));
     // 벤츠 - C-CLASS 6세대
-    static RefCarGrade refCarGrade10121 = new RefCarGrade("e200", "e200", CarFuelType.FUEL_GASOLINE,
+    static RefCarGrade refCarGrade10121 = new RefCarGrade("c200", "c200", CarFuelType.FUEL_GASOLINE,
             CarDetailModel.CAR_DETAIL_MODEL_C_CLASS_6G, Set.of(refCarTrim10001));
-    static RefCarGrade refCarGrade10122 = new RefCarGrade("e300", "e300", CarFuelType.FUEL_GASOLINE,
+    static RefCarGrade refCarGrade10122 = new RefCarGrade("c300", "c300", CarFuelType.FUEL_GASOLINE,
             CarDetailModel.CAR_DETAIL_MODEL_C_CLASS_6G, Set.of(refCarTrim10002, refCarTrim10003, refCarTrim10004));
 
+    // 벤츠 - A-CLASS 5세대
+    static RefCarGrade refCarGrade10131 = new RefCarGrade("a200", "a200", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_A_CLASS_5G, Set.of(refCarTrim10001));
+    static RefCarGrade refCarGrade10132 = new RefCarGrade("a300", "a300", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_A_CLASS_5G, Set.of(refCarTrim10002, refCarTrim10003, refCarTrim10004));
+    // 벤츠 - A-CLASS 6세대
+    static RefCarGrade refCarGrade10141 = new RefCarGrade("a200", "a200", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_A_CLASS_6G, Set.of(refCarTrim10001));
+    static RefCarGrade refCarGrade10142 = new RefCarGrade("a300", "a300", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_A_CLASS_6G, Set.of(refCarTrim10002, refCarTrim10003, refCarTrim10004));
+    // 벤츠 - A-CLASS 7세대
+    static RefCarGrade refCarGrade10151 = new RefCarGrade("a200", "a200", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_A_CLASS_7G, Set.of(refCarTrim10001));
+    static RefCarGrade refCarGrade10152 = new RefCarGrade("a300", "a300", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_A_CLASS_7G, Set.of(refCarTrim10002, refCarTrim10003, refCarTrim10004));
+
+    // 벤츠 - S-CLASS 7세대
+    static RefCarGrade refCarGrade10161 = new RefCarGrade("s450", "s450", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_S_CLASS_7G, Set.of(refCarTrim10001));
+    static RefCarGrade refCarGrade10162 = new RefCarGrade("s500", "s500", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_S_CLASS_7G, Set.of(refCarTrim10002, refCarTrim10003, refCarTrim10004));
+    static RefCarGrade refCarGrade10163 = new RefCarGrade("s350d", "s350", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_S_CLASS_7G, Set.of(refCarTrim10001));
+    static RefCarGrade refCarGrade10164 = new RefCarGrade("s450d", "s450", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_S_CLASS_7G, Set.of(refCarTrim10001));
+
+    static RefCarGrade refCarGrade10171 = new RefCarGrade("s450", "s450", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_S_CLASS_8G, Set.of(refCarTrim10001));
+    static RefCarGrade refCarGrade10172 = new RefCarGrade("s500", "s500", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_S_CLASS_8G, Set.of(refCarTrim10002, refCarTrim10003, refCarTrim10004));
+    static RefCarGrade refCarGrade10173 = new RefCarGrade("s350d", "s350", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_S_CLASS_8G, Set.of(refCarTrim10001));
+    static RefCarGrade refCarGrade10174 = new RefCarGrade("s450d", "s450", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_S_CLASS_8G, Set.of(refCarTrim10001));
+
+    static RefCarGrade refCarGrade10181 = new RefCarGrade("s450", "s450", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_S_CLASS_9G, Set.of(refCarTrim10001));
+    static RefCarGrade refCarGrade10182 = new RefCarGrade("s500", "s500", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_S_CLASS_9G, Set.of(refCarTrim10002, refCarTrim10003, refCarTrim10004));
+    static RefCarGrade refCarGrade10183 = new RefCarGrade("s350d", "s350", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_S_CLASS_9G, Set.of(refCarTrim10001));
+    static RefCarGrade refCarGrade10184 = new RefCarGrade("s450d", "s450", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_S_CLASS_9G, Set.of(refCarTrim10001));
+
+    
     // BMW 3시리즈
     static RefCarGrade refCarGrade20001 = new RefCarGrade("320i", "320i", CarFuelType.FUEL_GASOLINE,
             CarDetailModel.CAR_DETAIL_MODEL_3SERIES_5G, Set.of(refCarTrim20001, refCarTrim20002, refCarTrim20003));
@@ -265,6 +391,44 @@ public class RefCarDataBuilder {
     static RefCarGrade refCarGrade20124 = new RefCarGrade("530e", "530e", CarFuelType.FUEL_HYBRID,
             CarDetailModel.CAR_DETAIL_MODEL_5SERIES_8G, Set.of(refCarTrim20111, refCarTrim20112));
 
+    // BMW 7시리즈
+    static RefCarGrade refCarGrade20131 = new RefCarGrade("720i", "720i", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_7SERIES_4G, Set.of(refCarTrim20101, refCarTrim20102, refCarTrim20103));
+    static RefCarGrade refCarGrade20132 = new RefCarGrade("730i", "730i", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_7SERIES_4G, Set.of(refCarTrim20104, refCarTrim20105, refCarTrim20106));
+    static RefCarGrade refCarGrade20133 = new RefCarGrade("723d", "723d", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_7SERIES_4G, Set.of(refCarTrim20107, refCarTrim20108, refCarTrim20109, refCarTrim20110));
+
+    static RefCarGrade refCarGrade20141 = new RefCarGrade("720i", "720i", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_7SERIES_5G, Set.of(refCarTrim20101, refCarTrim20102, refCarTrim20103));
+    static RefCarGrade refCarGrade20142 = new RefCarGrade("730i", "730i", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_7SERIES_5G, Set.of(refCarTrim20104, refCarTrim20105, refCarTrim20106));
+    static RefCarGrade refCarGrade20143 = new RefCarGrade("723d", "723d", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_7SERIES_5G, Set.of(refCarTrim20107, refCarTrim20108, refCarTrim20109, refCarTrim20110));
+
+    static RefCarGrade refCarGrade20151 = new RefCarGrade("720i", "720i", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_7SERIES_6G, Set.of(refCarTrim20101, refCarTrim20102, refCarTrim20103));
+    static RefCarGrade refCarGrade20152 = new RefCarGrade("730i", "730i", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_7SERIES_6G, Set.of(refCarTrim20104, refCarTrim20105, refCarTrim20106));
+    static RefCarGrade refCarGrade20153 = new RefCarGrade("723d", "723d", CarFuelType.FUEL_DIESEL,
+            CarDetailModel.CAR_DETAIL_MODEL_7SERIES_6G, Set.of(refCarTrim20107, refCarTrim20108, refCarTrim20109, refCarTrim20110));
+
+    // BMW X5
+    static RefCarGrade refCarGrade20161 = new RefCarGrade("m50i", "m50i", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_X5_1G, Set.of(refCarTrim20101, refCarTrim20102, refCarTrim20103));
+    static RefCarGrade refCarGrade20162 = new RefCarGrade("m60i", "m60i", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_X5_1G, Set.of(refCarTrim20104, refCarTrim20105, refCarTrim20106));
+    static RefCarGrade refCarGrade20163 = new RefCarGrade("50e", "50e", CarFuelType.FUEL_HYBRID,
+            CarDetailModel.CAR_DETAIL_MODEL_X5_1G, Set.of(refCarTrim20107, refCarTrim20108, refCarTrim20109, refCarTrim20110));
+    static RefCarGrade refCarGrade20171 = new RefCarGrade("m50i", "m50i", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_X5_2G, Set.of(refCarTrim20101, refCarTrim20102, refCarTrim20103));
+    static RefCarGrade refCarGrade20172 = new RefCarGrade("m60i", "m60i", CarFuelType.FUEL_GASOLINE,
+            CarDetailModel.CAR_DETAIL_MODEL_X5_2G, Set.of(refCarTrim20104, refCarTrim20105, refCarTrim20106));
+    static RefCarGrade refCarGrade20173 = new RefCarGrade("50e", "50e", CarFuelType.FUEL_HYBRID,
+            CarDetailModel.CAR_DETAIL_MODEL_X5_2G, Set.of(refCarTrim20107, refCarTrim20108, refCarTrim20109, refCarTrim20110));
+    
+    
+    
     // 테슬라
     static RefCarGrade refCarGrade30001 = new RefCarGrade("전기", "전기", CarFuelType.FUEL_ELECTRIC,
             CarDetailModel.CAR_DETAIL_MODEL_MODEL3_1G, Set.of(refCarTrim30001, refCarTrim30002, refCarTrim30003, refCarTrim30004));
@@ -274,26 +438,14 @@ public class RefCarDataBuilder {
             CarDetailModel.CAR_DETAIL_MODEL_MODELY_1G, Set.of(refCarTrim30005, refCarTrim30006, refCarTrim30007, refCarTrim30003, refCarTrim30004));
 
 
-//    static RefCarGrade refCarGrade13 = new RefCarGrade("e450", "e450", CarFuelType.FUEL_GASOLINE,
-//            CarDetailModel.CAR_DETAIL_MODEL_C_CLASS_4G, Set.of(refCarTrim4, refCarTrim5));
-//
-//
-//    static RefCarGrade refCarGrade11 = new RefCarGrade("e450", "e450", CarFuelType.FUEL_GASOLINE,
-//            CarDetailModel.CAR_DETAIL_MODEL_3SERIES_5G, Set.of(refCarTrim4, refCarTrim5));
-//    static RefCarGrade refCarGrade12 = new RefCarGrade("e450", "e450", CarFuelType.FUEL_GASOLINE,
-//            CarDetailModel.CAR_DETAIL_MODEL_5SERIES_6G, Set.of(refCarTrim4, refCarTrim5));
-//
-//    static RefCarGrade refCarGrade14 = new RefCarGrade("e450", "e450", CarFuelType.FUEL_GASOLINE,
-//            CarDetailModel.CAR_DETAIL_MODEL_K5_ALL_NEW, Set.of(refCarTrim4, refCarTrim5));
-
-
-
 
     public List<RefCarGrade> listRefGrade = new ArrayList<>();
 
     public RefCarDataBuilder(){
         listRefGrade.addAll(List.of(refCarGrade1, refCarGrade2, refCarGrade3, refCarGrade4, refCarGrade5, refCarGrade6, refCarGrade7,
                 refCarGrade8, refCarGrade9, refCarGrade10, refCarGrade11, refCarGrade12, refCarGrade13, refCarGrade14, refCarGrade15,
+
+                refCarGrade21, refCarGrade22, refCarGrade23, refCarGrade24, refCarGrade25, refCarGrade26,
 
                 refCarGrade101, refCarGrade102, refCarGrade103, refCarGrade104, refCarGrade105, refCarGrade106, refCarGrade107,
                 refCarGrade108, refCarGrade109,
@@ -303,18 +455,39 @@ public class RefCarDataBuilder {
                 refCarGrade1021, refCarGrade1022, refCarGrade1023, refCarGrade1024, refCarGrade1025,
                 refCarGrade1031, refCarGrade1032, refCarGrade1033, refCarGrade1034, refCarGrade1035,
 
+                refCarGrade1041, refCarGrade1042, refCarGrade1043, refCarGrade1044, refCarGrade1045,
+                refCarGrade1051, refCarGrade1052, refCarGrade1053, refCarGrade1054, refCarGrade1055,
+                refCarGrade1061, refCarGrade1062,
+                refCarGrade1071, refCarGrade1072, refCarGrade1073, refCarGrade1074,
+                refCarGrade1081, refCarGrade1082, refCarGrade1083, refCarGrade1084,
+                refCarGrade1091, refCarGrade1092, refCarGrade1093, refCarGrade1094,
+
                 refCarGrade10001, refCarGrade10002, refCarGrade10003, refCarGrade10004, refCarGrade10011, refCarGrade10012, refCarGrade10013,
                 refCarGrade10014, refCarGrade10021, refCarGrade10022, refCarGrade10023, refCarGrade10024,
 
                 refCarGrade10101, refCarGrade10102,
                 refCarGrade10111, refCarGrade10112,
                 refCarGrade10121, refCarGrade10122,
+
+                refCarGrade10131, refCarGrade10132,
+                refCarGrade10141, refCarGrade10142,
+                refCarGrade10151, refCarGrade10152,
+                refCarGrade10161, refCarGrade10162, refCarGrade10163, refCarGrade10164,
+                refCarGrade10171, refCarGrade10172, refCarGrade10173, refCarGrade10174,
+                refCarGrade10181, refCarGrade10182, refCarGrade10183, refCarGrade10184,
+
                 refCarGrade20001, refCarGrade20002, refCarGrade20003,
                 refCarGrade20011, refCarGrade20012, refCarGrade20013,
                 refCarGrade20021, refCarGrade20022, refCarGrade20023,
                 refCarGrade20101, refCarGrade20102, refCarGrade20103, refCarGrade20104,
                 refCarGrade20111, refCarGrade20112, refCarGrade20113, refCarGrade20114,
                 refCarGrade20121, refCarGrade20122, refCarGrade20123, refCarGrade20124,
+
+                refCarGrade20131, refCarGrade20132, refCarGrade20133,
+                refCarGrade20141, refCarGrade20142, refCarGrade20143,
+                refCarGrade20151, refCarGrade20152, refCarGrade20153,
+                refCarGrade20161, refCarGrade20162, refCarGrade20163,
+                refCarGrade20171, refCarGrade20172, refCarGrade20173,
 
                 refCarGrade30001, refCarGrade30002, refCarGrade30003
         ));

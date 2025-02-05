@@ -163,9 +163,9 @@ public class RefCarDataLoader {
                     refCarSampleRepository.save(refCarSample);
                 }
             }
-            //else{
-              //  log.error("refCarInfo refCarGrade is null!!! " + refCarInfo.getRefCarInfoId() + " , "+ refCarInfo.getCarDetailModel());
-           // }
+            else{
+                log.error("<3> refCarInfo refCarGrade is null!!! " + refCarInfo.getRefCarInfoId() + " , "+ refCarInfo.getCarDetailModel());
+            }
        
         });
 
