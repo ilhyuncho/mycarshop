@@ -22,15 +22,20 @@ public class RefCarTypeSampleDataLoader {
 
     @EventListener(ApplicationReadyEvent.class) // 애플리케이션 시작 단계가 완료되면 발생한다.
     public void loadRefCarTypeSampleData() {
-        log.error("(ApplicationReadyEvent) loadRefCarTypeSampleData()!!!!!!!!");
+
+        log.error("<1> (ApplicationReadyEvent) loadRefCarTypeSampleData()!!!!!!!!");
+
         RefCarTypeInfoBuilder refCarTypeInfoBuilder = new RefCarTypeInfoBuilder();
 
         List<RefCarType> listRefCarSample = refCarTypeRepository.findAll();
 
+        log.error("<1> refCarTypeInfoBuilder.listRefCarType.size() : " + refCarTypeInfoBuilder.listRefCarType.size());
+        log.error("<1> listRefCarSample.size() : " + listRefCarSample.size());
+
         if(refCarTypeInfoBuilder.listRefCarType.size() != listRefCarSample.size()){
             refCarTypeRepository.deleteAll();
             refCarTypeRepository.saveAll(refCarTypeInfoBuilder.listRefCarType);
-            log.error("3. RefCarTypeSampleData saveAll()~~~~~~~~~~~~~");
+            log.error("<1> refCarTypeRepository.saveAll()~~~~~~~~~~~~~");
         }
     }
 }

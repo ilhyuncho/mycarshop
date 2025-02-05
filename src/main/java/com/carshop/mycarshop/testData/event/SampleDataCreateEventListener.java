@@ -35,24 +35,20 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
 
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
-
     private final UserAlarmRepository userAlarmRepository;
     private final UserPointHistoryRepository userPointHistoryRepository;
     private final UserAddressBookRepository userAddressBookRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final CartRepository cartRepository;
-
     private final RefCarSampleRepository refCarSampleRepository;
-
-
     private final CarRepository carRepository;
+
     private final PasswordEncoder passwordEncoder;
 
 
-
     public void initUserData(){
-        log.error("initUserData() call!!!");
+        log.error("<4> initUserData()!!!!!!!!");
 
         userAlarmRepository.deleteAll();
         orderItemRepository.deleteAll();
@@ -65,28 +61,33 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
         memberRepository.deleteAll();
     }
 
+    private static List<String> createListZipCode() {
+        IntStream randomStream = Util.createRandomStream(2, 100000, 999999);
+        List<String> listZipcode = randomStream.mapToObj(String::valueOf).map(a -> {
+                    StringBuilder buf = new StringBuilder(a);
+                    buf.insert(3, "-");
+                    return buf.toString();
+                })
+                //.peek(log::error)
+                .toList();
+        return listZipcode;
+    }
+
     @Override
     public void onApplicationEvent(SampleMemberCreateEvent event) {
 
         int createMemberCount = event.getCreateMemberCount();
 
-        log.error("(SampleDataCreateEventListener) onApplicationEvent()!!!!!!!!");
+        log.error("<4> (SampleDataCreateEventListener) onApplicationEvent()!!!!!!!!");
 
         if(memberRepository.count() < createMemberCount || userRepository.count() < createMemberCount){
 
             initUserData();
 
-            log.error("member, user 데이터 생성!!!!!!!!!!!!!!");
+            log.error("<4> member, user 데이터 생성!!!!!!!!!!!!!!");
 
             // zip-code 생성  ( Stream 활용 테스트 겸 )
-            IntStream randomStream = Util.createRandomStream(2, 100000, 999999);
-            List<String> listZipcode = randomStream.mapToObj(String::valueOf).map(a -> {
-                        StringBuilder buf = new StringBuilder(a);
-                        buf.insert(3, "-");
-                        return buf.toString();
-                    })
-                    .peek(log::error)
-                    .toList();
+            List<String> listZipcode = createListZipCode();
 
             // member 생성
             IntStream.rangeClosed(1, createMemberCount).forEach(i -> {
@@ -99,11 +100,11 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
                         .build();
                 member.addRole(MemberRole.USER);
 
-                if (i >= 8) {
+                if (i >= 8){
                     member.addRole(MemberRole.ADMIN);
                 }
 
-                memberRepository.save(member);
+                Member savedMember = memberRepository.save(member);
 
                 City city = new City(listZipcode.get(0), "부천시", "대한민국");
                 Address address = Address.builder()
@@ -121,7 +122,7 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
 
                 // User 생성
                 User user = User.builder()
-                        .member(member)
+                        .member(savedMember)
                         .userName("김민수" + i)
                         .address(address)
                         .billingAddress(address1)
@@ -129,11 +130,11 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
                         .mGrade(UserGradeType.GRADE_E)
                         .build();
 
-                Long userId = userRepository.save(user).getUserId();
+                User savedUser = userRepository.save(user);
 
                 // 배송 주소록 추가
                 UserAddressBook userAddressBook = UserAddressBook.builder()
-                        .user(user)
+                        .user(savedUser)
                         .address(address)
                         .deliveryName("마이홈")
                         .RecipientName("김민수")
@@ -146,7 +147,7 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
 
                 // 알림 추가
                 UserAlarm userAlarm = UserAlarm.builder()
-                        .user(user)
+                        .user(savedUser)
                         .alarmTitle("회원가입을 축하드립니다")
                         .alarmContent("앞으로 많이 이용해 주세요~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                         .build();
@@ -207,8 +208,8 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
                         carRepository.save(car);
                     }
                 }
-
             });
         }
     }
+
 }
