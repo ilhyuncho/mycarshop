@@ -201,7 +201,9 @@ public class SellingCarServiceImpl implements SellingCarService {
                 .carKm(sellingCar.getCar().getCarKm())
 
                 .carGradeName(sellingCar.getCar().getRefCarGrade().getName())
-                .carGradeNameDesc(sellingCar.getCar().getRefCarGrade().getNameDesc())
+                .carGradeDesc(sellingCar.getCar().getRefCarGrade().getNameDesc())
+                .carTrimName(sellingCar.getCar().getRefCarTrim().getName())
+                .carTrimDesc(sellingCar.getCar().getRefCarTrim().getNameDesc())
                 .carFuelType(sellingCar.getCar().getCarFuelType())
 
                 .sellingCarId(sellingCar.getSellingCarId())

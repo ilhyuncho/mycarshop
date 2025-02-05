@@ -28,6 +28,7 @@
     </div>
     <div class="wd50">
       <div class="h4" th:text="|(${responseDTO.carCompany}) ${responseDTO.carDetailModel}|"></div>
+      <div class="h4" th:text="|${responseDTO.carTrimName}|"></div>
       <div class="h5" th:text="|${responseDTO.carYears}년형 ${#numbers.formatInteger(responseDTO.carKm, 3, 'COMMA')}km|"></div>
 
       <hr class="my-4">

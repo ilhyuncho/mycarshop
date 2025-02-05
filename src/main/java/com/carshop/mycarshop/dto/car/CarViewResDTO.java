@@ -1,6 +1,7 @@
 package com.carshop.mycarshop.dto.car;
 
 
+import com.carshop.mycarshop.domain.reference.carType.CarFuelType;
 import com.carshop.mycarshop.domain.sellingCar.SellType;
 import com.carshop.mycarshop.domain.sellingCar.SellingCarStatus;
 import com.carshop.mycarshop.dto.ImageListDTO;
@@ -39,9 +40,10 @@ public class CarViewResDTO extends ImageListDTO {        // 내차 정보 로딩
     private int     carKm;
 
     private String carGradeName;
-    private String carGradeNameDesc;
+    private String carGradeDesc;
     private String carTrimName;
-    private String carTrimNameDesc;
+    private String carTrimDesc;
+    private CarFuelType carFuelType;
 
     private Long sellingCarId;
     private SellingCarStatus sellingCarStatus;
@@ -49,7 +51,8 @@ public class CarViewResDTO extends ImageListDTO {        // 내차 정보 로딩
 
     @Builder(builderMethodName = "writeCarViewDTOBuilder")
     public CarViewResDTO(Long carId, String userName, String memberId, String carNumber, String carSize, String carDetailModel, int carYears,
-                         String carColors, int carKm, String carGradeName, String carGradeNameDesc, String carTrimName, String carTrimNameDesc) {
+                         String carColors, int carKm, String carGradeName, String carGradeDesc, String carTrimName, String carTrimDesc,
+                         CarFuelType carFuelType) {
         this.carId = carId;
         this.userName = userName;
         this.memberId = memberId;
@@ -61,8 +64,9 @@ public class CarViewResDTO extends ImageListDTO {        // 내차 정보 로딩
         this.carKm = carKm;
 
         this.carGradeName = carGradeName;
-        this.carGradeNameDesc = carGradeNameDesc;
+        this.carGradeDesc = carGradeDesc;
         this.carTrimName = carTrimName;
-        this.carTrimNameDesc = carTrimNameDesc;
+        this.carTrimDesc = carTrimDesc;
+        this.carFuelType = carFuelType;
     }
 }

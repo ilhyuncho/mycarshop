@@ -127,9 +127,10 @@ public class UserCarServiceImpl implements UserCarService {
                 .carKm(car.getCarKm())
 
                 .carGradeName(car.getRefCarGrade().getName())
-                .carGradeNameDesc(car.getRefCarGrade().getNameDesc())
-                .carTrimName(car.getRefCarGrade().getName())
-                .carTrimNameDesc(car.getRefCarGrade().getNameDesc())
+                .carGradeDesc(car.getRefCarGrade().getNameDesc())
+                .carTrimName(car.getRefCarTrim().getName())
+                .carTrimDesc(car.getRefCarTrim().getNameDesc())
+                .carFuelType(car.getCarFuelType())
 
                 .carSize(car.getRefCarInfo().getCarSize().getValue())
                 .carDetailModel(car.getRefCarInfo().getCarDetailModel())

@@ -43,7 +43,22 @@
 
           <div class="input-group mb-3">
             <span class="input-group-text">차량 등급 설명</span>
-            <label><input type="text" class="form-control" th:value="${responseDTO.carGradeNameDesc}" readonly></label>
+            <label><input type="text" class="form-control" th:value="${responseDTO.carGradeDesc}" readonly></label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">차량 트림</span>
+            <label><input type="text" class="form-control" th:value="${responseDTO.carTrimName}" readonly></label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">차량 트림 설명</span>
+            <label><input type="text" class="form-control" th:value="${responseDTO.carTrimDesc}" readonly></label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">연료 타입</span>
+            <label><input type="text" class="form-control" th:value="${responseDTO.carFuelType.name}" readonly></label>
           </div>
 
           <div class="input-group mb-3">

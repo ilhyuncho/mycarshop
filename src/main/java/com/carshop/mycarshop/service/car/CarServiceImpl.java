@@ -44,9 +44,10 @@ public class CarServiceImpl implements CarService {
                 .carYears(car.getCarYears())
 
                 .carGradeName(car.getRefCarGrade().getName())
-                .carGradeNameDesc(car.getRefCarGrade().getNameDesc())
-                .carTrimName(car.getRefCarGrade().getName())
-                .carTrimNameDesc(car.getRefCarGrade().getNameDesc())
+                .carGradeDesc(car.getRefCarGrade().getNameDesc())
+                .carTrimName(car.getRefCarTrim().getName())
+                .carTrimDesc(car.getRefCarTrim().getNameDesc())
+                .carFuelType(car.getCarFuelType())
 
                 .userName(car.getUser().getUserName())
                 .memberId(car.getUser().getMember().getMemberId())

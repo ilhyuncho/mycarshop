@@ -28,9 +28,9 @@ public class SellingCarResDTO extends ImageListDTO {
     private int carKm;
 
     private String carGradeName;
-    private String carGradeNameDesc;
+    private String carGradeDesc;
     private String carTrimName;
-    private String carTrimNameDesc;
+    private String carTrimDesc;
     private CarFuelType carFuelType;
 
     private Boolean isLike;

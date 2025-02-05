@@ -23,29 +23,44 @@
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">CarNumber</span>
+              <span class="input-group-text">차량 번호</span>
               <label><input type="text" class="form-control" th:value="${responseDTO.carNumber}" name="carNumber" readonly disabled></label>
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">CarSize</span>
+              <span class="input-group-text">차량 사이즈</span>
               <label><input type="text" class="form-control" th:value="${responseDTO.carSize}" name="carSize" readonly disabled></label>
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">CarModel</span>
+              <span class="input-group-text">모델명</span>
               <label><input type="text" class="form-control" th:value="${responseDTO.carDetailModel}" name="carModel" readonly disabled></label>
             </div>
 
-<!--            <div class="input-group mb-3">-->
-<!--              <span class="input-group-text">연료 타입</span>-->
-<!--              <label><input type="text" class="form-control" th:value="${responseDTO.carFuel.name}" readonly disabled></label>-->
-<!--            </div>-->
+            <div class="input-group mb-3">
+              <span class="input-group-text">차량 등급</span>
+              <label><input type="text" class="form-control" th:value="${responseDTO.carGradeName}" readonly disabled></label>
+            </div>
 
-<!--            <div class="input-group mb-3">-->
-<!--              <span class="input-group-text">CarGrade</span>-->
-<!--              <label><input type="text" class="form-control" th:value="${responseDTO.carGrade.name}" readonly disabled></label>-->
-<!--            </div>-->
+            <div class="input-group mb-3">
+              <span class="input-group-text">차량 등급 설명</span>
+              <label><input type="text" class="form-control" th:value="${responseDTO.carGradeDesc}" readonly disabled></label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">차량 트림</span>
+              <label><input type="text" class="form-control" th:value="${responseDTO.carTrimName}" readonly disabled></label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">차량 트림 설명</span>
+              <label><input type="text" class="form-control" th:value="${responseDTO.carTrimDesc}" readonly disabled></label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">연료 타입</span>
+              <label><input type="text" class="form-control" th:value="${responseDTO.carFuelType.name}" readonly disabled></label>
+            </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarYears</span>
