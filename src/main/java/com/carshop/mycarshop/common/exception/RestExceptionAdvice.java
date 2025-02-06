@@ -16,7 +16,6 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MissingPathVariableException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -34,8 +33,40 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
     private final DefaultRedirectStrategy defaultRedirectStrategy = new DefaultRedirectStrategy();
 
     // 사용자 지정 에러 처리
+
+    @ExceptionHandler(value = {NotExistDataByIDException.class})
+    public ResponseEntity<?> handleNotExistDataByID(NotExistDataByIDException e, WebRequest request){
+
+        log.error("RestExceptionAdvice - NotExistDataByIDException!!! ");
+        String errorMsg = messageHandler.getMessage(MessageCode.ERROR_ACCESS_DENIED, Collections.emptyList());
+
+        return super.handleExceptionInternal(
+                e,
+                Map.of("result", "fail", "message", e.getMessage()),
+                new HttpHeaders(),
+                HttpStatus.BAD_REQUEST,
+                request
+        );
+    }
+
+    @ExceptionHandler(value = {InvalidUserPointException.class})
+    public ResponseEntity<?> handleInvalidUserPoint(InvalidUserPointException e, WebRequest request){
+
+        log.error("RestExceptionAdvice - InvalidUserPointException!!! ");
+        String errorMsg = messageHandler.getMessage(MessageCode.ERROR_ACCESS_DENIED, Collections.emptyList());
+
+        return super.handleExceptionInternal(
+                e,
+                Map.of("result", "fail", "message", e.getMessage()),
+                new HttpHeaders(),
+                HttpStatus.BAD_REQUEST,
+                request
+        );
+    }
+
+
     @ExceptionHandler(value = {AccessDeniedException.class})
-    public ResponseEntity<?> handleBoardNotFound(AccessDeniedException e, WebRequest request){
+    public ResponseEntity<?> handleAccessDenied(AccessDeniedException e, WebRequest request){
 
         log.error("request.getUserPrincipal() : " + request.getUserPrincipal());
         ///defaultRedirectStrategy.sendRedirect(request, response, "/auth/login");
@@ -52,7 +83,7 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
         );
     }
     @ExceptionHandler(value = {AwsTaskException.class})
-    public ResponseEntity<?> handleBoardNotFound(AwsTaskException e, WebRequest request){
+    public ResponseEntity<?> handleAwsTask(AwsTaskException e, WebRequest request){
 
         log.error("RestExceptionAdvice - AwsTaskException!!! ");
         return super.handleExceptionInternal(
@@ -64,7 +95,7 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
         );
     }
     @ExceptionHandler(value = {MemberTaskException.class})
-    public ResponseEntity<?> handleBoardNotFound(MemberTaskException e, WebRequest request){
+    public ResponseEntity<?> handleMemberTask(MemberTaskException e, WebRequest request){
 
         log.error("RestExceptionAdvice - MemberTaskException!!! ");
         return super.handleExceptionInternal(

@@ -8,7 +8,6 @@ import com.carshop.mycarshop.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.tomcat.util.json.ParseException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +27,16 @@ public class OrderRestController {
 
     @ApiOperation(value = "상품 결제 처리", notes = "")
     @PostMapping("/add")
-    public String postAdd(@RequestBody OrderReqDTO orderReqDTO, Principal principal){
+    public Map<String, String> postAdd(@RequestBody OrderReqDTO orderReqDTO, Principal principal){
 
         User user = userService.findUser(principal.getName());
 
         orderService.createOrder(user, orderReqDTO);
 
-        return "shop/main";
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+
+        return resultMap;
     }
 
     @ApiOperation(value = "상품 구매 취소", notes = "")

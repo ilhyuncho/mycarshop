@@ -443,10 +443,12 @@
 
         ////////////////////////////////////////////////////
         addOrderItem(formObj).then(result => {
+
             alert("정상적으로 주문 되었습니다")
             // 주문 페이지 로 이동
             pageReload('/order/list')
         }).catch(e => {
+            errorResponse(e)
             console.log(e)
         })
     }, false)
@@ -498,11 +500,12 @@
         }
 
         removeCartItem(cartId).then(result=>{
-            alert('선택한 상품이 삭제 되었습니다!')
 
+            alert('선택한 상품이 삭제 되었습니다!')
             // 장바구니 페이지 다시 로딩
             self.location = '/cart/list'
         }).catch(e=>{
+            errorResponse(e)
             console.log(e)
         })
     }

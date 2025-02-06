@@ -1,6 +1,5 @@
 package com.carshop.mycarshop.controller.cart;
 
-import com.carshop.mycarshop.domain.cart.Cart;
 import com.carshop.mycarshop.domain.user.User;
 import com.carshop.mycarshop.dto.shop.ItemBuyReqDTO;
 import com.carshop.mycarshop.service.cart.CartService;
@@ -36,7 +35,6 @@ public class CartRestController {
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
-
         return resultMap;
     }
 
@@ -44,11 +42,10 @@ public class CartRestController {
     @DeleteMapping("/{cartId}")
     public Map<String, String> postRemove(@PathVariable("cartId") Long cartId ){
 
-        Cart cart = cartService.deleteInCart(cartId);
+        cartService.deleteInCart(cartId);
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
-
         return resultMap;
     }
 

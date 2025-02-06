@@ -1,6 +1,7 @@
 package com.carshop.mycarshop.service.cart;
 
 import com.carshop.mycarshop.common.exception.ItemNotFoundException;
+import com.carshop.mycarshop.common.exception.NotExistDataByIDException;
 import com.carshop.mycarshop.domain.cart.Cart;
 import com.carshop.mycarshop.domain.cart.CartRepository;
 import com.carshop.mycarshop.domain.notification.EventNotification;
@@ -63,7 +64,7 @@ public class CartServiceImpl implements CartService {
                 }).collect(Collectors.toList());
     }
     @Override
-    public Long addCart(ItemBuyReqDTO itemBuyReqDTO, User user) {
+    public void addCart(ItemBuyReqDTO itemBuyReqDTO, User user) {
 
         ShopItem shopItem = shopItemRepository.findByItemName(itemBuyReqDTO.getItemName())
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
@@ -86,34 +87,14 @@ public class CartServiceImpl implements CartService {
                 .itemOptionId2(itemBuyReqDTO.getOptionId(1))
                 .build();
 
-        return cartRepository.save(cart).getCartId();
-    }
-    @Override
-    public void modify(ItemBuyReqDTO itemBuyReqDTO) {
-
-        Cart cart = cartRepository.findById(itemBuyReqDTO.getCartId())
-                .orElseThrow(() -> {
-                    log.info("User expected to delete cart but was empty. cartId = '{}',"
-                            , itemBuyReqDTO.getCartId());
-                    return new ItemNotFoundException("선택 상품이 없습니다");
-                });
-
-        cart.changeItemCount(itemBuyReqDTO.getItemCount());
-
         cartRepository.save(cart);
     }
-
     @Override
-    public Cart deleteInCart(Long cartId) {
-        Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> {
-                    log.info("User expected to delete cart but was empty. cartId = '{}',"
-                            , cartId);
-                    return new ItemNotFoundException("선택 상품이 없습니다");
-                });
+    public void deleteInCart(Long cartId) {
+
+        Cart cart = getCartByCartId(cartId);
 
         cartRepository.delete(cart);
-        return cart;
     }
     private static CartDetailResDTO entityToDTO(User user, Cart cart, EventNotification event) {
 
@@ -127,6 +108,14 @@ public class CartServiceImpl implements CartService {
                 .discountPrice(CommonUtils.calcDiscountPrice(user, cart.getShopItem(), event))
                 .isFreeDelivery(cart.getShopItem().isFreeDelivery())
                 .build();
+    }
 
+    public Cart getCartByCartId(Long cartId) {
+        return cartRepository.findById(cartId)
+                .orElseThrow(() -> {
+                    log.info("User expected to modify cart but was empty. cartId = '{}',"
+                            , cartId);
+                    return new NotExistDataByIDException("장바구니 정보가 존재하지 않습니다");
+                });
     }
 }

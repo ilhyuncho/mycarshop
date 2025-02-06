@@ -1,5 +1,6 @@
 package com.carshop.mycarshop.service.notification;
 
+import com.carshop.mycarshop.common.exception.AlreadyRegisterException;
 import com.carshop.mycarshop.common.exception.ItemNotFoundException;
 import com.carshop.mycarshop.common.util.Util;
 import com.carshop.mycarshop.domain.notification.*;
@@ -156,7 +157,7 @@ public class NotificationServiceImpl implements NotificationService {
     public Long registerEventNotification(NotificationRegDTO eventDTO) {
 
         eventNotificationRepository.findByName(eventDTO.getName())
-                .ifPresent(m -> {throw new ItemNotFoundException("해당 이벤트 정보가 이미 존재 함");});
+                .ifPresent(m -> {throw new AlreadyRegisterException("해당 이벤트 정보가 이미 존재 함");});
 
         LocalDate regStartDate = LocalDate.parse(eventDTO.getEventStartDate());
         LocalDate regEndDate = LocalDate.parse(eventDTO.getEventEndDate());

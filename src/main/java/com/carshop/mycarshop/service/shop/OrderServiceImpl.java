@@ -1,5 +1,6 @@
 package com.carshop.mycarshop.service.shop;
 
+import com.carshop.mycarshop.common.exception.InvalidUserPointException;
 import com.carshop.mycarshop.common.exception.ItemNotFoundException;
 import com.carshop.mycarshop.common.exception.orderNotFoundException;
 import com.carshop.mycarshop.domain.cart.Cart;
@@ -17,6 +18,7 @@ import com.carshop.mycarshop.dto.PageRequestDTO;
 import com.carshop.mycarshop.dto.PageResponseDTO;
 import com.carshop.mycarshop.dto.order.*;
 import com.carshop.mycarshop.dto.shop.ItemBuyReqDTO;
+import com.carshop.mycarshop.service.cart.CartService;
 import com.carshop.mycarshop.service.common.CommonUtils;
 import com.carshop.mycarshop.service.notification.NotificationService;
 import com.carshop.mycarshop.service.user.UserPointHistoryService;
@@ -46,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderTemporaryRepository orderTemporaryRepository;
     private final ReviewRepository reviewRepository;
 
+    private final CartService cartService;
     private final ItemOptionService itemOptionService;
     private final NotificationService notificationService;
     private final UserPointHistoryService userPointHistoryService;
@@ -220,7 +223,7 @@ public class OrderServiceImpl implements OrderService {
 
         if(orderReqDTO.getUseMPoint() > 0
                 && orderReqDTO.getUseMPoint() > user.getMPoint()){
-            throw new IllegalArgumentException("사용 포인트 값이 잘못 되었습니다");
+            throw new InvalidUserPointException("사용 포인트 값이 잘못 되었습니다");
         }
 
         // 상세 구매 아이템 정보 생성
@@ -228,8 +231,9 @@ public class OrderServiceImpl implements OrderService {
 
             // 장바구니를 통해서 주문시
             if( orderDetailDTO.getCartId() != null){
-                Cart cart = cartRepository.findById(orderDetailDTO.getCartId())
-                        .orElseThrow(() -> new ItemNotFoundException("장바구니 정보가 존재하지않습니다"));
+
+                Cart cart = cartService.getCartByCartId(orderDetailDTO.getCartId());
+
                 // 장바구니 정보 비활성화
                 cart.changeIsActive(false);
             }
