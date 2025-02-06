@@ -112,10 +112,10 @@
 
 
               <a th:href="|@{/myPage/carList(memberId=${#authentication.principal.username})}|" class="text-decoration-none">
-                <button type="button" class="btn btn-primary">List</button>
+                <button type="button" class="btn btn-info">List</button>
               </a>
               <a th:href="|@{/myPage/carModify(carId=${responseDTO.carId}, memberId=${#authentication.principal.username} )}|" class="text-decoration-none">
-                <button type="button" class="btn btn-secondary">Modify</button>
+                <button type="button" class="btn btn-primary">정보 변경</button>
               </a>
             </div>
           </div>
