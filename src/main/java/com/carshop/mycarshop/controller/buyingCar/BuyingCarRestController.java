@@ -75,9 +75,7 @@ public class BuyingCarRestController {
             buyingCarService.updateBuyingCar(offerUser, buyingCarRegDTO);
         }
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return resultMap;
+        return new HashMap<>();
     }
 
     @ApiOperation(value = "구매 제안 리스트 전달", notes = "list 전달")

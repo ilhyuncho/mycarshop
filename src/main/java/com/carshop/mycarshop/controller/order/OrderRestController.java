@@ -33,10 +33,7 @@ public class OrderRestController {
 
         orderService.createOrder(user, orderReqDTO);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-
-        return resultMap;
+        return new HashMap<>();
     }
 
     @ApiOperation(value = "상품 구매 취소", notes = "")
@@ -45,9 +42,7 @@ public class OrderRestController {
 
         orderService.cancelOrder(orderId);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return resultMap;
+        return new HashMap<>();
     }
 
     @ApiOperation(value = "바로 주문 내역 임시 저장", notes = "즉시 주문하기 실행")
@@ -60,9 +55,7 @@ public class OrderRestController {
         Long orderTemporaryId = orderService.addOrderTemporary(itemBuyReqDTO, user);
 
         Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
         resultMap.put("orderTemporaryId", orderTemporaryId.toString());
-
         return resultMap;
     }
 

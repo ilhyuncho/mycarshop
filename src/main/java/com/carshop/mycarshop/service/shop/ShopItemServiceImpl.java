@@ -168,7 +168,7 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         listItemImage.stream().filter(itemImage -> !itemImage.getIsMainImage()) // mainImage는 제외
                 .forEach(itemImage -> {
-                    log.error(itemImage.getItemImageId());
+                   // log.error(itemImage.getItemImageId());
                     itemImage.changeImageOrder(mapImageDTO.get(itemImage.getItemImageId()));
                 });
     }

@@ -50,8 +50,6 @@ public class ReviewRestController {
 
         reviewService.writeReview(user, reviewWriteReqDTO);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return resultMap;
+        return new HashMap<>();
     }
 }

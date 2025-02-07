@@ -31,19 +31,25 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     private final CarConsumableRepository carConsumableRepository;
     private final RefCarConsumableRepository refCarConsumableRepository;
 
-    // 해당 consumableId 정보
+    @Override
     public CarConsumable getCarConsumableInfo(Long consumableId){
         return carConsumableRepository.findById(consumableId)
                 .orElseThrow(() -> new OwnerCarNotFoundException("해당 소모품 정보가 존재하지않습니다"));
     }
-
     @Override
     public RefCarConsumable getRefCarConsumableInfo(Long refConsumableId){
         return refCarConsumableRepository.findById(refConsumableId)
                 .orElseThrow(() -> new NoSuchElementException("해당 소모품 정보가 존재하지않습니다"));
     }
+    @Override
+    public CarConsumableDetailResDTO getConsumableInfo(Long consumableId) {
 
+        CarConsumable carConsumable = getCarConsumableInfo(consumableId);
+
+        return entityToDetailDTO(carConsumable);
+    }
     // 해당 차의 소모품 교환 내역별 최신 값 get
+    @Override
     public Map<RefCarConsumable, Optional<CarConsumable>> getMapRecentConsumableInfo(Car car){
 
         // 1. RefConsumableId 별로 그룹핑
@@ -52,16 +58,16 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .collect(Collectors.groupingBy(CarConsumable::getRefCarConsumable,
                         Collectors.maxBy(Comparator.comparing(CarConsumable::getReplaceDate))));
     }
-
+    @Override
     public List<RefCarConsumable> getAllRefCarConsumableInfo(){
         return refCarConsumableRepository.findAll()
                 .stream()
                 .sorted(Comparator.comparing(RefCarConsumable::getViewOrder))
                 .collect(Collectors.toList());
     }
-
+    // 소모품 관리 전체 내역 및 해당 차의 소모품 별 최신 관리 내역
     @Override
-    public List<CarConsumableResDTO> getListConsumableInfo(Long carId){ // 소모품 관리 전체 내역 및 해당 차의 소모품 별 최신 관리 내역 return
+    public List<CarConsumableResDTO> getListConsumableInfo(Long carId){
 
         Car car = carService.getCarInfo(carId);
 
@@ -87,33 +93,32 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 })
                 .collect(Collectors.toList());
     }
-
+    // 소모품 히스토리 리스트
     @Override
-    public List<CarConsumableDetailResDTO> getConsumableDetail(Long carId, Long refConsumableId){   // 소모품 히스토리 리스트
+    public List<CarConsumableDetailResDTO> getConsumableDetail(Long carId, Long refConsumableId){
 
         return carConsumableRepository.findByCarAndRefCarConsumable(carId, refConsumableId)
                 .stream()
                 .map(CarConsumableServiceImpl::entityToDetailDTO)
                 .collect(Collectors.toList());
     }
-
-
     @Override
-    public CarConsumableDetailResDTO getConsumableInfo(Long consumableId) {
+    public List<HistoryCarResDTO> getListHistory(Long carId, List<ConsumableType> listConsumableType) {
 
-        CarConsumable carConsumable = getCarConsumableInfo(consumableId);
+        Car car = carService.getCarInfo(carId);
 
-        return entityToDetailDTO(carConsumable);
+        return carConsumableRepository.findByConsumableTypes(car, listConsumableType)
+                .stream()
+                .map(CarConsumableServiceImpl::entityToHistoryDTO)
+                .sorted(Comparator.comparing(HistoryCarResDTO::getReplaceDate).reversed())
+                .collect(Collectors.toList());
     }
-
     @Override
     public void registerConsumable(CarConsumableRegDTO carConsumableRegDTO){
 
         Car car = carService.getCarInfo(carConsumableRegDTO.getCarId());
 
         RefCarConsumable refCarConsumable = getRefCarConsumableInfo(carConsumableRegDTO.getRefConsumableId());
-
-        log.error("refCarConsumable : " + refCarConsumable.toString());
 
         CarConsumable carConsumable = CarConsumable.builder()
                 .refCarConsumable(refCarConsumable)
@@ -128,7 +133,6 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
         carConsumableRepository.save(carConsumable);
     }
-
     @Override
     public void modifyConsumable(CarConsumableRegDTO carConsumableRegDTO) {
 
@@ -136,26 +140,13 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
         carConsumable.setConsumableInfo(carConsumableRegDTO);
     }
-
     @Override
     public void removeConsumable(Long consumableId) {
+
         CarConsumable carConsumable = getCarConsumableInfo(consumableId);
 
         carConsumableRepository.delete(carConsumable);
     }
-
-    @Override
-    public List<HistoryCarResDTO> getListHistory(Long carId, List<ConsumableType> listConsumableType) {
-
-        Car car = carService.getCarInfo(carId);
-
-        return carConsumableRepository.findByConsumableTypes(car, listConsumableType)
-                .stream()
-                .map(CarConsumableServiceImpl::entityToHistoryDTO)
-                .sorted(Comparator.comparing(HistoryCarResDTO::getReplaceDate).reversed())
-                .collect(Collectors.toList());
-    }
-
     private static CarConsumableResDTO entityToDTO(RefCarConsumable refCarConsumable) {
         return CarConsumableResDTO.builder()
                 .refConsumableId(refCarConsumable.getRefConsumableId())
@@ -166,7 +157,6 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .viewOrder(refCarConsumable.getViewOrder())
                 .build();
     }
-
     private static CarConsumableDetailResDTO entityToDetailDTO(CarConsumable carConsumable) {
         return CarConsumableDetailResDTO.builder()
                 .consumableId(carConsumable.getConsumableId())
@@ -179,7 +169,6 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .repairName(carConsumable.getRefCarConsumable().getName())
                 .build();
     }
-
     private static HistoryCarResDTO entityToHistoryDTO(CarConsumable carConsumable) {
         return HistoryCarResDTO.builder()
                 .replacePrice(carConsumable.getReplacePrice())

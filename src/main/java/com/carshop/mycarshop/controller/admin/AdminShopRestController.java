@@ -29,40 +29,33 @@ public class AdminShopRestController {
 
     @ApiOperation(value = "[상품] 데이터 넣기", notes = "관리자 접근")
     @PostMapping("/registerShopItem")
-    public ResponseEntity<Map<String, String>> postRegisterShopItem(@Valid @RequestBody ShopItemReqDTO shopItemReqDTO,
+    public Map<String, String> postRegisterShopItem(@Valid @RequestBody ShopItemReqDTO shopItemReqDTO,
                                                                     BindingResult bindingResult){
 
         Long ItemId = shopItemService.registerItem(shopItemReqDTO);
 
         Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
         resultMap.put("ItemId", ItemId.toString());
 
-        return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+        return resultMap;
     }
 
     @ApiOperation(value = "[상품] 데이터 수정", notes = "관리자 접근")
     @PostMapping("/modifyShopItem")
-    public ResponseEntity<Map<String, String>> postShopItemModify(@Valid @RequestBody ShopItemReqDTO shopItemReqDTO,
+    public Map<String, String> postShopItemModify(@Valid @RequestBody ShopItemReqDTO shopItemReqDTO,
                                                                   BindingResult bindingResult){
 
         shopItemService.modifyItem(shopItemReqDTO);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-
-        return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+        return new HashMap<>();
     }
     @ApiOperation(value = "[상품] 이미지 순서 변경", notes = "관리자 접근")
     @PostMapping("/modifyImageOrder")
-    public ResponseEntity<Map<String, String>> postImageOrderModify(@Valid @RequestBody ImageOrderReqDTO imageOrderReqDTO,
+    public Map<String, String> postImageOrderModify(@Valid @RequestBody ImageOrderReqDTO imageOrderReqDTO,
                                                                     BindingResult bindingResult){
-
         shopItemService.modifyImageOrder(imageOrderReqDTO);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+        return new HashMap<>();
     }
 
 

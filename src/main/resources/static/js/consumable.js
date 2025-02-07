@@ -1,5 +1,4 @@
 async function registerConsumable(formObj) {
-    console.log(formObj)
 
     const response = await axios.post(`/consumable/register`, formObj)
 
@@ -8,7 +7,6 @@ async function registerConsumable(formObj) {
 }
 
 async function modifyConsumable(formObj) {
-    console.log(formObj)
 
     const response = await axios.post(`/consumable/modify`, formObj)
 
@@ -17,7 +15,6 @@ async function modifyConsumable(formObj) {
 }
 
 async function removeConsumable(consumableId) {
-    console.log(consumableId)
 
     const response = await axios.post(`/consumable/remove/${consumableId}`)
 

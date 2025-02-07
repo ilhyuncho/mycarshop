@@ -4,6 +4,7 @@ import com.carshop.mycarshop.domain.user.User;
 import com.carshop.mycarshop.dto.statistics.StatisticsReqDTO;
 import com.carshop.mycarshop.dto.statistics.StatisticsResDTO;
 import com.carshop.mycarshop.dto.statistics.StatisticsTotalResDTO;
+import com.carshop.mycarshop.service.car.CarService;
 import com.carshop.mycarshop.service.carConsumable.CarStatisticsService;
 import com.carshop.mycarshop.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -28,26 +29,28 @@ import java.util.List;
 public class StatisticsRestController {
 
     private final UserService userService;
+    private final CarService carService;
     private final CarStatisticsService carStatisticsService;
 
     @ApiOperation(value = "내차 통계 내역 조회", notes = "")
     @GetMapping("/get")
-    public List<StatisticsResDTO> getCarStatistics(@Valid StatisticsReqDTO satisticsReqDTO,
+    public List<StatisticsResDTO> getCarStatistics(@Valid StatisticsReqDTO statisticsReqDTO,
                                       BindingResult bindingResult,
                                       Principal principal){
 
         userService.findUser(principal.getName());
+        carService.getCarInfo(statisticsReqDTO.getCarId());
 
         List<StatisticsResDTO> listDto = new ArrayList<>();
 
-        if("#consume".equals(satisticsReqDTO.getTargetId())){
-            listDto = carStatisticsService.getStatisticsConsume(satisticsReqDTO);
+        if("#consume".equals(statisticsReqDTO.getTargetId())){
+            listDto = carStatisticsService.getStatisticsConsume(statisticsReqDTO);
         }
-        else if("#fuelAmount".equals(satisticsReqDTO.getTargetId())){
-            listDto = carStatisticsService.getStatisticsFuelAmount(satisticsReqDTO);
+        else if("#fuelAmount".equals(statisticsReqDTO.getTargetId())){
+            listDto = carStatisticsService.getStatisticsFuelAmount(statisticsReqDTO);
         }
-        else if("#distance".equals(satisticsReqDTO.getTargetId())){
-            listDto = carStatisticsService.getStatisticsDistance(satisticsReqDTO);
+        else if("#distance".equals(statisticsReqDTO.getTargetId())){
+            listDto = carStatisticsService.getStatisticsDistance(statisticsReqDTO);
         }
 
         return listDto;
@@ -55,12 +58,13 @@ public class StatisticsRestController {
 
     @ApiOperation(value = "내차 통계 총 내역 조회", notes = "")
     @GetMapping("/total")
-    public StatisticsTotalResDTO getTotalCarStatistics(@Valid StatisticsReqDTO satisticsReqDTO,
+    public StatisticsTotalResDTO getTotalCarStatistics(@Valid StatisticsReqDTO statisticsReqDTO,
                                        BindingResult bindingResult,
                                        Principal principal){
 
         userService.findUser(principal.getName());
+        carService.getCarInfo(statisticsReqDTO.getCarId());
 
-        return carStatisticsService.getStatisticsTotal(satisticsReqDTO);
+        return carStatisticsService.getStatisticsTotal(statisticsReqDTO);
     }
 }

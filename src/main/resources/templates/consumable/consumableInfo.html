@@ -162,14 +162,7 @@
       consumableType:'REPAIR',
     }
 
-    console.log(modalRefConsumableId.value)
-    console.log(modalReplaceDate.value)
-
     registerConsumable(formObj).then(result => {
-
-      if(result.result === 'fail'){
-        alert(result.message)
-      }
 
       modalRefConsumableId.value= ''
       modalReplaceDate.value= ''

@@ -34,11 +34,24 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
 
     // 사용자 지정 에러 처리
 
+    @ExceptionHandler(value = {OwnerCarNotFoundException.class})
+    public ResponseEntity<?> handleOwnerCarNotFound(OwnerCarNotFoundException e, WebRequest request){
+
+        log.error("RestExceptionAdvice - OwnerCarNotFoundException!!! ");
+
+        return super.handleExceptionInternal(
+                e,
+                Map.of("result", "fail", "message", e.getMessage()),
+                new HttpHeaders(),
+                HttpStatus.BAD_REQUEST,
+                request
+        );
+    }
+
     @ExceptionHandler(value = {NotExistDataByIDException.class})
     public ResponseEntity<?> handleNotExistDataByID(NotExistDataByIDException e, WebRequest request){
 
         log.error("RestExceptionAdvice - NotExistDataByIDException!!! ");
-        String errorMsg = messageHandler.getMessage(MessageCode.ERROR_ACCESS_DENIED, Collections.emptyList());
 
         return super.handleExceptionInternal(
                 e,
@@ -53,7 +66,6 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> handleInvalidUserPoint(InvalidUserPointException e, WebRequest request){
 
         log.error("RestExceptionAdvice - InvalidUserPointException!!! ");
-        String errorMsg = messageHandler.getMessage(MessageCode.ERROR_ACCESS_DENIED, Collections.emptyList());
 
         return super.handleExceptionInternal(
                 e,
@@ -114,7 +126,7 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
         log.error(e.getMessage());
         return super.handleExceptionInternal(
                 e,
-                e.getMessage(),
+                Map.of("result", "fail", "message", e.getMessage()),
                 new HttpHeaders(),
                 HttpStatus.NOT_FOUND,
                 request

@@ -38,10 +38,8 @@ public class MyPageRestController {
                                               BindingResult bindingResult, Principal principal){
 
         userCarService.modifyMyCarKm(carKmUpdateReqDTO);
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
 
-        return resultMap;
+        return new HashMap<>();
     }
 
     @ApiOperation(value = "나의 차량 조회", notes = "")
@@ -65,9 +63,7 @@ public class MyPageRestController {
         Long carId = userCarService.registerMyCar(user, carRegisterReqDTO.getCarNumber());
 
         Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
         resultMap.put("carId", carId.toString());
-
         return resultMap;
     }
 
@@ -77,10 +73,7 @@ public class MyPageRestController {
 
         userCarService.modifyMyCar(carInfoReqDTO);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-
-        return resultMap;
+        return new HashMap<>();
     }
 
 }

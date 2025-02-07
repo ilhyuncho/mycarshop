@@ -8,6 +8,8 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Aspect
 @Component
 @Log4j2
@@ -22,10 +24,19 @@ public class ReturnValueLoggingAspect {
 //        log.error("Service Error message: {}", th.getMessage());
 //    }
 
-    // RestController 에서 리턴시 적용
-    @AfterReturning(pointcut = "execution(* com.carshop.mycarshop.controller..*.*(..))", returning = "retVals")
+    // RestController 에서 PageResponseDTO 타입을 리턴시 적용
+    @AfterReturning(pointcut = "execution(* com.carshop.mycarshop.controller..*(..))", returning = "retVals")
     public void printControllerReturnObject(JoinPoint joinPoint, PageResponseDTO<?> retVals) throws Throwable{
         log.error( "3.Controller ReturnObject : " + retVals.toString());
+    }
+
+    // RestController 에서 Map<String,String> 타입을 리턴시 적용
+    @AfterReturning(pointcut = "execution(* com.carshop.mycarshop.controller..*(..))", returning = "retVals")
+    public void printControllerReturnObject1(JoinPoint joinPoint, Map<String,String> retVals){
+
+        retVals.put("result", "success");
+
+        log.error( "4.Controller ReturnObject : " + retVals.toString());
     }
 
     @AfterThrowing(pointcut = "execution(* com.carshop.mycarshop.controller..*.*(..))", throwing="th")

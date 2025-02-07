@@ -19,14 +19,11 @@ import java.util.List;
 @Transactional
 public class CarStatisticsServiceImpl implements CarStatisticsService {
 
-    private final CarService carService;
     private final CarConsumableRepository carConsumableRepository;
 
 
     @Override
     public List<StatisticsResDTO> getStatisticsConsume(StatisticsReqDTO statisticsReqDTO) {
-
-        Car car = carService.getCarInfo(statisticsReqDTO.getCarId());
 
         return carConsumableRepository.statisticsConsume(statisticsReqDTO);
     }
@@ -34,23 +31,17 @@ public class CarStatisticsServiceImpl implements CarStatisticsService {
     @Override
     public List<StatisticsResDTO> getStatisticsFuelAmount(StatisticsReqDTO statisticsReqDTO) {
 
-        Car car = carService.getCarInfo(statisticsReqDTO.getCarId());
-
         return carConsumableRepository.statisticsFuelAmount(statisticsReqDTO);
     }
 
     @Override
     public List<StatisticsResDTO> getStatisticsDistance(StatisticsReqDTO statisticsReqDTO) {
 
-        Car car = carService.getCarInfo(statisticsReqDTO.getCarId());
-
         return carConsumableRepository.statisticsDistance(statisticsReqDTO);
     }
 
     @Override
     public StatisticsTotalResDTO getStatisticsTotal(StatisticsReqDTO statisticsReqDTO) {
-
-        Car car = carService.getCarInfo(statisticsReqDTO.getCarId());
 
         return carConsumableRepository.statisticsTotal(statisticsReqDTO);
     }

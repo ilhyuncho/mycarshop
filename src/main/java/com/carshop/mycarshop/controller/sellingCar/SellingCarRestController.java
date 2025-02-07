@@ -41,10 +41,7 @@ public class SellingCarRestController {
 
         sellingCarService.registerSellingCar(user, sellingCarRegDTO);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-
-        return resultMap;
+        return new HashMap<>();
     }
 
     @ApiOperation(value = "판매 현황", notes = "차 소유주가 [판매 현황] 버튼 클릭")
@@ -66,9 +63,7 @@ public class SellingCarRestController {
 
         sellingCarService.updateSellingCar(sellingCarRegDTO);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return resultMap;
+        return new HashMap<>();
     }
 
     @ApiOperation(value = "판매 차량 리스트 정보 전달", notes = "판매 차량 리스트 화면")
@@ -103,8 +98,6 @@ public class SellingCarRestController {
 
         sellingCarService.likeSellingCar(user, sellingCarRegDTO);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return resultMap;
+        return new HashMap<>();
     }
 }

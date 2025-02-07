@@ -50,6 +50,7 @@ public class myInfoRestController {
     public UserAddressBookResDTO addressInfo(Long userAddressBookId){
         return userAddressBookService.getUserAddressBookInfo(userAddressBookId);
     }
+
     @ApiOperation(value = "모든 배송 주소 정보 get", notes = "")
     @GetMapping("/allAddressInfo")
     //@PreAuthorize("principal.username != #userName")
@@ -72,9 +73,7 @@ public class myInfoRestController {
 
         userAddressBookService.registerAddressBook(user, userAddressBookReqDTO);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return resultMap;
+        return new HashMap<>();
     }
 
     @ApiOperation(value = "배송지 수정", notes = "")
@@ -87,9 +86,7 @@ public class myInfoRestController {
 
         userAddressBookService.modifyAddressBook(user, userAddressBookReqDTO);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return resultMap;
+        return new HashMap<>();
     }
 
     @ApiOperation(value = "배송지 주소 삭제", notes = "")
@@ -99,13 +96,9 @@ public class myInfoRestController {
 
         User user = userService.findUser(principal.getName());
 
-        log.error(userAddressBookId);
-
         userAddressBookService.deleteAddressBook(user, userAddressBookId);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return resultMap;
+        return new HashMap<>();
     }
 
     @ApiOperation(value = "배송 진행 상황 get", notes = "")
@@ -118,8 +111,7 @@ public class myInfoRestController {
     @GetMapping("/getMainAddress")
     public Address getMainAddress(Principal principal){
 
-        User user = userService.findUser(principal.getName());
-        return user.getAddress();
+        return userService.findUser(principal.getName()).getAddress();
     }
 
     @ApiOperation(value = "기본 주소 추가 or 수정", notes = "")
@@ -131,7 +123,6 @@ public class myInfoRestController {
         User user = userService.registerMainAddress(principal.getName(), userAddressReqDTO);
 
         Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
         resultMap.put("fullAddress", user.getAddress().fullAddress() );
         return resultMap;
     }
@@ -144,9 +135,7 @@ public class myInfoRestController {
 
         userService.changePassword(principal.getName(), userPasswordReqDTO);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return resultMap;
+        return new HashMap<>();
     }
 
 

@@ -33,9 +33,7 @@ public class CartRestController {
 
         cartService.addCart(itemBuyReqDTO, user);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return resultMap;
+        return new HashMap<>();
     }
 
     @ApiOperation(value = "장바구니 상품 취소", notes = "DELETE 방식으로 특정 상품 삭제")
@@ -44,9 +42,7 @@ public class CartRestController {
 
         cartService.deleteInCart(cartId);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return resultMap;
+        return new HashMap<>();
     }
 
 }

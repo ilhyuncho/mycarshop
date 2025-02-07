@@ -1,7 +1,5 @@
 package com.carshop.mycarshop.controller.myPage;
 
-import com.carshop.mycarshop.domain.reference.RefCarConsumable;
-import com.carshop.mycarshop.domain.user.User;
 import com.carshop.mycarshop.dto.car.CarConsumableDetailResDTO;
 import com.carshop.mycarshop.dto.car.CarConsumableResDTO;
 import com.carshop.mycarshop.service.carConsumable.CarConsumableService;

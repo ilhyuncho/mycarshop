@@ -58,8 +58,6 @@ public class HistoryRestController {
 
         carConsumableService.registerConsumable(carConsumableRegDTO);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return resultMap;
+        return new HashMap<>();
     }
 }

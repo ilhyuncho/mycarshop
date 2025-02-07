@@ -88,7 +88,7 @@ public class FileHandler {
                     boolean deleteThumbnail = thumbnailFile.delete();
                 }
             }catch(Exception e){
-                log.error(e.getMessage());
+                log.error("error: " + e.getMessage());
             }
         }
     }
