@@ -42,40 +42,21 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
                     // 유저 포인트 획득 처리
                     user.addMPoint(refPointSituation.getGainPoint());
                     // 히스토리 추가
-                    saveUserPointHistory(user, refPointSituation, checkValue);
+                    saveUserPointHistory(user, PointType.GAIN,
+                            PointSituation.fromValue(refPointSituation.getRefPointSituationId()),
+                            refPointSituation.getGainPoint(), checkValue);
                 });
     }
 
-    private void saveUserPointHistory(User user, RefPointSituation refPointSituation, String checkValue) {
+    @Override
+    public void saveUserPointHistory(User user, PointType pointType, PointSituation pointSituation, int point, String checkValue){
 
         userPointHistoryRepository.save(UserPointHistory.builder()
                 .user(user)
-                .pointType(PointType.GAIN)
-                .pointSituation(PointSituation.fromValue(refPointSituation.getRefPointSituationId()))
-                .pointValue(refPointSituation.getGainPoint())
+                .pointType(pointType)
+                .pointSituation(pointSituation)
+                .pointValue(point)
                 .checkValue(checkValue)
-                .build());
-    }
-
-    @Override
-    public void consumeUserPoint(User user, UserActionType userActionType, int consumePoint){
-
-        userPointHistoryRepository.save(UserPointHistory.builder()
-                .user(user)
-                .pointType(PointType.CONSUME)
-                .pointSituation(PointSituation.BUY_ITEM_WITH_POINT)
-                .pointValue(consumePoint * -1)
-                .build());
-    }
-
-    @Override
-    public void cancelUserPoint(User user, UserActionType userActionType, int returnPoint) {
-
-        userPointHistoryRepository.save(UserPointHistory.builder()
-                .user(user)
-                .pointType(PointType.RETURN)
-                .pointSituation(PointSituation.CANCEL_ITEM_RETURN_POINT)
-                .pointValue(returnPoint)
                 .build());
     }
 
@@ -105,8 +86,8 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
     }
 
     @Override
-    public UserListPointHistoryResDTO<UserPointHistoryResDTO> getListUserPointHistory(PageRequestDTO pageRequestDTO,
-                                                                                      User user, UserPointHistoryReqDTO userPointHistoryReqDTO) {
+    public UserListPointHistoryResDTO<UserPointHistoryResDTO> getListUserPointHistory(PageRequestDTO pageRequestDTO, User user,
+                                                                                      UserPointHistoryReqDTO userPointHistoryReqDTO) {
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("regDate");
@@ -117,7 +98,6 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
         List<UserPointHistoryResDTO> dtoList = result.map(UserPointHistoryServiceImpl::entityToDTO)
                 .stream().collect(Collectors.toList());
 
-        dtoList.forEach(log::error);
         // List.copyOf 활용 예 ( 불변 객체 리턴 )
         //List<UserMissionResDTO> unModifyCartDTOList = List.copyOf(dtoList);
 

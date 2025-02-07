@@ -10,10 +10,7 @@ import com.carshop.mycarshop.domain.notification.EventType;
 import com.carshop.mycarshop.domain.review.Review;
 import com.carshop.mycarshop.domain.review.ReviewRepository;
 import com.carshop.mycarshop.domain.shop.*;
-import com.carshop.mycarshop.domain.user.User;
-import com.carshop.mycarshop.domain.user.UserActionType;
-import com.carshop.mycarshop.domain.user.UserAddressBook;
-import com.carshop.mycarshop.domain.user.UserAddressBookRepository;
+import com.carshop.mycarshop.domain.user.*;
 import com.carshop.mycarshop.dto.PageRequestDTO;
 import com.carshop.mycarshop.dto.PageResponseDTO;
 import com.carshop.mycarshop.dto.order.*;
@@ -252,8 +249,9 @@ public class OrderServiceImpl implements OrderService {
 
         // 포인트 사용 이력 저장
         if(orderReqDTO.getUseMPoint() > 0){
-            userPointHistoryService.consumeUserPoint(user, UserActionType.ACTION_BUY_ITEM_WITH_POINT,
-                    orderReqDTO.getUseMPoint());
+            userPointHistoryService.saveUserPointHistory(user, PointType.CONSUME,
+                    PointSituation.BUY_ITEM_WITH_POINT,orderReqDTO.getUseMPoint() * -1, null);
+
         }
 
         return order.getOrderId();
@@ -273,7 +271,9 @@ public class OrderServiceImpl implements OrderService {
         });
 
         if(order.getUseMPoint() > 0){
-            userPointHistoryService.cancelUserPoint(order.getUser(), UserActionType.ACTION_CANCEL_ITEM_WITH_POINT, order.getUseMPoint());
+            userPointHistoryService.saveUserPointHistory(order.getUser(), PointType.RETURN,
+                    PointSituation.CANCEL_ITEM_RETURN_POINT, order.getUseMPoint(), null);
+
         }
     }
 
