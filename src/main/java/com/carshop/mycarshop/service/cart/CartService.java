@@ -8,10 +8,10 @@ import com.carshop.mycarshop.dto.shop.ItemBuyReqDTO;
 import java.util.List;
 
 public interface CartService {
-
+    Cart getCartByCartId(Long cartId);
     List<CartDetailResDTO> getCartAll(User user);
     void addCart(ItemBuyReqDTO itemBuyReqDTO, User user);
     void deleteInCart(Long cartId);
 
-    Cart getCartByCartId(Long cartId);
+
 }

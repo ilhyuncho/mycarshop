@@ -10,8 +10,8 @@ import java.util.List;
 public interface UserAddressBookService {
 
     UserAddressBook getUserAddressBook(Long userAddressBookId);
-    List<UserAddressBook> getListUserAddressBook(User user);
     UserAddressBookResDTO getUserAddressBookInfo(Long userAddressBookId);
+    List<UserAddressBook> getListUserAddressBook(User user);
     UserAddressBookResDTO getMainAddressInfo(User user);
     List<UserAddressBookResDTO> getAllUserAddressBookInfo(User user);
     void registerAddressBook(User user, UserAddressBookReqDTO userAddressBookReqDTO);

@@ -29,6 +29,15 @@ public class ReviewServiceImpl implements ReviewService {
     private final ShopItemService shopItemService;
 
     @Override
+    public ReviewResDTO getReview(Long reviewId) {
+
+        Review review = reviewRepository.findByReviewId(reviewId)
+                .orElseThrow(() -> new NoSuchElementException("해당 리뷰 정보가 존재하지않습니다"));
+
+        return entityToDTO(review);
+    }
+
+    @Override
     public ReviewListResDTO<ReviewResDTO> getListReview(PageRequestDTO pageRequestDTO, Long shopItemId) {
 
         ShopItem shopItem = shopItemService.getShopItemById(shopItemId);
@@ -42,7 +51,6 @@ public class ReviewServiceImpl implements ReviewService {
                 .map(ReviewServiceImpl::entityToDTO)
                 .collect(Collectors.toList());
 
-
         // 리뷰 평균 별 점수 get
         Float reviewAvgScore = reviewRepository.getReviewAvgScore(shopItemId);
 
@@ -52,15 +60,6 @@ public class ReviewServiceImpl implements ReviewService {
                 .total((int)result.getTotalElements()) // 수정 해야 함!!!
                 .reviewAvgScore(reviewAvgScore == null ? 0 : reviewAvgScore)
                 .build();
-    }
-
-    @Override
-    public ReviewResDTO getReview(Long reviewId) {
-
-        Review review = reviewRepository.findByReviewId(reviewId)
-                .orElseThrow(() -> new NoSuchElementException("해당 리뷰 정보가 존재하지않습니다"));
-
-        return entityToDTO(review);
     }
 
     @Override

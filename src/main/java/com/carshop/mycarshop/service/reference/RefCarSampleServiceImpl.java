@@ -21,30 +21,31 @@ public class RefCarSampleServiceImpl implements RefCarSampleService {
     @Override
     public RefCarSampleDTO findMyCar(String carNumber) {
 
-        if(carNumber.isEmpty()){
-            // 임의로 차량 정보 db에서 get ( 테스트 간편하게... )
-            List<RefCarSample> listCarSample = refCarSampleRepository.findAll();
+        if(carNumber == null || carNumber.isBlank()){
+            return getRandomCarSample();
+        }
 
-            if(listCarSample.size() > 0){
+        return refCarSampleRepository.findByCarNumber(carNumber)
+                    .map(RefCarSampleServiceImpl::entityToDTO)
+                    .orElse(null);
+    }
 
-                RefCarSample refCarSample = listCarSample.stream()
-                        .skip(new Random().nextInt(listCarSample.size()))
-                        .findFirst().get();
+    private RefCarSampleDTO getRandomCarSample() {
 
-                return entityToDTO(refCarSample);
-            }
-            else{
-                log.error("RefCarSample Data is Invalid!!!!!!!!!!!!");
-                return null;
-            }
+        List<RefCarSample> listCarSample = refCarSampleRepository.findAll();
+
+        if(listCarSample.size() > 0){
+            RefCarSample refCarSample = listCarSample.get(new Random().nextInt(listCarSample.size()));
+            return entityToDTO(refCarSample);
         }
         else{
-            Optional<RefCarSample> refCarSample = refCarSampleRepository.findByCarNumber(carNumber);
-            return refCarSample.map(RefCarSampleServiceImpl::entityToDTO).orElse(null);
+            log.error("RefCarSample Data is Invalid!!!!!!!!!!!!");
+            return null;
         }
     }
 
     public static RefCarSampleDTO entityToDTO(RefCarSample refCarSample) {
+
         if( refCarSample == null){
             return null;
         }

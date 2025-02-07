@@ -10,6 +10,7 @@ import com.carshop.mycarshop.domain.shop.ShopItemRepository;
 import com.carshop.mycarshop.domain.user.User;
 import com.carshop.mycarshop.dto.cart.CartDetailResDTO;
 import com.carshop.mycarshop.dto.shop.ItemBuyReqDTO;
+import com.carshop.mycarshop.dto.shop.ItemOptionResDTO;
 import com.carshop.mycarshop.service.common.CommonUtils;
 import com.carshop.mycarshop.service.notification.NotificationService;
 import com.carshop.mycarshop.service.shop.ItemOptionService;
@@ -34,9 +35,17 @@ public class CartServiceImpl implements CartService {
     private final ShopItemService shopItemService;
     private final NotificationService notificationService;
 
+    public Cart getCartByCartId(Long cartId){
+        return cartRepository.findById(cartId)
+                .orElseThrow(() -> {
+                    log.info("User expected to modify cart but was empty. cartId = '{}',"
+                            , cartId);
+                    return new NotExistDataByIDException("장바구니 정보가 존재하지 않습니다");
+                });
+    }
+
     @Override
     public List<CartDetailResDTO> getCartAll(User user) {
-
         // 이벤트 체크
         final EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
 
@@ -45,23 +54,10 @@ public class CartServiceImpl implements CartService {
 
         return listCart.stream()
                 .filter(Cart::getIsActive)  // 유효한 정보 만..
-                .map(cart -> {
-                    CartDetailResDTO cartDTO = entityToDTO(user, cart, event);
-                    // 아이템 옵션 set
-                    cartDTO.getListItemOption().addAll(itemOptionService.getListItemOptionInfo(cart.getListOptionId()));
-
-                    // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
-                    cart.getShopItem().getItemImageSet()
-                            .stream().filter(image -> image.getImageOrder() == 0)
-                            .peek(log::error)
-                            .forEach(image -> {
-                                cartDTO.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
-                                        image.getImageOrder(), image.getIsMainImage());
-                            });
-
-                    return cartDTO;
-                }).collect(Collectors.toList());
+                .map(cart -> cartToDTO(user, event, cart))
+                .collect(Collectors.toList());
     }
+
     @Override
     public void addCart(ItemBuyReqDTO itemBuyReqDTO, User user) {
 
@@ -108,12 +104,22 @@ public class CartServiceImpl implements CartService {
                 .build();
     }
 
-    public Cart getCartByCartId(Long cartId) {
-        return cartRepository.findById(cartId)
-                .orElseThrow(() -> {
-                    log.info("User expected to modify cart but was empty. cartId = '{}',"
-                            , cartId);
-                    return new NotExistDataByIDException("장바구니 정보가 존재하지 않습니다");
+    private CartDetailResDTO cartToDTO(User user, EventNotification event, Cart cart) {
+        CartDetailResDTO cartDTO = entityToDTO(user, cart, event);
+
+        // 아이템 옵션 set
+        List<ItemOptionResDTO> listItemOptionInfo = itemOptionService.getListItemOptionInfo(cart.getListOptionId());
+        cartDTO.getListItemOption().addAll(listItemOptionInfo);
+
+        // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
+        cart.getShopItem().getItemImageSet()
+                .stream().filter(image -> image.getImageOrder() == 0)
+                .peek(log::error)
+                .forEach(image -> {
+                    cartDTO.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
+                            image.getImageOrder(), image.getIsMainImage());
                 });
+
+        return cartDTO;
     }
 }

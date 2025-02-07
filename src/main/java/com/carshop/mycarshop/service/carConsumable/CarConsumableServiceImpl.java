@@ -17,7 +17,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -79,20 +78,10 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
         return listRefCarConsumable.stream()
                 .filter(refCarConsumable -> !refCarConsumable.getName().equals("주유"))
-                .map(refCarConsumable -> {
-                    CarConsumableResDTO dto = entityToDTO(refCarConsumable);
-
-                    // 고객이 이미 등록한 데이터가 있다면..
-                    if(mapCarConsumable.containsKey(refCarConsumable)){
-
-                        CarConsumable carConsumable = mapCarConsumable.get(refCarConsumable).get();
-                        // 해당 소모품 최신 정비 내역 set
-                        dto.setRecentReplaceInfo(refCarConsumable, carConsumable);
-                    }
-                    return dto;
-                })
+                .map(refCarConsumable -> convertRefCarConsumableToDTO(refCarConsumable, mapCarConsumable))
                 .collect(Collectors.toList());
     }
+
     // 소모품 히스토리 리스트
     @Override
     public List<CarConsumableDetailResDTO> getConsumableDetail(Long carId, Long refConsumableId){
@@ -147,6 +136,19 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
         carConsumableRepository.delete(carConsumable);
     }
+
+    private CarConsumableResDTO convertRefCarConsumableToDTO(RefCarConsumable refCarConsumable,
+                                                             Map<RefCarConsumable, Optional<CarConsumable>> mapCarConsumable){
+
+        CarConsumableResDTO dto = entityToDTO(refCarConsumable);
+
+        // 고객이 이미 등록한 데이터가 있다면 최신 정비 내역을 설정
+        mapCarConsumable.getOrDefault(refCarConsumable, Optional.empty())
+                .ifPresent(carConsumable -> dto.setRecentReplaceInfo(refCarConsumable, carConsumable));
+
+        return dto;
+    }
+
     private static CarConsumableResDTO entityToDTO(RefCarConsumable refCarConsumable) {
         return CarConsumableResDTO.builder()
                 .refConsumableId(refCarConsumable.getRefConsumableId())
