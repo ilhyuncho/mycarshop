@@ -29,8 +29,7 @@ public class AlarmRestController {
 
     @ApiOperation(value = "알림 세부 내용 조회", notes = "")
     @GetMapping("/{alarmId}")
-    public UserAlarmDTO getAlarmDetail(@PathVariable(name="alarmId") Long alarmId
-            , Principal principal){
+    public UserAlarmDTO getAlarmDetail(@PathVariable(name="alarmId") Long alarmId, Principal principal){
 
         userService.findUser(principal.getName());
 
@@ -39,18 +38,19 @@ public class AlarmRestController {
 
     @ApiOperation(value = "알림 리스트 내역 조회", notes = "")
     @GetMapping("/list")
-    public PageResponseDTO<UserAlarmDTO> getUserAlarm(PageRequestDTO pageRequestDTO,
-                                                      Principal principal){
+    public PageResponseDTO<UserAlarmDTO> getUserAlarm(PageRequestDTO pageRequestDTO, Principal principal){
 
         User user = userService.findUser(principal.getName());
 
-        return userAlarmService.getListAlarm(pageRequestDTO, user);
+        return userAlarmService.getListAlarm(user, pageRequestDTO);
     }
 
     @ApiOperation(value = "새로운 알림이 있는지 조회", notes = "")
     @GetMapping("/new")
     public boolean getNewAlarm(Principal principal){
+
         User user = userService.findUser(principal.getName());
+
         return userAlarmService.isNewAlarm(user);
     }
 

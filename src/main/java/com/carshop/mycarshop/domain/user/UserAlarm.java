@@ -31,9 +31,11 @@ public class UserAlarm extends BaseEntity {
     @JoinColumn(name="UserId")   // pk(외래키)가 user테이블(주테이블)에 생성
     private User user;
 
-
     public void readAlarm(){
-        this.alarmCheck = true;
+        if(!this.isAlarmCheck()){
+            // 읽음으로 표시
+            this.alarmCheck = true;
+        }
     }
 
 }

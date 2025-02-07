@@ -31,26 +31,23 @@ public class UserAlarmServiceImpl implements UserAlarmService {
         UserAlarm userAlarm = userAlarmRepository.findById(alarmId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 알림 정보가 존재하지않습니다"));
 
-        if(!userAlarm.isAlarmCheck()){
-            userAlarm.readAlarm();      // 읽음으로 표시
-        }
+        // 읽음으로 표시
+        userAlarm.readAlarm();
 
         return entityToDTO(userAlarm);
     }
 
     @Override
-    public PageResponseDTO<UserAlarmDTO> getListAlarm(PageRequestDTO pageRequestDTO, User user){
+    public PageResponseDTO<UserAlarmDTO> getListAlarm(User user, PageRequestDTO pageRequestDTO){
 
         Pageable pageable = pageRequestDTO.getPageable("userAlarmId");
 
         Page<UserAlarm> result = userAlarmRepository.findByUser(user, pageable);
-        List<UserAlarm> listAlarm = result.getContent();
 
-        List<UserAlarmDTO> listAlarmDTO = listAlarm.stream()
+        List<UserAlarmDTO> listAlarmDTO = result.getContent()
+                .stream()
                 .map(UserAlarmServiceImpl::entityToDTO)
                 .collect(Collectors.toList());
-
-        listAlarm.forEach(log::error);
 
         return PageResponseDTO.<UserAlarmDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
@@ -61,15 +58,12 @@ public class UserAlarmServiceImpl implements UserAlarmService {
 
     @Override
     public boolean isNewAlarm(User user) {
-
-        Long newCount = userAlarmRepository.countByUserAndAlarmCheck(user, false);
-        return newCount > 0;
+        return userAlarmRepository.countByUserAndAlarmCheck(user,false) > 0;
     }
 
     @Override
     public void registerAlarm(User user, String alarmTitle, String alarmContent) {
 
-        //log.error("registerAlarm() " + alarmTitle + "," + alarmContent);
         UserAlarm userAlarm = UserAlarm.builder()
                 .user(user)
                 .alarmTitle(alarmTitle)

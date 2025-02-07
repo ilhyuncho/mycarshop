@@ -17,6 +17,7 @@ import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,20 +37,24 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
                 .findFirst()
                 .orElse(null);  // 예) 차량 판매 시 판매 하는 차량 번호
 
-        RefPointSituation refPointSituation = checkMissionIncomplete(user, userActionType, checkValue);
+        Optional.ofNullable(checkMissionIncomplete(user, userActionType, checkValue))
+                .ifPresent(refPointSituation -> {
+                    // 유저 포인트 획득 처리
+                    user.addMPoint(refPointSituation.getGainPoint());
+                    // 히스토리 추가
+                    saveUserPointHistory(user, refPointSituation, checkValue);
+                });
+    }
 
-        if(refPointSituation != null){
+    private void saveUserPointHistory(User user, RefPointSituation refPointSituation, String checkValue) {
 
-            user.addMPoint(refPointSituation.getGainPoint());
-
-            userPointHistoryRepository.save(UserPointHistory.builder()
-                    .user(user)
-                    .pointType(PointType.GAIN)
-                    .pointSituation(PointSituation.fromValue(refPointSituation.getRefPointSituationId()))
-                    .pointValue(refPointSituation.getGainPoint())
-                    .checkValue(checkValue)
-                    .build());
-        }
+        userPointHistoryRepository.save(UserPointHistory.builder()
+                .user(user)
+                .pointType(PointType.GAIN)
+                .pointSituation(PointSituation.fromValue(refPointSituation.getRefPointSituationId()))
+                .pointValue(refPointSituation.getGainPoint())
+                .checkValue(checkValue)
+                .build());
     }
 
     @Override
@@ -77,28 +82,26 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
     @Override
     public RefPointSituation checkMissionIncomplete(User user, UserActionType userActionType, String checkValue) {
 
-        log.error("checkMissionIncomplete()!" + userActionType + "," + checkValue );
+        log.error("checkMissionIncomplete()!" + userActionType + "," + checkValue);
         // 총 성공 미션 갯수 get
         int countUserPointHistory = userPointHistoryRepository.getCountUserPointHistory(user);
 
+        // First login case
         if(countUserPointHistory == 0 && userActionType.equals(UserActionType.ACTION_LOGIN)){
-
-            return refPointSituationRepository.findById(PointSituation.FIRST_LOGIN.getType())
-                    .orElseThrow(() -> new NoSuchElementException("해당 미션 정보가 존재하지않습니다"));
+            return findPointSituation(PointSituation.FIRST_LOGIN);
         }
-        else{
-            PointSituation pointSituation = convertPointSituation(userActionType);
 
-            List<UserPointHistory> listUserPointHistory = userPointHistoryRepository.getListPointHistoryBySituationType(user, pointSituation, checkValue);
-            if(listUserPointHistory.size() == 0){
+        PointSituation pointSituation = convertPointSituation(userActionType);
 
-                return refPointSituationRepository.findById(pointSituation.getType())
-                        .orElseThrow(() -> new NoSuchElementException("해당 미션 정보가 존재하지않습니다"));
-            }
+        List<UserPointHistory> listUserPointHistory =
+                userPointHistoryRepository.getListPointHistoryBySituationType(user, pointSituation, checkValue);
 
-            //listUserPointHistory.forEach(log::error);
-        }
-        return null;
+        return listUserPointHistory.isEmpty() ? findPointSituation(pointSituation) : null;
+    }
+
+    private RefPointSituation findPointSituation(PointSituation pointSituation) {
+        return refPointSituationRepository.findById(pointSituation.getType())
+                .orElseThrow(() -> new NoSuchElementException("해당 미션 정보가 존재하지 않습니다"));
     }
 
     @Override

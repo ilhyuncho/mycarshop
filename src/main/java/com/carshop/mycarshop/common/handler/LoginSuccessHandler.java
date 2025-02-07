@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @Log4j2
 @AllArgsConstructor
 @Component      // 스테레오 타입 애너테이션
+@Transactional
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final UserPointHistoryService userPointHistoryService;
