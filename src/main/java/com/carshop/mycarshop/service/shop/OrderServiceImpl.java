@@ -38,8 +38,6 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final ShopItemRepository shopItemRepository;
-    private final CartRepository cartRepository;
     private final OrderItemRepository orderItemRepository;
     private final UserAddressBookRepository userAddressBookRepository;
     private final OrderTemporaryRepository orderTemporaryRepository;
@@ -49,6 +47,7 @@ public class OrderServiceImpl implements OrderService {
     private final ItemOptionService itemOptionService;
     private final NotificationService notificationService;
     private final UserPointHistoryService userPointHistoryService;
+    private final ShopItemService shopItemService;
 
     @Override
     public Order getOrderInfo(Long orderId){
@@ -212,49 +211,26 @@ public class OrderServiceImpl implements OrderService {
                 .recipientPhoneNumber(userAddressBook.getRecipientPhoneNumber())
                 .build();
     }
+
     @Override
     public Long createOrder(User user, OrderReqDTO orderReqDTO){
 
+        // 사용 포인트 검증
+        validateUserPoint(user, orderReqDTO.getUseMPoint());
+
+        // 상세 구매 아이템 정보 생성
+        List<OrderItem> listOrderItem = createOrderItems(orderReqDTO);
+
+        // 고객 배송 정보
         UserAddressBook userAddressBook = userAddressBookRepository.findById(orderReqDTO.getUserAddressBookId())
                 .orElseThrow(() -> new ItemNotFoundException("배송 주소 정보가 존재하지않습니다"));
 
-        if(orderReqDTO.getUseMPoint() > 0
-                && orderReqDTO.getUseMPoint() > user.getMPoint()){
-            throw new InvalidUserPointException("사용 포인트 값이 잘못 되었습니다");
-        }
-
-        // 상세 구매 아이템 정보 생성
-        List<OrderItem> listOrderItem = orderReqDTO.getListOrderDetail().stream().map(orderDetailDTO -> {
-
-            // 장바구니를 통해서 주문시
-            if( orderDetailDTO.getCartId() != null){
-
-                Cart cart = cartService.getCartByCartId(orderDetailDTO.getCartId());
-
-                // 장바구니 정보 비활성화
-                cart.changeIsActive(false);
-            }
-
-            ShopItem shopItem = shopItemRepository.findById(orderDetailDTO.getItemId())
-                    .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
-
-            // 주문 상품 생성
-            return OrderItem.createOrderItem(orderDetailDTO, shopItem);
-
-        }).collect(Collectors.toList());
+        // 포인트 사용 이력 저장
+        saveUserPointHistory(user, orderReqDTO);
 
         // Order 생성
         Order order = Order.createOrder(user, userAddressBook, orderReqDTO, listOrderItem);
-        orderRepository.save(order);
-
-        // 포인트 사용 이력 저장
-        if(orderReqDTO.getUseMPoint() > 0){
-            userPointHistoryService.saveUserPointHistory(user, PointType.CONSUME,
-                    PointSituation.BUY_ITEM_WITH_POINT,orderReqDTO.getUseMPoint() * -1, null);
-
-        }
-
-        return order.getOrderId();
+        return orderRepository.save(order).getOrderId();
     }
 
     @Override
@@ -273,15 +249,13 @@ public class OrderServiceImpl implements OrderService {
         if(order.getUseMPoint() > 0){
             userPointHistoryService.saveUserPointHistory(order.getUser(), PointType.RETURN,
                     PointSituation.CANCEL_ITEM_RETURN_POINT, order.getUseMPoint(), null);
-
         }
     }
 
     @Override
     public Long addOrderTemporary(ItemBuyReqDTO itemBuyReqDTO, User user) {
 
-        ShopItem shopItem = shopItemRepository.findByItemName(itemBuyReqDTO.getItemName())
-                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
+        ShopItem shopItem = shopItemService.getShopItemByItemName(itemBuyReqDTO.getItemName());
 
         // 이벤트 체크
         EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
@@ -299,10 +273,45 @@ public class OrderServiceImpl implements OrderService {
                 .itemOptionId2(itemBuyReqDTO.getOptionId(1))
                 .build();
 
-        orderTemporaryRepository.save(orderTemporary);
-
-        return orderTemporary.getOrderTemporaryId();
+        return orderTemporaryRepository.save(orderTemporary).getOrderTemporaryId();
     }
 
+    private void validateUserPoint(User user, int useMPoint){
+        if(useMPoint > 0 && useMPoint > user.getMPoint()){
+            throw new InvalidUserPointException("사용 포인트 값이 잘못 되었습니다");
+        }
+    }
+
+    private void saveUserPointHistory(User user, OrderReqDTO orderReqDTO) {
+        if(orderReqDTO.getUseMPoint() > 0){
+            userPointHistoryService.saveUserPointHistory(user, PointType.CONSUME,
+                    PointSituation.BUY_ITEM_WITH_POINT, orderReqDTO.getUseMPoint() * -1, null);
+        }
+    }
+
+    private List<OrderItem> createOrderItems(OrderReqDTO orderReqDTO) {
+
+        return orderReqDTO.getListOrderDetail().stream().map(orderDetailDTO -> {
+            // 장바구니를 통해서 주문시
+            disableCartState(orderDetailDTO.getCartId());
+
+            return createOrderItem(orderDetailDTO);
+        }).collect(Collectors.toList());
+    }
+
+    private void disableCartState(Long cartId){
+        if(cartId != null) {
+            Cart cart = cartService.getCartByCartId(cartId);
+            // 장바구니 정보 비활성화
+            cart.changeIsActive(false);
+        }
+    }
+
+    private OrderItem createOrderItem(OrderDetailDTO orderDetailDTO) {
+
+        ShopItem shopItem = shopItemService.getShopItemById(orderDetailDTO.getItemId());
+
+        return OrderItem.createOrderItem(orderDetailDTO, shopItem);
+    }
 
 }

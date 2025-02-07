@@ -1,6 +1,5 @@
 package com.carshop.mycarshop.service.cart;
 
-import com.carshop.mycarshop.common.exception.ItemNotFoundException;
 import com.carshop.mycarshop.common.exception.NotExistDataByIDException;
 import com.carshop.mycarshop.domain.cart.Cart;
 import com.carshop.mycarshop.domain.cart.CartRepository;
@@ -14,7 +13,7 @@ import com.carshop.mycarshop.dto.shop.ItemBuyReqDTO;
 import com.carshop.mycarshop.service.common.CommonUtils;
 import com.carshop.mycarshop.service.notification.NotificationService;
 import com.carshop.mycarshop.service.shop.ItemOptionService;
-import com.carshop.mycarshop.service.user.UserService;
+import com.carshop.mycarshop.service.shop.ShopItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -30,9 +29,9 @@ import java.util.stream.Collectors;
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
-    private final ShopItemRepository shopItemRepository;
+
     private final ItemOptionService itemOptionService;
-    private final UserService userService;
+    private final ShopItemService shopItemService;
     private final NotificationService notificationService;
 
     @Override
@@ -66,8 +65,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public void addCart(ItemBuyReqDTO itemBuyReqDTO, User user) {
 
-        ShopItem shopItem = shopItemRepository.findByItemName(itemBuyReqDTO.getItemName())
-                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
+        ShopItem shopItem = shopItemService.getShopItemByItemName(itemBuyReqDTO.getItemName());
 
         // 이벤트 체크
         EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);

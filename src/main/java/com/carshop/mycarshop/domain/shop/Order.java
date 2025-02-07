@@ -78,8 +78,7 @@ public class Order {
         // 현재 배송 상태가 취소 가능 한지 체크
         this.deliveryStatus.checkCancellable();
 
-        if(this.useMPoint > 0)
-        {
+        if(this.useMPoint > 0) {
             this.user.addMPoint(this.useMPoint);
         }
 

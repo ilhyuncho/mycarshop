@@ -131,18 +131,15 @@ public class ShopItem {
     //ShopItem 엔티티 에서 ItemOption 엔티티 객체들을 모두 관리  end---------------
 
     public void addPurchaseCount(int count) {
-        if(stockCount - purchaseCount < count){
+
+        if(this.stockCount - this.purchaseCount < count){
             throw new NotEnoughStockCountException("need more Stock");
         }
-        purchaseCount += count;
+        this.purchaseCount += count;
     }
     public void minusPurchaseCount(int count) {
-        if(purchaseCount - count < 0){
-            purchaseCount = 0;
-        }
-        else{
-            purchaseCount -= count;
-        }
+
+        this.purchaseCount = Math.max(this.purchaseCount - count, 0);
     }
 
     public SortedMap<ItemOptionType, String> getMapItemOption(){

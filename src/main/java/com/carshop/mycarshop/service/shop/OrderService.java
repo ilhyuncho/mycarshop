@@ -19,7 +19,4 @@ public interface OrderService {
     Long createOrder(User user, OrderReqDTO orderReqDTO);
     void cancelOrder(Long orderId);
     Long addOrderTemporary(ItemBuyReqDTO itemBuyReqDTO, User user);
-
-
-
 }

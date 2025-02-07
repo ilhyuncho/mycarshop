@@ -4,12 +4,12 @@ import com.carshop.mycarshop.common.exception.ItemNotFoundException;
 import com.carshop.mycarshop.domain.review.Review;
 import com.carshop.mycarshop.domain.review.ReviewRepository;
 import com.carshop.mycarshop.domain.shop.ShopItem;
-import com.carshop.mycarshop.domain.shop.ShopItemRepository;
 import com.carshop.mycarshop.domain.user.User;
 import com.carshop.mycarshop.dto.PageRequestDTO;
 import com.carshop.mycarshop.dto.review.ReviewListResDTO;
 import com.carshop.mycarshop.dto.review.ReviewResDTO;
 import com.carshop.mycarshop.dto.review.ReviewWriteReqDTO;
+import com.carshop.mycarshop.service.shop.ShopItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -25,13 +25,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
-    private final ShopItemRepository shopItemRepository;
+
+    private final ShopItemService shopItemService;
 
     @Override
     public ReviewListResDTO<ReviewResDTO> getListReview(PageRequestDTO pageRequestDTO, Long shopItemId) {
 
-        ShopItem shopItem = shopItemRepository.findById(shopItemId)
-                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
+        ShopItem shopItem = shopItemService.getShopItemById(shopItemId);
 
         Pageable pageable = pageRequestDTO.getPageable("reviewId");
 
@@ -68,8 +68,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         Long shopItemId = reviewWriteReqDTO.getShopItemId();
 
-        ShopItem shopItem = shopItemRepository.findById(shopItemId)
-                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
+        ShopItem shopItem = shopItemService.getShopItemById(shopItemId);
 
         Review review = Review.builder()
                 .reviewer(user.getMember().getMemberId())

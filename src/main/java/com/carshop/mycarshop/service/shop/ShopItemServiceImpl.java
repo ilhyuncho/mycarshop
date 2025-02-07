@@ -37,10 +37,20 @@ public class ShopItemServiceImpl implements ShopItemService {
     private final NotificationService notificationService;
 
     @Override
+    public ShopItem getShopItemByItemName(String ItemName){
+        return shopItemRepository.findByItemName(ItemName)
+                .orElseThrow(() -> new ItemNotFoundException("해당 ItemName의 상품이 존재하지 않습니다"));
+    }
+    @Override
+    public ShopItem getShopItemById(Long id){
+        return shopItemRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException("해당 id의 상품이 존재하지않습니다"));
+    }
+
+    @Override
     public ShopItemExtandDTO getItemInfo(Long shopItemId, User user) {  // User는 null 이 올수 있음
 
-        ShopItem shopItem = shopItemRepository.findById(shopItemId)
-                .orElseThrow(() -> new ItemNotFoundException("해당 상품 정보가 존재하지않습니다"));
+        ShopItem shopItem = getShopItemById(shopItemId);
 
         // 진행 중인 이벤트 체크
         EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
@@ -129,8 +139,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     @Override
     public void modifyItem(ShopItemReqDTO shopItemReqDTO) {
 
-        ShopItem shopItem = shopItemRepository.findById(shopItemReqDTO.getShopItemId())
-                .orElseThrow(() -> new ItemNotFoundException("해당 상품 정보가 존재하지않습니다"));
+        ShopItem shopItem = getShopItemById(shopItemReqDTO.getShopItemId());
 
         // 가격 정책 update
         shopItem.getItemPrice().changePriceInfo(shopItemReqDTO.getOriginalPrice(),
@@ -149,8 +158,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     @Override
     public void modifyImageOrder(ImageOrderReqDTO imageOrderReqDTO) {
 
-        ShopItem shopItem = shopItemRepository.findById(imageOrderReqDTO.getObjectId())
-                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
+        ShopItem shopItem = getShopItemById(imageOrderReqDTO.getObjectId());
 
         // 관리자가 재설정한 image order
         Map<Long, Integer> mapImageDTO = imageOrderReqDTO.getImageOrderList().stream()
