@@ -99,7 +99,7 @@ public class Car extends BaseEntity {
                 .refCarInfo(refCarInfo)
                 .carColors(refCarSampleDTO.getCarColor())
                 .carYears(refCarSampleDTO.getCarYear())
-
+                .carKm(refCarSampleDTO.getCarKm())
                 .refCarGrade(refCarSampleDTO.getRefCarGrade())
                 .refCarTrim(refCarSampleDTO.getRefCarTrim())
                 .carFuelType(refCarSampleDTO.getCarFuelType())

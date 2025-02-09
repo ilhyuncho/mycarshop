@@ -60,12 +60,7 @@ public class SellingCar extends BaseEntity {
     }
 
     public void changeLikeCount(Boolean isLike){
-        if(isLike){
-            likeCount +=1;
-        }
-        else{
-            likeCount = likeCount > 0 ? likeCount - 1 : 0;
-        }
+        likeCount += isLike ? 1 : (likeCount > 0 ? -1 : 0);
     }
     public void changeViewCount(){
         viewCount +=1;

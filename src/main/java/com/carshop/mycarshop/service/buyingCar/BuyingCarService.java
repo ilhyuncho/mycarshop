@@ -9,13 +9,13 @@ import com.carshop.mycarshop.dto.buyingCar.BuyingCarRegDTO;
 import com.carshop.mycarshop.dto.buyingCar.BuyingCarViewDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BuyingCarService {
 
-    BuyingCar getBuyingCarInfo(User user, SellingCar sellingCar);
+    Optional<BuyingCar> getBuyingCarInfo(User user, SellingCar sellingCar);
     List<BuyingCarViewDTO> getListBuyingCarInfo(User user);
     BuyingCarListResDTO<BuyingCarViewDTO> getPageBuyingCarInfo(PageRequestDTO pageRequestDTO, Long sellingCarId);
-    BuyingCarViewDTO getHighProposalBuyingCar(Long sellingCarId);
 
     void registerBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO);
     void updateBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO);

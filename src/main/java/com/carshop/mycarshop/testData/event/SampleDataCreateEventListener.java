@@ -24,7 +24,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Component
@@ -154,42 +153,36 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
                 userAlarmRepository.save(userAlarm);
 
                 if(i == 1){
-                    Optional<RefCarSample> refCarSample = refCarSampleRepository.findById(1L);
+                    refCarSampleRepository.findById(1L).ifPresent(refCarSample -> {
+                            RefCarInfo refCarInfo = refCarSample.getRefCarInfo();
 
-                    if(refCarSample.isPresent()){
-                        RefCarSample refCarSampleData = refCarSample.get();
-                        RefCarInfo refCarInfo = refCarSampleData.getRefCarInfo();
+                            Car car = Car.builder(user, RefCarSampleServiceImpl.entityToDTO(refCarSample), refCarInfo)
+                                    .build();
 
-                        Car car = Car.builder(user, RefCarSampleServiceImpl.entityToDTO(refCarSampleData), refCarInfo)
-                                .build();
+                            List<String> listImage = new ArrayList<>();
+                            listImage.add("1111_carin.png");
+                            listImage.add("2222_carin2.png");
 
-                        List<String> listImage = new ArrayList<>();
-                        listImage.add("1111_carin.png");
-                        listImage.add("2222_carin2.png");
+                            car.resetImages(listImage, "carin.png");
 
-                        car.resetImages(listImage, "carin.png");
+                            // 차량 판매 등록
+                            // SellType sellType = SellType.fromValue("auctionType");
+                            SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
+                                    .sellingCarStatus(SellingCarStatus.PROCESSING)
+                                    .sellType("auctionType")
+                                    .requiredPrice(1000000)
+                                    .build();
+                            car.registerSellingCar(sellingCarRegDTO);
 
-                        // 차량 판매 등록
-                        // SellType sellType = SellType.fromValue("auctionType");
-                        SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
-                                .sellingCarStatus(SellingCarStatus.PROCESSING)
-                                .sellType("auctionType")
-                                .requiredPrice(1000000)
-                                .build();
-                        car.registerSellingCar(sellingCarRegDTO);
-
-                        carRepository.save(car);
-
-                    }
+                            carRepository.save(car);
+                        }
+                    );
                 }
                 else if(i == 8){
-                    Optional<RefCarSample> refCarSample = refCarSampleRepository.findById(2L);
+                    refCarSampleRepository.findById(2L).ifPresent(refCarSample -> {
+                        RefCarInfo refCarInfo = refCarSample.getRefCarInfo();
 
-                    if(refCarSample.isPresent()) {
-                        RefCarSample refCarSampleData = refCarSample.get();
-                        RefCarInfo refCarInfo = refCarSampleData.getRefCarInfo();
-
-                        Car car = Car.builder(user, RefCarSampleServiceImpl.entityToDTO(refCarSampleData), refCarInfo)
+                        Car car = Car.builder(user, RefCarSampleServiceImpl.entityToDTO(refCarSample), refCarInfo)
                                 .build();
 
                         List<String> listImage = new ArrayList<>();
@@ -206,7 +199,7 @@ public class SampleDataCreateEventListener implements ApplicationListener<Sample
                         car.registerSellingCar(sellingCarRegDTO);
 
                         carRepository.save(car);
-                    }
+                    });
                 }
             });
         }

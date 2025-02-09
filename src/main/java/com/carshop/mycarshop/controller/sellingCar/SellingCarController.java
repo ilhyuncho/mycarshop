@@ -79,7 +79,7 @@ public class SellingCarController {
             user = userService.findUser(principal.getName());
         }
 
-        SellingCarResDTO sellingCarResDTO = sellingCarService.getSellingCarInfo(user, sellingCarId);
+        SellingCarResDTO sellingCarResDTO = sellingCarService.getSellingCarData(user, sellingCarId);
 
         model.addAttribute("responseDTO", sellingCarResDTO);
 

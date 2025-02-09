@@ -50,7 +50,7 @@ public class SellingCarRestController {
 
         User user = userService.findUser(principal.getName());
 
-        return sellingCarService.getSellingCarInfo(user, sellingCarId);
+        return sellingCarService.getSellingCarData(user, sellingCarId);
     }
 
     @ApiOperation(value = "판매 취소 or 완료 처리", notes = "판매 중이던 차량")

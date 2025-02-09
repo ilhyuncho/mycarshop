@@ -28,20 +28,18 @@ public class UserSearchCarHistoryServiceImpl implements UserSearchCarHistoryServ
     @Override
     public void insertSearchCarHistory(User user, SellingCar sellingCar) {
 
-        Optional<UserSearchCarHistory> result = userSearchCarHistoryRepository.findByUserAndSellingCar(user, sellingCar);
+        // ifPresentOrElse -> 값이 비어 있을때, 있을때 모두 처리 가능
+       userSearchCarHistoryRepository.findByUserAndSellingCar(user, sellingCar)
+               .ifPresentOrElse(UserSearchCarHistory::plusSearchCount
+                , () -> {
+                    UserSearchCarHistory userSearchCarHistory = UserSearchCarHistory.builder()
+                            .user(user)
+                            .sellingCar(sellingCar)
+                            .searchCount(1)
+                            .build();
 
-        if(result.isPresent()){
-            result.get().plusSearchCount();
-        }
-        else{
-            UserSearchCarHistory userSearchCarHistory = UserSearchCarHistory.builder()
-                    .user(user)
-                    .sellingCar(sellingCar)
-                    .searchCount(1)
-                    .build();
-
-            userSearchCarHistoryRepository.save(userSearchCarHistory);
-        }
+                    userSearchCarHistoryRepository.save(userSearchCarHistory);
+                });
     }
 
     @Override
@@ -51,14 +49,14 @@ public class UserSearchCarHistoryServiceImpl implements UserSearchCarHistoryServ
 
         return listHistory.stream()
                 .sorted(Comparator.comparing(UserSearchCarHistory::getModDate))
-                .map(UserSearchCarHistory::getSellingCar)
-                .filter(sellingCar -> sellingCar.getSellingCarStatus() == SellingCarStatus.PROCESSING
+                .map(UserSearchCarHistory::getSellingCar)   // SellingCar 객체로 변환
+                .filter(sellingCar -> sellingCar.getSellingCarStatus() == SellingCarStatus.PROCESSING   // 판매 중 or 판매 완료
                         || sellingCar.getSellingCarStatus() == SellingCarStatus.COMPLETE)
                 .map(SellingCarServiceImpl::entityToDTO)
                 .map(sellingCarResDTO -> {     // 대표 이미지만 필터링 ( ImageOrder = 0 )
                     sellingCarResDTO.getFileNames().stream()
                             .filter(carImage -> !carImage.getIsMainImage())
-                            .collect(Collectors.toList())
+                            .toList()
                             .forEach(x -> sellingCarResDTO.getFileNames().remove(x));
                     return sellingCarResDTO;
                 })

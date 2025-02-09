@@ -17,7 +17,6 @@ import com.carshop.mycarshop.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,12 +83,4 @@ public class BuyingCarRestController {
 
         return buyingCarService.getPageBuyingCarInfo(pageRequestDTO, sellingCarId);
     }
-
-    @ApiOperation(value = "구매 희망 최고 가격", notes = "")
-    @GetMapping("/highProposalPrice")
-    public BuyingCarViewDTO getHighProposalPrice(Long sellingCarId){
-
-        return buyingCarService.getHighProposalBuyingCar(sellingCarId);
-    }
-
 }
