@@ -40,22 +40,18 @@ public class BuyingCarServiceImpl implements BuyingCarService {
     public Optional<BuyingCar> getBuyingCarInfo(User user, SellingCar sellingCar){
         // 판매 차량을 사려고 하는 고객의 구매 정보 get
          return buyingCarRepository.findBySellingCarAndUserAndIsActive(sellingCar, user, true);
-
-//        return buyingCarRepository.findBySellingCarAndUserAndIsActive(sellingCar, user, true)
-//                .orElse(null);
     }
 
     @Override
     public List<BuyingCarViewDTO> getListBuyingCarInfo(User user) { // 차량 구매 내역 조회
 
-        List<BuyingCarViewDTO> result  = buyingCarRepository.findByUser(user).stream()
+        return buyingCarRepository.findByUser(user)
+                .stream()
                 .filter(BuyingCar::getIsActive)     // Active 한 상태만 조회
                 // null은 제외 (테스트용)
                 //.filter(Objects::nonNull)
                 .map(BuyingCarServiceImpl::entityToDTO)
                 .collect(Collectors.toList());
-
-        return result;
     }
 
     @Override
@@ -129,6 +125,7 @@ public class BuyingCarServiceImpl implements BuyingCarService {
             if(buyCarStatus == BuyCarStatus.PROPOSE_CHANGE_PRICE){
                 buyingCar.changePrice(buyingCarRegDTO.getRequestPrice());
             }
+
         }, () -> {
             throw new OwnerCarNotFoundException("구매 신청 정보가 존재 하지 않습니다");
         });

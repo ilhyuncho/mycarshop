@@ -58,11 +58,11 @@
         <div th:if="${#authorization.expression('hasRole(''USER'')')}">
           <li><a class="dropdown-item" th:href="|@{/myInfo/info(memberId=${#authentication.principal.username})}|">나의 정보</a></li>
           <li><a class="dropdown-item" th:href="|@{/myPage/carList(memberId=${#authentication.principal.username})}|">내차 정보</a></li>
-          <li><a class="dropdown-item" th:href="|@{/myPage/carOrderList}|">차량 주문</a></li>
+          <li><a class="dropdown-item" th:href="|@{/myPage/carOrderList}|">차량 주문 현황</a></li>
           <li><a class="dropdown-item" th:href="|@{/cart/list}|">장바구니</a></li>
           <li><a class="dropdown-item" th:href="|@{/order/list}|">주문 내역</a></li>
 <!--          <li><a class="dropdown-item" th:href="|@{/userCredit/info(memberId=${#authentication.principal.username})}|">결제 내역</a></li>-->
-          <li><a class="dropdown-item" th:href="|@{/logout}|">Logout</a></li>
+          <li><a class="dropdown-item" th:href="|@{/logout}|">로그아웃</a></li>
         </div>
         <div th:unless="${#authorization.expression('hasRole(''USER'')')}">
           <li><a class="dropdown-item" th:href="|@{/auth/login}|">Login</a></li>

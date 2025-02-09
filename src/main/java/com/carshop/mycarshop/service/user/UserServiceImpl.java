@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDTO findUserDTO(String memberId){
         User user = findUser(memberId);
+
         return entityToDTO(user);
     }
 

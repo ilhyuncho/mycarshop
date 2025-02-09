@@ -69,7 +69,6 @@
 
                     <div class="input-group mb-3">
                         <span class="input-group-text">배송 주소&nbsp;<a th:href="|@{/myInfo/deliveryAddress(memberId=${#authentication.principal.username})}|">(배송 주소록 관리)</a></span>
-                        <input type="text" class="form-control" th:value="${userDTO.billingAddress}" readonly>
                     </div>
 
                 </div><!-- <div class="card-body">-->
