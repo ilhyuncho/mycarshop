@@ -61,12 +61,6 @@
             </span>
                         <input type="text" class="form-control userAddress" th:value="${userDTO.address}" readonly>
                     </div>
-
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">결제 주소</span>
-                        <input type="text" class="form-control" th:value="${userDTO.billingAddress}" readonly>
-                    </div>
-
                     <div class="input-group mb-3">
                         <span class="input-group-text">배송 주소&nbsp;<a th:href="|@{/myInfo/deliveryAddress(memberId=${#authentication.principal.username})}|">(배송 주소록 관리)</a></span>
                     </div>
@@ -112,8 +106,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary registerMainAddressBtn">Register</button>
-                    <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
+                    <button type="button" class="btn btn-primary registerMainAddressBtn">등록하기</button>
+                    <button type="button" class="btn btn-outline-dark closeModalBtn">닫기</button>
                 </div>
             </div>
         </div>
@@ -234,7 +228,7 @@
         })
     }
 
-    // [주소 추가] 요청 처리
+    // [주소 추가 or 수정] 요청 처리
     document.querySelector(".registerMainAddressBtn").addEventListener("click", function(e){
 
         const formObj = {
