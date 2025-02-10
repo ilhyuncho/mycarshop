@@ -54,6 +54,7 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         // 진행 중인 이벤트 체크
         EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
+
         // 회원 등급, 이벤트 여부에 따라 아이템 가격 계산
         int discountPrice = CommonUtils.calcDiscountPrice(user, shopItem, event);
 
@@ -72,14 +73,12 @@ public class ShopItemServiceImpl implements ShopItemService {
                 .map(ShopItemServiceImpl::convertShopItemExtandDTO)
                 .collect(Collectors.toList());
 
-        // 대표 이미지만 필터링 ( ImageOrder = 0 )------------------begin---------------
-//        for (ShopItemExtandDTO dto : listShopItemDTO) {
-//            dto.getFileNames().stream()
-//                    .filter(carImage -> carImage.getImageOrder() != 0)
-//                    .collect(Collectors.toList())
-//                    .forEach(x-> dto.getFileNames().remove(x));
-//        }
-        // 대표 이미지만 필터링 ( ImageOrder = 0 )------------------end---------------
+        // 테스트
+//        listShopItemDTO.forEach(shopItemExtandDTO -> {
+//            shopItemExtandDTO.getFileNames().forEach( imageDTO -> {
+//                log.error(imageDTO.getFileName());
+//            });
+//        });
 
         return listShopItemDTO;
     }
@@ -101,7 +100,7 @@ public class ShopItemServiceImpl implements ShopItemService {
                     throw new ItemNotFoundException("해당 상품 정보가 이미 존재 함");
                 });
 
-        // 아이템 가격 정책 저장
+        // 1. 아이템 가격 정책 저장
         ItemPrice itemPrice = ItemPrice.builder()
                 .originalPrice(shopItemReqDTO.getOriginalPrice())
                 .membershipPercent(shopItemReqDTO.getMembershipPercent())
@@ -110,30 +109,30 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         itemPriceRepository.save(itemPrice);
 
-        // ShopItem 정보 저장
+        // 2. ShopItem 정보 저장
         ShopItem shopItem = dtoToEntity(shopItemReqDTO, itemPrice);
 
         // 아이템 옵션 set
-        shopItemReqDTO.getItemOptionList().forEach(itemOptionDTO -> {
-            String[] values = itemOptionDTO.getOptionValue().split(",");
-            int orderIndex = 0;
-            for (String value : values) {
+        setItemOption(shopItemReqDTO, shopItem);
 
-                ItemOption itemOption = ItemOption.builder()
-                        .itemOptionType(ItemOptionType.fromValue(Integer.valueOf(itemOptionDTO.getOptionType())))
-                        .optionOrder(orderIndex++)
-                        .typePriority(itemOptionDTO.getTypePriority())
-                        .optionName(value.trim())
-                        .shopItem(shopItem)
-                        .build();
+        return shopItemRepository.save(shopItem).getShopItemId();
+    }
 
-                shopItem.addItemOption(itemOption);
-            }
-        });
+    private static void setItemOption(ShopItemReqDTO shopItemReqDTO, ShopItem shopItem) {
 
-        ShopItem saveItem = shopItemRepository.save(shopItem);
+        if(shopItemReqDTO.getItemOptionList().isEmpty()){
+            return;
+        }
 
-        return saveItem.getShopItemId();
+        shopItemReqDTO.getItemOptionList()
+            .forEach(itemOptionDTO -> {
+                String[] values = itemOptionDTO.getOptionValue().split(",");
+
+                int orderIndex = 0;
+                for (String value : values) {
+                    shopItem.setItemOption(itemOptionDTO, shopItem, orderIndex++, value);
+                }
+            });
     }
 
     @Override
@@ -151,7 +150,7 @@ public class ShopItemServiceImpl implements ShopItemService {
         // 첨부파일 update
         shopItem.updateImages(shopItemReqDTO.getFileNames(), shopItemReqDTO.getMainImageFileName());
 
-        // 아이템 옵션 udpate
+        // 아이템 옵션 update
         shopItem.updateItemOption(shopItemReqDTO.getItemOptionList());
     }
 
@@ -174,9 +173,9 @@ public class ShopItemServiceImpl implements ShopItemService {
 //            log.error("value:" + stringListEntry.getValue());
 //        }
 
-        listItemImage.stream().filter(itemImage -> !itemImage.getIsMainImage()) // mainImage는 제외
+        listItemImage.stream()
+                .filter(itemImage -> !itemImage.getIsMainImage()) // mainImage는 제외
                 .forEach(itemImage -> {
-                   // log.error(itemImage.getItemImageId());
                     itemImage.changeImageOrder(mapImageDTO.get(itemImage.getItemImageId()));
                 });
     }
@@ -184,6 +183,79 @@ public class ShopItemServiceImpl implements ShopItemService {
     @Override
     public void deleteItem(Long itemId) {
         shopItemRepository.deleteById(itemId);
+    }
+
+    private static ShopItemResDTO convertShopItemDTO(ShopItem shopItem) {
+
+        ShopItemResDTO shopItemResDTO = entityToDTO(shopItem);// 1. sample DTO 셋팅
+
+        setItemImage(shopItem, shopItemResDTO, true);
+
+        return shopItemResDTO;
+    }
+    private static ShopItemExtandDTO convertShopItemExtandDTO(ShopItem shopItem) {
+
+        // 1. sample DTO 셋팅
+        ShopItemResDTO shopItemResDTO = entityToDTO(shopItem);
+
+        // 2. 확장 DTO 셋팅
+        ShopItemExtandDTO shopItemExtandDTO = (ShopItemExtandDTO) shopItemResDTO;
+
+        shopItemExtandDTO.setStockCount(shopItem.getStockCount());
+        shopItemExtandDTO.setMembershipPercent(shopItem.getItemPrice().getMembershipPercent());
+        shopItemExtandDTO.setIsEventTarget(shopItem.getItemPrice().getIsEventTarget());
+
+        // 3. Item Image 셋팅
+        setItemImage(shopItem, shopItemResDTO, true);
+
+        // 4. ItemOption Map 셋팅
+        setItemOption(shopItem, shopItemExtandDTO);
+
+        return shopItemExtandDTO;
+    }
+
+    private static void setItemImage(ShopItem shopItem, ShopItemResDTO shopItemResDTO, boolean isOnlyMainImage) {
+
+        if(shopItem.getItemImageSet().isEmpty()) {
+            return ;
+        }
+
+        shopItem.getItemImageSet().stream()
+            .filter(itemImage -> !isOnlyMainImage || itemImage.getIsMainImage())
+            .forEach(itemImage -> {
+                shopItemResDTO.addImage(itemImage.getItemImageId(), itemImage.getUuid(), itemImage.getFileName(),
+                        itemImage.getImageOrder(), itemImage.getIsMainImage());
+            });
+    }
+
+    private static void setItemOption(ShopItem shopItem, ShopItemExtandDTO shopItemExtandDTO) {
+        SortedMap<ItemOptionType, String> mapItemOption = shopItem.getMapItemOption();
+        Map<ItemOptionType, String> mapItemOptionForView = shopItem.getMapItemOptionForView();
+
+        mapItemOption.forEach((itemOptionType, optionValue) -> {
+            shopItemExtandDTO.getListOptionType().add(
+                    ItemOptionDTO.builder()
+                            .optionType(itemOptionType.getName())
+                            //.optionValue("0-선택안함, " + mapItemOption.get(itemOptionType))
+                            .optionValue(optionValue)
+                            .optionValueForView(mapItemOptionForView.get(itemOptionType))
+                            .build()
+            );
+        });
+    }
+
+    private static ShopItemResDTO entityToDTO(ShopItem shopItem){
+
+        return ShopItemExtandDTO.builder()
+                .shopItemId(shopItem.getShopItemId())
+                .itemName(shopItem.getItemName())
+                .itemTitle(shopItem.getItemTitle())
+                .itemDesc(shopItem.getItemDesc())
+                .originalPrice(shopItem.getItemPrice().getOriginalPrice())
+                .isFreeDelivery(shopItem.isFreeDelivery())
+                .stockCount(shopItem.getStockCount())
+                .purchaseCount(shopItem.getPurchaseCount())
+                .build();
     }
 
     private static ShopItem dtoToEntity(ShopItemReqDTO shopItemReqDTO, ItemPrice itemPrice) {
@@ -205,63 +277,6 @@ public class ShopItemServiceImpl implements ShopItemService {
             });
         }
         return shopItem;
-    }
-
-    private static ShopItemResDTO entityToDTO(ShopItem shopItem){
-
-        ShopItemExtandDTO shopItemExtandDTO = ShopItemExtandDTO.builder()
-                .shopItemId(shopItem.getShopItemId())
-                .itemName(shopItem.getItemName())
-                .itemTitle(shopItem.getItemTitle())
-                .itemDesc(shopItem.getItemDesc())
-                .originalPrice(shopItem.getItemPrice().getOriginalPrice())
-                .isFreeDelivery(shopItem.isFreeDelivery())
-                .stockCount(shopItem.getStockCount())
-                .purchaseCount(shopItem.getPurchaseCount())
-                .build();
-
-        if( shopItem.getItemImageSet().size() > 0) {
-            shopItem.getItemImageSet().forEach(shopItemImage -> {
-                shopItemExtandDTO.addImage(shopItemImage.getItemImageId(), shopItemImage.getUuid(), shopItemImage.getFileName(),
-                        shopItemImage.getImageOrder(), shopItemImage.getIsMainImage());
-            });
-        }
-
-        return shopItemExtandDTO;
-    }
-
-    private static ShopItemResDTO convertShopItemDTO(ShopItem shopItem) {
-
-        return entityToDTO(shopItem);   // 1. sample DTO 셋팅
-    }
-    private static ShopItemExtandDTO convertShopItemExtandDTO(ShopItem shopItem) {
-
-        // 1. sample DTO 셋팅
-        ShopItemResDTO shopItemResDTO = entityToDTO(shopItem);
-
-        // 2. 확장 DTO 셋팅
-        ShopItemExtandDTO shopItemExtandDTO = (ShopItemExtandDTO) shopItemResDTO;
-
-        shopItemExtandDTO.setStockCount(shopItem.getStockCount());
-        shopItemExtandDTO.setMembershipPercent(shopItem.getItemPrice().getMembershipPercent());
-        shopItemExtandDTO.setIsEventTarget(shopItem.getItemPrice().getIsEventTarget());
-
-        ////////////////////////////////////////////////////////////
-        // ItemOption Map 정보 가져오기
-        SortedMap<ItemOptionType, String> mapItemOption = shopItem.getMapItemOption();
-        Map<ItemOptionType, String> mapItemOptionForView = shopItem.getMapItemOptionForView();
-
-        for (ItemOptionType itemOptionType : mapItemOption.keySet()) {
-            shopItemExtandDTO.getListOptionType().add(
-                    ItemOptionDTO.builder()
-                            .optionType(itemOptionType.getName())
-                            .optionValue("0-선택안함, " + mapItemOption.get(itemOptionType))
-                            .optionValueForView(mapItemOptionForView.get(itemOptionType))
-                            .build()
-            );
-        }
-
-        return shopItemExtandDTO;
     }
 
 }
