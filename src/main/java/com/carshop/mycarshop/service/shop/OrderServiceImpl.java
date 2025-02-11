@@ -4,13 +4,13 @@ import com.carshop.mycarshop.common.exception.InvalidUserPointException;
 import com.carshop.mycarshop.common.exception.ItemNotFoundException;
 import com.carshop.mycarshop.common.exception.orderNotFoundException;
 import com.carshop.mycarshop.domain.cart.Cart;
-import com.carshop.mycarshop.domain.cart.CartRepository;
 import com.carshop.mycarshop.domain.notification.EventNotification;
 import com.carshop.mycarshop.domain.notification.EventType;
 import com.carshop.mycarshop.domain.review.Review;
 import com.carshop.mycarshop.domain.review.ReviewRepository;
 import com.carshop.mycarshop.domain.shop.*;
 import com.carshop.mycarshop.domain.user.*;
+import com.carshop.mycarshop.dto.ImageListDTO;
 import com.carshop.mycarshop.dto.PageRequestDTO;
 import com.carshop.mycarshop.dto.PageResponseDTO;
 import com.carshop.mycarshop.dto.order.*;
@@ -74,36 +74,22 @@ public class OrderServiceImpl implements OrderService {
 
         List<OrderListResDTO> listResDTO = new ArrayList<>();
 
-        for (Order order : mapOrderItem.keySet()) {
+        mapOrderItem.forEach( (order, listOrderItem ) ->{
 
-            OrderListResDTO orderListResDTO = OrderListResDTO.builder()
-                    .orderId(order.getOrderId())
-                    .deliveryStatus(order.getDeliveryStatus().getName())
-                    .orderDate(order.getOrderTime().toLocalDate())
-                    .orderPrice(order.getTotalPrice())
-                    .paymentPrice(order.getTotalPaymentPrice())
-                    .build();
+            OrderListResDTO orderListResDTO = entityToDTO(order);
 
-            // 주문 타이틀 생성
-            String itemNames = mapOrderItem.get(order).stream()
-                    .map(orderItem -> orderItem.getShopItem().getItemTitle())
-                    .reduce("", (a, b) -> a + b + " ,")
-                    .replaceFirst(".$", "");    // 정규 표현식을 활용한 마지막 문자 제거
-            // . -> 모든 문자, $ -> 문자열의 끝
-            orderListResDTO.setItemTitle(itemNames);
+            // 주문 내역 ( ex : 상품1 ,상품2 ,상품3 )
+            List<OrderItem> listItem = mapOrderItem.get(order);
 
-            // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
-            mapOrderItem.get(order).forEach(orderItem -> {
-                orderItem.getShopItem().getItemImageSet()
-                        .stream().filter(ItemImage::getIsMainImage)
-                        .forEach(image -> {
-                            orderListResDTO.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
-                                    image.getImageOrder(), image.getIsMainImage());
-                        });
+            orderListResDTO.setItemTitle(makeItemsName(listItem));
+
+            // 아이템 대표 이미지 셋팅
+            listItem.forEach(orderItem -> {
+                setMainImage(orderListResDTO, orderItem);
             });
 
             listResDTO.add(orderListResDTO);
-        }
+        });
 
         // 주문 순서 역순으로 정렬
         listResDTO.sort(Comparator.comparing(OrderListResDTO::getOrderId).reversed());
@@ -114,6 +100,18 @@ public class OrderServiceImpl implements OrderService {
                 .total((int)resultOrderItem.getTotalElements()) // 수정 해야 함!!!
                 .build();
     }
+
+    private static String makeItemsName(List<OrderItem> orderItems) {
+        if(orderItems.isEmpty()){
+            return "";
+        }
+        return orderItems.stream()
+                .map(orderItem -> orderItem.getShopItem().getItemTitle())
+                .reduce("", (a, b) -> a + b + " ,")
+                .replaceFirst(".$", "");    // 정규 표현식을 활용한 마지막 문자 제거
+                                                            // . -> 모든 문자, $ -> 문자열의 끝
+    }
+
     @Override
     public List<OrderItemResDTO> getOrderDetail(User user, Long orderId) {
 
@@ -140,23 +138,16 @@ public class OrderServiceImpl implements OrderService {
 
             // 아이템 옵션 set
             itemDTO.getListItemOption().addAll(itemOptionService.getListItemOptionInfo(orderItem.getListOptionId()));
-
-            // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
-            orderItem.getShopItem().getItemImageSet()
-                    .stream().filter(image -> image.getImageOrder() == 0)
-                    .peek(log::error)
-                    .forEach(image -> {
-                        itemDTO.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
-                                image.getImageOrder(), image.getIsMainImage());
-                    });
+            // 아이템 대표 이미지 셋팅
+            setMainImage(itemDTO, orderItem);
 
             return itemDTO;
         }).collect(Collectors.toList());
 
         listOrderItemResDTO.forEach(log::error);
-
         return listOrderItemResDTO;
     }
+
     @Override
     public OrderTemporaryResDTO getOrderTemporary(Long orderTemporaryId) {
 
@@ -276,6 +267,18 @@ public class OrderServiceImpl implements OrderService {
         return orderTemporaryRepository.save(orderTemporary).getOrderTemporaryId();
     }
 
+    private static <T extends ImageListDTO> void setMainImage(T target, OrderItem orderItem) {
+
+        if(orderItem.getShopItem().getItemImageSet().isEmpty()){
+            return;
+        }
+
+        orderItem.getShopItem().getItemImageSet().stream()
+                .filter(ItemImage::getIsMainImage)
+                .forEach(image -> target.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
+                        image.getImageOrder(), true));
+    }
+
     private void validateUserPoint(User user, int useMPoint){
         if(useMPoint > 0 && useMPoint > user.getMPoint()){
             throw new InvalidUserPointException("사용 포인트 값이 잘못 되었습니다");
@@ -312,6 +315,17 @@ public class OrderServiceImpl implements OrderService {
         ShopItem shopItem = shopItemService.getShopItemById(orderDetailDTO.getItemId());
 
         return OrderItem.createOrderItem(orderDetailDTO, shopItem);
+    }
+
+    private static OrderListResDTO entityToDTO(Order order) {
+        OrderListResDTO orderListResDTO = OrderListResDTO.builder()
+                .orderId(order.getOrderId())
+                .deliveryStatus(order.getDeliveryStatus().getName())
+                .orderDate(order.getOrderTime().toLocalDate())
+                .orderPrice(order.getTotalPrice())
+                .paymentPrice(order.getTotalPaymentPrice())
+                .build();
+        return orderListResDTO;
     }
 
 }

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @Log4j2
@@ -55,10 +56,10 @@ public class ShopItemServiceImpl implements ShopItemService {
         // 진행 중인 이벤트 체크
         EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
 
+        ShopItemExtandDTO shopItemExtandDTO = convertShopItemExtandDTO(shopItem);
+
         // 회원 등급, 이벤트 여부에 따라 아이템 가격 계산
         int discountPrice = CommonUtils.calcDiscountPrice(user, shopItem, event);
-
-        ShopItemExtandDTO shopItemExtandDTO = convertShopItemExtandDTO(shopItem);
         shopItemExtandDTO.setDiscountPrice(discountPrice);
 
         return shopItemExtandDTO;
@@ -69,18 +70,9 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         List<ShopItem> listShopItem = shopItemRepository.findAll();
 
-        List<ShopItemExtandDTO> listShopItemDTO = listShopItem.stream()
+        return listShopItem.stream()
                 .map(ShopItemServiceImpl::convertShopItemExtandDTO)
                 .collect(Collectors.toList());
-
-        // 테스트
-//        listShopItemDTO.forEach(shopItemExtandDTO -> {
-//            shopItemExtandDTO.getFileNames().forEach( imageDTO -> {
-//                log.error(imageDTO.getFileName());
-//            });
-//        });
-
-        return listShopItemDTO;
     }
 
     @Override
@@ -111,7 +103,6 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         // 2. ShopItem 정보 저장
         ShopItem shopItem = dtoToEntity(shopItemReqDTO, itemPrice);
-
         // 아이템 옵션 set
         setItemOption(shopItemReqDTO, shopItem);
 
@@ -128,10 +119,8 @@ public class ShopItemServiceImpl implements ShopItemService {
             .forEach(itemOptionDTO -> {
                 String[] values = itemOptionDTO.getOptionValue().split(",");
 
-                int orderIndex = 0;
-                for (String value : values) {
-                    shopItem.setItemOption(itemOptionDTO, shopItem, orderIndex++, value);
-                }
+                IntStream.range(0, values.length)
+                        .forEach(orderIndex -> shopItem.setItemOption(itemOptionDTO, shopItem, orderIndex, values[orderIndex]));
             });
     }
 
@@ -166,13 +155,6 @@ public class ShopItemServiceImpl implements ShopItemService {
         // DB에 등록된 image order 데이터 get
         List<ItemImage> listItemImage = itemImageRepository.findByShopItem(shopItem);
 
-//        listItemImage.forEach(log::error);
-//
-//        for (Map.Entry<Long, Integer> stringListEntry : mapImageDTO.entrySet()) {
-//            log.error("key:" + stringListEntry.getKey());
-//            log.error("value:" + stringListEntry.getValue());
-//        }
-
         listItemImage.stream()
                 .filter(itemImage -> !itemImage.getIsMainImage()) // mainImage는 제외
                 .forEach(itemImage -> {
@@ -187,8 +169,9 @@ public class ShopItemServiceImpl implements ShopItemService {
 
     private static ShopItemResDTO convertShopItemDTO(ShopItem shopItem) {
 
-        ShopItemResDTO shopItemResDTO = entityToDTO(shopItem);// 1. sample DTO 셋팅
-
+        // 1. sample DTO 셋팅
+        ShopItemResDTO shopItemResDTO = entityToDTO(shopItem);
+        // 2. Item Image 셋팅
         setItemImage(shopItem, shopItemResDTO, true);
 
         return shopItemResDTO;
@@ -217,7 +200,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     private static void setItemImage(ShopItem shopItem, ShopItemResDTO shopItemResDTO, boolean isOnlyMainImage) {
 
         if(shopItem.getItemImageSet().isEmpty()) {
-            return ;
+            return;
         }
 
         shopItem.getItemImageSet().stream()
@@ -271,8 +254,8 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         if(shopItemReqDTO.getFileNames() != null){
             shopItemReqDTO.getFileNames().forEach(fileName ->{
-                String[] arr = fileName.split("_");
 
+                String[] arr = fileName.split("_");
                 shopItem.addImage(arr[0], arr[1], arr[1].equals(shopItemReqDTO.getMainImageFileName()));
             });
         }
