@@ -60,56 +60,22 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public PageResponseDTO<OrderResDTO> getOrderAll(User user, PageRequestDTO pageRequestDTO) {
 
-        Pageable pageable = pageRequestDTO.getPageable("orderItemId");
-
         // 고객의 주문 내역 조회
-        List<Order> orderList = orderRepository.findByUser(user);
+        List<Order> listOrder = orderRepository.findByUser(user);
 
         // 주문 별 상품 구매 내역 조회
-        Page<OrderItem> resultOrderItem = orderItemRepository.findByOrders(orderList, pageable);
+        Pageable pageable = pageRequestDTO.getPageable("orderItemId");
+        Page<OrderItem> resultOrderItem = orderItemRepository.findByOrders(listOrder, pageable);
+        List<OrderItem> listOrderItem = resultOrderItem.getContent();
 
-        Map<Order, List<OrderItem>> mapOrderItem = resultOrderItem.getContent().stream()
-                .collect(Collectors.groupingBy(OrderItem::getOrder,
-                        Collectors.mapping(Function.identity(), Collectors.toList())));
-
-        List<OrderResDTO> listResDTO = new ArrayList<>();
-
-        mapOrderItem.forEach( (order, listOrderItem ) ->{
-
-            OrderResDTO orderResDTO = entityToDTO(order);
-
-            // 주문 내역 ( ex : 상품1 ,상품2 ,상품3 )
-            List<OrderItem> listItem = mapOrderItem.get(order);
-
-            orderResDTO.setItemTitle(makeItemsName(listItem));
-
-            // 아이템 대표 이미지 셋팅
-            listItem.forEach(orderItem -> {
-                setMainImage(orderResDTO, orderItem);
-            });
-
-            listResDTO.add(orderResDTO);
-        });
-
-        // 주문 순서 역순으로 정렬
-        listResDTO.sort(Comparator.comparing(OrderResDTO::getOrderId).reversed());
+        // 주문 별 상품 내역 셋팅
+        List<OrderResDTO> listResDTO = setOrderItems(listOrderItem);;
 
         return PageResponseDTO.<OrderResDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(listResDTO)
                 .total((int)resultOrderItem.getTotalElements()) // 수정 해야 함!!!
                 .build();
-    }
-
-    private static String makeItemsName(List<OrderItem> orderItems) {
-        if(orderItems.isEmpty()){
-            return "";
-        }
-        return orderItems.stream()
-                .map(orderItem -> orderItem.getShopItem().getItemTitle())
-                .reduce("", (a, b) -> a + b + " ,")
-                .replaceFirst(".$", "");    // 정규 표현식을 활용한 마지막 문자 제거
-                                                            // . -> 모든 문자, $ -> 문자열의 끝
     }
 
     @Override
@@ -139,7 +105,7 @@ public class OrderServiceImpl implements OrderService {
             // 아이템 옵션 set
             itemDTO.getListItemOption().addAll(itemOptionService.getListItemOptionInfo(orderItem.getListOptionId()));
             // 아이템 대표 이미지 셋팅
-            setMainImage(itemDTO, orderItem);
+            setMainImage(itemDTO, orderItem.getShopItem());
 
             return itemDTO;
         }).collect(Collectors.toList());
@@ -174,14 +140,8 @@ public class OrderServiceImpl implements OrderService {
         // 아이템 옵션 set
         orderTemporaryResDTO.getListItemOption().addAll(itemOptionService.getListItemOptionInfo(orderTemporary.getListOptionId()));
 
-        // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
-        orderTemporary.getShopItem().getItemImageSet()
-                .stream().filter(image -> image.getImageOrder() == 0)
-                .peek(log::error)
-                .forEach(image -> {
-                    orderTemporaryResDTO.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
-                            image.getImageOrder(), image.getIsMainImage());
-                });
+        // 아이템 대표 이미지 셋팅
+        setMainImage(orderTemporaryResDTO, orderTemporary.getShopItem());
 
         return orderTemporaryResDTO;
     }
@@ -209,12 +169,12 @@ public class OrderServiceImpl implements OrderService {
         // 사용 포인트 검증
         validateUserPoint(user, orderReqDTO.getUseMPoint());
 
-        // 상세 구매 아이템 정보 생성
-        List<OrderItem> listOrderItem = createOrderItems(orderReqDTO);
-
         // 고객 배송 정보
         UserAddressBook userAddressBook = userAddressBookRepository.findById(orderReqDTO.getUserAddressBookId())
                 .orElseThrow(() -> new ItemNotFoundException("배송 주소 정보가 존재하지않습니다"));
+
+        // 상세 구매 아이템 정보 생성
+        List<OrderItem> listOrderItem = createOrderItems(orderReqDTO);
 
         // 포인트 사용 이력 저장
         saveUserPointHistory(user, orderReqDTO);
@@ -267,25 +227,59 @@ public class OrderServiceImpl implements OrderService {
         return orderTemporaryRepository.save(orderTemporary).getOrderTemporaryId();
     }
 
-    private static <T extends ImageListDTO> void setMainImage(T target, OrderItem orderItem) {
+    private static List<OrderResDTO> setOrderItems(List<OrderItem> listOrderItem) {
 
-        if(orderItem.getShopItem().getItemImageSet().isEmpty()){
+        return listOrderItem.stream()
+                .collect(Collectors.groupingBy(OrderItem::getOrder))
+                .entrySet().stream()
+                .map(entry -> {
+                    Order order = entry.getKey();
+                    List<OrderItem> listItem = entry.getValue();
+
+                    OrderResDTO orderResDTO = entityToDTO(order);
+                    orderResDTO.setItemTitle(makeItemsName(listItem));
+
+                    // 아이템 대표 이미지 셋팅
+                    listItem.forEach(item -> setMainImage(orderResDTO, item.getShopItem()));
+
+                    return orderResDTO;
+                })
+                .sorted(Comparator.comparing(OrderResDTO::getOrderId).reversed())       // 주문 순서 역순으로 정렬
+                .collect(Collectors.toList());
+    }
+
+    private static String makeItemsName(List<OrderItem> orderItems) {
+        if(orderItems.isEmpty()){
+            return "";
+        }
+        return orderItems.stream()
+                .map(orderItem -> orderItem.getShopItem().getItemTitle())
+                .reduce("", (a, b) -> a + b + " ,")
+                .replaceFirst(".$", "");    // 정규 표현식을 활용한 마지막 문자 제거
+        // . -> 모든 문자, $ -> 문자열의 끝
+    }
+
+    private static <T extends ImageListDTO> void setMainImage(T target, ShopItem shopItem) {
+
+        if(shopItem.getItemImageSet().isEmpty()){
             return;
         }
 
-        orderItem.getShopItem().getItemImageSet().stream()
-                .filter(ItemImage::getIsMainImage)
-                .forEach(image -> target.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
-                        image.getImageOrder(), true));
+        shopItem.getItemImageSet().stream()
+            .filter(ItemImage::getIsMainImage)
+            .forEach(image -> target.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
+                    image.getImageOrder(), true));
     }
 
     private void validateUserPoint(User user, int useMPoint){
+
         if(useMPoint > 0 && useMPoint > user.getMPoint()){
             throw new InvalidUserPointException("사용 포인트 값이 잘못 되었습니다");
         }
     }
 
     private void saveUserPointHistory(User user, OrderReqDTO orderReqDTO) {
+
         if(orderReqDTO.getUseMPoint() > 0){
             userPointHistoryService.saveUserPointHistory(user, PointType.CONSUME,
                     PointSituation.BUY_ITEM_WITH_POINT, orderReqDTO.getUseMPoint() * -1, null);
@@ -303,6 +297,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void disableCartState(Long cartId){
+
         if(cartId != null) {
             Cart cart = cartService.getCartByCartId(cartId);
             // 장바구니 정보 비활성화
@@ -318,6 +313,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private static OrderResDTO entityToDTO(Order order) {
+
         return OrderResDTO.builder()
                 .orderId(order.getOrderId())
                 .deliveryStatus(order.getDeliveryStatus().getName())
