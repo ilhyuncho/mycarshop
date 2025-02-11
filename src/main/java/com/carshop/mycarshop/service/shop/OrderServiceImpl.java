@@ -58,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
                 });
     }
     @Override
-    public PageResponseDTO<OrderListResDTO> getOrderAll(User user, PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<OrderResDTO> getOrderAll(User user, PageRequestDTO pageRequestDTO) {
 
         Pageable pageable = pageRequestDTO.getPageable("orderItemId");
 
@@ -72,29 +72,29 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.groupingBy(OrderItem::getOrder,
                         Collectors.mapping(Function.identity(), Collectors.toList())));
 
-        List<OrderListResDTO> listResDTO = new ArrayList<>();
+        List<OrderResDTO> listResDTO = new ArrayList<>();
 
         mapOrderItem.forEach( (order, listOrderItem ) ->{
 
-            OrderListResDTO orderListResDTO = entityToDTO(order);
+            OrderResDTO orderResDTO = entityToDTO(order);
 
             // 주문 내역 ( ex : 상품1 ,상품2 ,상품3 )
             List<OrderItem> listItem = mapOrderItem.get(order);
 
-            orderListResDTO.setItemTitle(makeItemsName(listItem));
+            orderResDTO.setItemTitle(makeItemsName(listItem));
 
             // 아이템 대표 이미지 셋팅
             listItem.forEach(orderItem -> {
-                setMainImage(orderListResDTO, orderItem);
+                setMainImage(orderResDTO, orderItem);
             });
 
-            listResDTO.add(orderListResDTO);
+            listResDTO.add(orderResDTO);
         });
 
         // 주문 순서 역순으로 정렬
-        listResDTO.sort(Comparator.comparing(OrderListResDTO::getOrderId).reversed());
+        listResDTO.sort(Comparator.comparing(OrderResDTO::getOrderId).reversed());
 
-        return PageResponseDTO.<OrderListResDTO>withAll()
+        return PageResponseDTO.<OrderResDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(listResDTO)
                 .total((int)resultOrderItem.getTotalElements()) // 수정 해야 함!!!
@@ -317,15 +317,14 @@ public class OrderServiceImpl implements OrderService {
         return OrderItem.createOrderItem(orderDetailDTO, shopItem);
     }
 
-    private static OrderListResDTO entityToDTO(Order order) {
-        OrderListResDTO orderListResDTO = OrderListResDTO.builder()
+    private static OrderResDTO entityToDTO(Order order) {
+        return OrderResDTO.builder()
                 .orderId(order.getOrderId())
                 .deliveryStatus(order.getDeliveryStatus().getName())
                 .orderDate(order.getOrderTime().toLocalDate())
                 .orderPrice(order.getTotalPrice())
                 .paymentPrice(order.getTotalPaymentPrice())
                 .build();
-        return orderListResDTO;
     }
 
 }

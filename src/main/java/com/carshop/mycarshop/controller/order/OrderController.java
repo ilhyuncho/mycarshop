@@ -4,7 +4,7 @@ import com.carshop.mycarshop.domain.user.User;
 import com.carshop.mycarshop.dto.PageRequestDTO;
 import com.carshop.mycarshop.dto.PageResponseDTO;
 import com.carshop.mycarshop.dto.order.OrderItemResDTO;
-import com.carshop.mycarshop.dto.order.OrderListResDTO;
+import com.carshop.mycarshop.dto.order.OrderResDTO;
 import com.carshop.mycarshop.dto.order.OrderTemporaryResDTO;
 import com.carshop.mycarshop.dto.user.UserAddressBookResDTO;
 import com.carshop.mycarshop.service.shop.OrderService;
@@ -42,7 +42,7 @@ public class OrderController {
 
         User user = userService.findUser(principal.getName());
 
-        PageResponseDTO<OrderListResDTO> orderAll = orderService.getOrderAll(user, pageRequestDTO);
+        PageResponseDTO<OrderResDTO> orderAll = orderService.getOrderAll(user, pageRequestDTO);
 
         model.addAttribute("responseDTO", orderAll);
 

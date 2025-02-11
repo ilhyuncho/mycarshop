@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderListResDTO extends ImageListDTO {
+public class OrderResDTO extends ImageListDTO {
     private Long orderId;
     private String deliveryStatus;
     //private String itemName;
