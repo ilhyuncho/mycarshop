@@ -28,7 +28,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         // 실제 인증을 처리할때 호출
+        log.error("==================== BEGIN ====================");
         log.error("loadUserByUsername!!~~~~~~~~~~~~ : " + username);
 
         if(loginAttemptService.isBlocked(username)){
@@ -37,7 +39,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         Optional<Member> result = memberRepository.getWithRoles(username);
         if(result.isEmpty()){
-            log.error("exception!!!!!!!!!!!!!! UsernameNotFoundException");
+            log.error("exception!!!!!!!!!!!!!! UsernameNotFoundException, username : " + username);
             throw new UsernameNotFoundException("username not found...");
         }
 

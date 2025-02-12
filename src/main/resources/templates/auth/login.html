@@ -29,10 +29,10 @@
                                     </div>
                                 </th:block>
 
-                                <div th:if="${loginError}" class="alert alert-danger">Wrong Username or Password</div>
-                                <div th:if="${loginDisabled}" class="alert alert-danger">Account has Not verified.</div>
-                                <div th:if="${loginVerified}" class="alert alert-success">Account has been verified. Please sign-in</div>
-                                <div th:if="${loginLocked}" class="alert alert-danger">Account locked.</div>
+                                <div th:if="${loginError}" class="alert alert-danger" th:utext="|Wrong Username or Password. <br> ${alarmMessage}|"></div>
+                                <div th:if="${loginDisabled}" class="alert alert-danger" th:utext="|Account has Not verified. <br> ${alarmMessage}|"></div>
+                                <div th:if="${loginVerified}" class="alert alert-success" th:utext="Account has been verified. Please sign-in"></div>
+                                <div th:if="${loginLocked}" class="alert alert-danger" th:utext="|Account locked. <br> ${alarmMessage}|"></div>
 
                                 <form th:action="@{/auth/login}" method="post" id="f1" th:if="${param.logout == null}">
                                     <div class="form-floating mb-3">

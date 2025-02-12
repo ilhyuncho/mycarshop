@@ -104,6 +104,7 @@ public class AuthController {
     public String loginError(Model model) {
         log.error("loginError()~!~~~~");
 
+        model.addAttribute("alarmMessage", "로그인 실패 했습니다");
         model.addAttribute("loginError", true);
         return "auth/login";
     }
@@ -113,6 +114,7 @@ public class AuthController {
     public String loginDisabled(Model model) {
         log.error("loginDisabled()~!~~~~");
 
+        model.addAttribute("alarmMessage", "아직 이메일 인증이 되지 않았습니다");
         model.addAttribute("loginDisabled", true);
         return "auth/login";
     }
@@ -122,6 +124,7 @@ public class AuthController {
         log.error("loginLocked()~!~~~~");
 
         model.addAttribute("loginLocked", true);
+        model.addAttribute("alarmMessage", "1분후 다시 시도해 주세요");
         return "auth/login";
     }
 

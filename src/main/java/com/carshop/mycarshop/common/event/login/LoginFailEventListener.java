@@ -16,6 +16,7 @@ public class LoginFailEventListener implements ApplicationListener<Authenticatio
 
     @Override
     public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent event) {
+
         String memberId = event.getAuthentication().getPrincipal().toString();
 
         log.error("LoginFailEventListener-onApplicationEvent() memberId : " + memberId);

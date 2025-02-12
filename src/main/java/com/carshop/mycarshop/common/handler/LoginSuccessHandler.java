@@ -69,6 +69,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         String message = messageHandler.getMessage(MessageCode.WELCOME_GREETING, listArgs);
 
         //String message = "환영 합니다...";
+        log.error("==================== END ======================");
+        log.error("");
 
         session.setAttribute("greeting", message);
         session.setAttribute("memberName", authentication.getName());
