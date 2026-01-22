@@ -1,5 +1,5 @@
 # 자동차 중고 거래 사이트 프로젝트
-http://myshop55.shop:8080
+http://myshop55.shop:8080 - 현재 aws 에서 삭제 한 상태.
 
 # 개발 환경
 * IntelliJ
