@@ -11,7 +11,7 @@ permissions:
     pattern: "**"
     owner: ubuntu
     group: ubuntu
-  - object: /scripts
+  - object: scripts
     pattern: "*.sh"
     owner: ubuntu
     group: ubuntu

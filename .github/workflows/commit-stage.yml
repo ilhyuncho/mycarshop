@@ -136,7 +136,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # (7) 빌드 결과물을 S3 버킷에 업로드
+      # (7) 배포 스크립트 실행 권한 (zip에 포함)
+      - name: Make deploy scripts executable
+        run: chmod +x scripts/start.sh scripts/stop.sh
+
+      # (8) 빌드 결과물을 S3 버킷에 업로드
       - name: Upload to AWS S3
         run: |
           aws deploy push \
@@ -144,7 +148,7 @@ jobs:
             --ignore-hidden-files \
             --s3-location s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip \
             --source .
-      # (8) S3 버킷에 있는 파일을 대상으로 CodeDeploy 실행
+      # (9) S3 버킷에 있는 파일을 대상으로 CodeDeploy 실행
       - name: Deploy to AWS EC2 from S3
         run: |
           aws deploy create-deployment \
