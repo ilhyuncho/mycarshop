@@ -12,6 +12,6 @@ public class CarInfo {
     private String carOption;
     private String company;
     private String companyNation;
-    private Integer modelYear;
+    private Integer modelYear;  //테스트
 }
 
