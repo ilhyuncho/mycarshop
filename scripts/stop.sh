@@ -4,6 +4,10 @@ PROJECT_ROOT="/home/ubuntu/app"
 JAR_FILE="$PROJECT_ROOT/mycarshop.jar"
 
 DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
+if [ -f "$DEPLOY_LOG" ] && [ ! -w "$DEPLOY_LOG" ]; then
+  DEPLOY_LOG="/home/ubuntu/deploy.log"
+fi
+touch "$DEPLOY_LOG"
 
 TIME_NOW=$(date +%c)
 

@@ -42,3 +42,6 @@ out/
 
 ### AWS codedeploy db info
 application-aws.properties
+
+### Local log files
+logs/
