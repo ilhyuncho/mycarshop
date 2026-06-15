@@ -2,10 +2,12 @@
 
 PROJECT_ROOT="/home/ubuntu/app"
 JAR_FILE="$PROJECT_ROOT/mycarshop.jar"
+LOG_DIR="$PROJECT_ROOT/logs"
 
-DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
+DEPLOY_LOG="$LOG_DIR/deploy.log"
+mkdir -p "$LOG_DIR"
 if [ -f "$DEPLOY_LOG" ] && [ ! -w "$DEPLOY_LOG" ]; then
-  DEPLOY_LOG="/home/ubuntu/deploy.log"
+  DEPLOY_LOG="/home/ubuntu/logs/deploy.log"
 fi
 touch "$DEPLOY_LOG"
 

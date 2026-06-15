@@ -2,32 +2,33 @@
 
 PROJECT_ROOT="/home/ubuntu/app"
 JAR_FILE="$PROJECT_ROOT/mycarshop.jar"
+LOG_DIR="$PROJECT_ROOT/logs"
 
-APP_LOG="$PROJECT_ROOT/application.log"
-ERROR_LOG="$PROJECT_ROOT/error.log"
-DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
+APP_LOG="$LOG_DIR/application.log"
+ERROR_LOG="$LOG_DIR/error.log"
+DEPLOY_LOG="$LOG_DIR/deploy.log"
+
+# 앱 실행에 필요한 디렉터리 (파일 업로드, 로그)
+mkdir -p "$PROJECT_ROOT/file_repo" "$LOG_DIR"
+
 if [ -f "$DEPLOY_LOG" ] && [ ! -w "$DEPLOY_LOG" ]; then
-  DEPLOY_LOG="/home/ubuntu/deploy.log"
+  DEPLOY_LOG="/home/ubuntu/logs/deploy.log"
 fi
-touch "$DEPLOY_LOG"
 if [ -f "$APP_LOG" ] && [ ! -w "$APP_LOG" ]; then
-  APP_LOG="/home/ubuntu/application.log"
+  APP_LOG="/home/ubuntu/logs/application.log"
 fi
 if [ -f "$ERROR_LOG" ] && [ ! -w "$ERROR_LOG" ]; then
-  ERROR_LOG="/home/ubuntu/error.log"
+  ERROR_LOG="/home/ubuntu/logs/error.log"
 fi
-touch "$APP_LOG" "$ERROR_LOG"
+touch "$DEPLOY_LOG" "$APP_LOG" "$ERROR_LOG"
 
 TIME_NOW=$(date +%c)
-
-# 앱 실행에 필요한 디렉터리 (파일 업로드, log4j2)
-mkdir -p "$PROJECT_ROOT/file_repo" "$PROJECT_ROOT/logs"
 
 # build 파일 복사
 echo "$TIME_NOW > $JAR_FILE 파일 복사" >> $DEPLOY_LOG
 cp $PROJECT_ROOT/build/libs/*.jar $JAR_FILE
 
-# 재기동 시 이전 application.log 백업 (ANSI 섞인 옛 로그와 구분)
+# 재기동 시 이전 로그 백업 (ANSI 섞인 옛 application.log 와 구분)
 if [ -f "$APP_LOG" ] && [ -s "$APP_LOG" ]; then
   mv "$APP_LOG" "${APP_LOG}.bak.$(date +%Y%m%d_%H%M%S)"
 fi
