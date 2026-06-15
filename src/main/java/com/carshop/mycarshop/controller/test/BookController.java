@@ -1,6 +1,5 @@
 package com.carshop.mycarshop.controller.test;
 
-import com.carshop.mycarshop.domain.car.Car;
 import com.carshop.mycarshop.domain.test.Book;
 import com.carshop.mycarshop.service.test.BookService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +25,11 @@ public class BookController {
     @GetMapping
     public List<Book> getBooks(){
         return bookService.getBooks();
+    }
+
+    @GetMapping("/{bookNumber}")
+    public Book getBook(@PathVariable String bookNumber) {
+        return bookService.getBookData(bookNumber);
     }
 
 }
