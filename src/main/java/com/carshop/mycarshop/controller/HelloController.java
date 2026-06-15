@@ -30,7 +30,7 @@ public class HelloController {
                     var currTime = LocalTime.from(time);
                     return currTime.getHour() >= 13;
                 });
-        log.error("isItEventTime : " + isItEventTime);
+        log.error("mainPage isItEventTime : " + isItEventTime);
 
         //NotiEventResDTO eventDTO = notificationService.getRandomPopupEventInfo();
 
@@ -39,6 +39,8 @@ public class HelloController {
         // 메인 페이지에서 출력
         HttpSession session = request.getSession();
         session.setAttribute("greeting", "환영합니다!!!");
+        log.info("greeting 설정 완료 [application.log] : {}", session.getAttribute("greeting"));
+        log.warn("greeting 설정 완료 [application-log4j2.log] : {}", session.getAttribute("greeting"));
 
         return "index";
     }
