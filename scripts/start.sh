@@ -37,6 +37,19 @@ if [ -f "$ERROR_LOG" ] && [ -s "$ERROR_LOG" ]; then
 fi
 touch "$APP_LOG" "$ERROR_LOG"
 
+# 이전 프로세스가 8080을 잡고 있으면 기동 실패 — stop.sh 이후에도 남았을 때 대비
+for i in $(seq 1 15); do
+  if ! ss -lntp 2>/dev/null | grep -q ':8080 '; then
+    break
+  fi
+  echo "$TIME_NOW > 8080 포트 대기 중 (${i}/15)" >> "$DEPLOY_LOG"
+  sleep 1
+done
+if ss -lntp 2>/dev/null | grep -q ':8080 '; then
+  echo "$TIME_NOW > 8080 포트가 사용 중이라 기동 중단" >> "$DEPLOY_LOG"
+  exit 1
+fi
+
 # jar 파일 실행
 echo "$TIME_NOW > $JAR_FILE 파일 실행" >> $DEPLOY_LOG
 nohup java -jar -Duser.timezone=Asia/Seoul -Dspring.profiles.active=aws $JAR_FILE > $APP_LOG 2> $ERROR_LOG &
