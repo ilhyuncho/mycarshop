@@ -14,6 +14,8 @@ import com.carshop.mycarshop.dto.history.HistoryCarResDTO;
 import com.carshop.mycarshop.service.car.CarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,6 +32,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     private final CarService carService;
     private final CarConsumableRepository carConsumableRepository;
     private final RefCarConsumableRepository refCarConsumableRepository;
+    private final ObjectProvider<CarConsumableService> carConsumableServiceProvider;
 
     // 해당 consumableId 정보
     public CarConsumable getCarConsumableInfo(Long consumableId){
@@ -52,6 +55,8 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                         Collectors.maxBy(Comparator.comparing(CarConsumable::getReplaceDate))));
     }
 
+    @Override
+    @Cacheable(value = "refCarConsumables", key = "'all'")
     public List<RefCarConsumable> getLitRefCarConsumableInfo(){
         return refCarConsumableRepository.findAll()
                 .stream()
@@ -68,7 +73,8 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         Map<RefCarConsumable, Optional<CarConsumable>> mapCarConsumable = getMapRecentConsumableInfo(car);
 
         // 전체 ref 소모품 종류 get
-        List<RefCarConsumable> listRefCarConsumable = getLitRefCarConsumableInfo();
+        List<RefCarConsumable> listRefCarConsumable =
+                carConsumableServiceProvider.getObject().getLitRefCarConsumableInfo();
 
         return listRefCarConsumable.stream()
                 .filter(refCarConsumable -> !refCarConsumable.getName().equals("주유"))
