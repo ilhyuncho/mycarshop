@@ -1,5 +1,6 @@
 package com.carshop.mycarshop.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
@@ -29,12 +30,14 @@ public class ImageListDTO {
                 .build();
         fileNames.add(imageDTO);
     }
+    @JsonIgnore
     public ImageDTO getMainImage(){
         return fileNames.stream()
                 .filter(ImageDTO::getIsMainImage)
                 .findFirst().orElse(null);
     }
 
+    @JsonIgnore
     public List<ImageDTO> getListExceptMainImage(){
         return fileNames.stream()
                 .filter(imageDTO -> !imageDTO.getIsMainImage())
@@ -42,6 +45,7 @@ public class ImageListDTO {
                 .collect(Collectors.toList());
     }
 
+    @JsonIgnore
     public List<ImageDTO> getListAllImage(){
         return fileNames.stream()
                 .sorted(Comparator.comparing(ImageDTO::getImageOrder))
