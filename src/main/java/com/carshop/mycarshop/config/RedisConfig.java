@@ -1,5 +1,10 @@
 package com.carshop.mycarshop.config;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -54,6 +59,23 @@ public class RedisConfig {
                         RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(
-                                new GenericJackson2JsonRedisSerializer()));
+                                redisJsonSerializer()));
+    }
+
+    // JavaTimeModule 추가
+    // Jackson 기본 ObjectMapper는 LocalDateTime을 모릅니다.
+    // JavaTimeModule을 등록해야 직렬화/역직렬화가 됩니다.
+    // 없을 때 Could not write JSON: Java 8 date/time type `java.time.LocalDateTime` not supported by default
+    private static GenericJackson2JsonRedisSerializer redisJsonSerializer() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());  // JavaTimeModule 등록,  LocalDateTime, LocalDate 지원
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.activateDefaultTyping(
+                BasicPolymorphicTypeValidator.builder()
+                        .allowIfSubType(Object.class)
+                        .build(),
+                ObjectMapper.DefaultTyping.NON_FINAL,
+                JsonTypeInfo.As.PROPERTY);
+        return new GenericJackson2JsonRedisSerializer(objectMapper);
     }
 }
