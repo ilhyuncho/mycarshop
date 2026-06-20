@@ -1,6 +1,7 @@
 package com.carshop.mycarshop.dto.shop;
 
 import com.carshop.mycarshop.domain.shop.ItemSellingStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -26,7 +27,8 @@ public class ShopItemExtandDTO extends ShopItemResDTO {
     public ItemOptionDTO getOptionType(Integer index){
         return listOptionType.get(index);
     }
-
+    // Jackson은 인자 없는 getXxx() / isXxx() 만 JSON 프로퍼티로 봅니다.
+    @JsonIgnore     // "sellingStatus" JSON에 포함 → 역직렬화 문제
     public ItemSellingStatus getSellingStatus(){
         return this.stockCount <= 0 ? ItemSellingStatus.STATUS_SOLDOUT : ItemSellingStatus.STATUS_SELLING;
     }
