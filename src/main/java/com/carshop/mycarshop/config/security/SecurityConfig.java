@@ -1,6 +1,7 @@
 package com.carshop.mycarshop.config.security;
 
 
+import com.carshop.mycarshop.common.filter.SessionLoggingFilter;
 import com.carshop.mycarshop.common.handler.LoginSuccessHandler;
 import com.carshop.mycarshop.config.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -27,6 +29,7 @@ public class SecurityConfig {
     private final DataSource dataSource;
     private final CustomUserDetailsService userDetailsService;
     private final LoginSuccessHandler loginSuccessHandler;
+    private final SessionLoggingFilter sessionLoggingFilter;
 
     //private final JWTCheckFilter jwtCheckFilter;
 
@@ -42,14 +45,18 @@ public class SecurityConfig {
         http.csrf().disable();
 
 
-        http.rememberMe().key("12345678")
-                .tokenRepository(persistentTokenRepository())
-                .userDetailsService(userDetailsService)
-                .tokenValiditySeconds(60*60*24*30); // 30일?
+        http.rememberMe().key("12345678")                           //rememberMe() -> RememberMeAuthenticationFilter 활성화
+                .tokenRepository(persistentTokenRepository())       // 토큰 DB(JDBC) 저장
+                .userDetailsService(userDetailsService)             // 쿠키로 사용자 재조회
+                //.tokenValiditySeconds(60*60*24*30); // 30일?
+                 .tokenValiditySeconds(60); // 60초
 
         // 일단, swagger-ui 접근이 안되어서 일단 보류
         // jwtCheckFilter를 UsernamePasswordAuthenticationFilter 앞에 두기
         // http.addFilterBefore(jwtCheckFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // 모든 HTTP 요청마다 Security 필터 체인을 타면서 항상 한 번 실행됩니다.
+        http.addFilterAfter(sessionLoggingFilter, UsernamePasswordAuthenticationFilter.class);
 
         // 모든 경로에 접근 가능
         return http.build();
