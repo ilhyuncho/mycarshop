@@ -39,11 +39,11 @@
     </div>
     <div class="wd50">
       <span style="background-color: #0a53be" class="badge badge-primary mgb-15"
-            th:if="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}">
+            th:if="${responseDTO.getSellingStatus() == T(com.carshop.mycarshop.domain.shop.ItemSellingStatus).STATUS_SELLING}">
         판매중
       </span>
       <span style="background-color: red"  class="badge badge-primary mgb-15"
-            th:if="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SOLDOUT}">
+            th:if="${responseDTO.getSellingStatus() == T(com.carshop.mycarshop.domain.shop.ItemSellingStatus).STATUS_SOLDOUT}">
         품절
       </span>
 
@@ -130,12 +130,12 @@
       </div>
 
 
-      <div th:if="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}"
+      <div th:if="${responseDTO.getSellingStatus() == T(com.carshop.mycarshop.domain.shop.ItemSellingStatus).STATUS_SELLING}"
            class="text-right">
         <button type="button" class="btn btn-primary addCartBtn">장바구니 담기</button>
         <button type="button" class="btn border-primary orderBtn">바로 주문</button>
       </div>
-      <div th:unless="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}"
+      <div th:unless="${responseDTO.getSellingStatus() == T(com.carshop.mycarshop.domain.shop.ItemSellingStatus).STATUS_SELLING}"
            class="text-right">
         <button type="button" class="btn btn-danger btn-lg">품절</button>
       </div>
