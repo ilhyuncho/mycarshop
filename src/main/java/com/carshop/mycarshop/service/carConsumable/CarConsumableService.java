@@ -17,7 +17,7 @@ public interface CarConsumableService {
     void removeConsumable(Long consumableId);
 
     RefCarConsumable getRefCarConsumableInfo(Long refConsumableId);
-    List<RefCarConsumable> getLitRefCarConsumableInfo();
+    List<RefCarConsumable> getListRefCarConsumableInfo();
     List<CarConsumableResDTO> getListConsumableInfo(Long carId);
     List<HistoryCarResDTO> getListHistory(Long carId, List<ConsumableType> listConsumableType);
 //    List<HistoryCarResDTO> getListHistory(Long carId, ConsumableType consumableType);

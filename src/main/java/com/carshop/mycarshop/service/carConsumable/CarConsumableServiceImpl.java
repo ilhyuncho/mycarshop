@@ -5,6 +5,7 @@ import com.carshop.mycarshop.domain.car.Car;
 import com.carshop.mycarshop.domain.carConsumable.CarConsumable;
 import com.carshop.mycarshop.domain.carConsumable.CarConsumableRepository;
 import com.carshop.mycarshop.domain.carConsumable.ConsumableType;
+import com.carshop.mycarshop.config.RedisCacheNames;
 import com.carshop.mycarshop.domain.reference.RefCarConsumable;
 import com.carshop.mycarshop.domain.reference.RefCarConsumableRepository;
 import com.carshop.mycarshop.dto.car.CarConsumableDetailResDTO;
@@ -56,8 +57,9 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     }
 
     @Override
-    @Cacheable(value = "refCarConsumables", key = "'all'")
-    public List<RefCarConsumable> getLitRefCarConsumableInfo(){
+    @Cacheable(value = RedisCacheNames.REF_CAR_CONSUMABLES, key = "'all'") // 작은따옴표 2개가 있는 이유: Spring Expression Language(SpEL)에서 문자열 리터럴 all을 의미
+    // 주의: 같은 클래스 안에서 this.getListRefCarConsumableInfo()처럼 직접 호출하면 캐시가 안 먹습니다.
+    public List<RefCarConsumable> getListRefCarConsumableInfo(){
         return refCarConsumableRepository.findAll()
                 .stream()
                 .sorted(Comparator.comparing(RefCarConsumable::getViewOrder))
@@ -74,7 +76,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
         // 전체 ref 소모품 종류 get
         List<RefCarConsumable> listRefCarConsumable =
-                carConsumableServiceProvider.getObject().getLitRefCarConsumableInfo();
+                carConsumableServiceProvider.getObject().getListRefCarConsumableInfo();
 
         return listRefCarConsumable.stream()
                 .filter(refCarConsumable -> !refCarConsumable.getName().equals("주유"))

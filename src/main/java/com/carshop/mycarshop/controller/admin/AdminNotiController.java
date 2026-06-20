@@ -65,7 +65,7 @@ public class AdminNotiController {
             bindingResult.getAllErrors().forEach(log::error);
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:admin/eventRegister";
+            return "redirect:/admin/eventRegister";
         }
 
         notiControllerValidator.validate(notificationRegDTO, bindingResult);
@@ -75,7 +75,7 @@ public class AdminNotiController {
             redirectAttributes.addFlashAttribute("errorMessage", "이벤트 기간 중복으로 등록 실패");
         }
 
-        return "redirect:admin/eventRegister";
+        return "redirect:/admin/eventRegister";
     }
 
     @ApiOperation(value = "[이벤트] 세부 정보 변경 (post)", notes = "")
@@ -91,7 +91,7 @@ public class AdminNotiController {
 
         notificationService.modifyEventNotification(notiId, notificationRegDTO );
 
-        return "redirect:admin/eventDetail/" + notiId;
+        return "redirect:/admin/eventDetail/" + notiId;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -130,14 +130,14 @@ public class AdminNotiController {
             bindingResult.getAllErrors().forEach(log::error);
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:admin/newsRegister";
+            return "redirect:/admin/newsRegister";
         }
 
         notiControllerValidator.validate(notificationRegDTO, bindingResult);
 
         Long newsId = notificationService.registerNewsNotification(notificationRegDTO);
 
-        return "redirect:admin/newsRegister";
+        return "redirect:/admin/newsRegister";
     }
     @ApiOperation(value = "[뉴스] 세부 정보 변경 (post)", notes = "관리자 접근")
     @PostMapping("/newsModify/{notiId}")
@@ -154,7 +154,7 @@ public class AdminNotiController {
 
         notificationService.modifyNewsNotification(notiId, notificationRegDTO );
 
-        return "redirect:admin/newsDetail/" + notiId;
+        return "redirect:/admin/newsDetail/" + notiId;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////
@@ -176,7 +176,7 @@ public class AdminNotiController {
 
         redirectAttributes.addFlashAttribute("result", "removed");
 
-        return "redirect:admin/" + notiType + "Register";
+        return "redirect:/admin/" + notiType + "Register";
     }
 
     @ApiOperation(value = "[뉴스] & [이벤트] 이미지 순서 수정 페이지로 이동", notes = "관리자 접근")

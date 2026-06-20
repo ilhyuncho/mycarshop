@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 실제 인증을 처리할때 호출
-        log.error("loadUserByUsername!!~~~~~~~~~~~~ : " + username);
+        log.info("loadUserByUsername!!~~~~~~~~~~~~ : " + username);
 
         Optional<Member> result = memberRepository.getWithRoles(username);
         if(result.isEmpty()){
@@ -40,7 +40,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 member.getRoleSet().stream().
                         map(memberRole -> new SimpleGrantedAuthority("ROLE_" + memberRole.name())).collect(Collectors.toList()));
 
-        log.error("memberSecurityDTO : " + memberSecurityDTO);
+        log.info("memberSecurityDTO : " + memberSecurityDTO);
         return memberSecurityDTO;
 
         // UserDetails 인터페이스를 구현한 User라는 클래스를 제공

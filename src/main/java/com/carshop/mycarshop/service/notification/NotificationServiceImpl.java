@@ -2,6 +2,7 @@ package com.carshop.mycarshop.service.notification;
 
 import com.carshop.mycarshop.common.exception.ItemNotFoundException;
 import com.carshop.mycarshop.common.util.Util;
+import com.carshop.mycarshop.config.RedisCacheNames;
 import com.carshop.mycarshop.domain.notification.*;
 import com.carshop.mycarshop.dto.ImageDTO;
 import com.carshop.mycarshop.dto.ImageOrderReqDTO;
@@ -14,6 +15,8 @@ import com.carshop.mycarshop.dto.notification.NotificationRegDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -153,6 +156,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    @CacheEvict(value = RedisCacheNames.ACTIVE_EVENTS, allEntries = true)
     public Long registerEventNotification(NotificationRegDTO eventDTO) {
 
         eventNotificationRepository.findByName(eventDTO.getName())
@@ -188,6 +192,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    @CacheEvict(value = RedisCacheNames.ACTIVE_EVENTS, allEntries = true)
     public void modifyEventNotification(Long notiId, NotificationRegDTO dto) {
 
         EventNotification eventNotification = eventNotificationRepository.findById(notiId)
@@ -226,6 +231,7 @@ public class NotificationServiceImpl implements NotificationService {
         newsNotification.updateImages(dto);
     }
     @Override
+    @CacheEvict(value = RedisCacheNames.ACTIVE_EVENTS, allEntries = true)
     public void deleteNotification(String notiType, Long notiId) {
 
         if(notiType.equals("event")){
@@ -264,6 +270,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    @Cacheable(value = RedisCacheNames.ACTIVE_EVENTS, key = "#eventType.name()")
     public EventNotification getNowDoingEventInfo(EventType eventType) { // 현재 진행 중인 이벤트 정보 return
 
         LocalDate now = LocalDate.now();

@@ -1,5 +1,6 @@
 package com.carshop.mycarshop.service.shop;
 
+import com.carshop.mycarshop.config.RedisCacheNames;
 import com.carshop.mycarshop.common.exception.ItemNotFoundException;
 import com.carshop.mycarshop.domain.notification.EventNotification;
 import com.carshop.mycarshop.domain.notification.EventType;
@@ -15,6 +16,8 @@ import com.carshop.mycarshop.service.common.CommonUtils;
 import com.carshop.mycarshop.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -75,6 +78,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     }
 
     @Override
+    @Cacheable(value = RedisCacheNames.SHOP_ITEMS, key = "'all'")
     public List<ShopItemResDTO> getAllItemsForShop() {   // 악세서리 샵 상품 리스트 (심플)
 
         List<ShopItem> listShopItem = shopItemRepository.findAll();
@@ -84,6 +88,7 @@ public class ShopItemServiceImpl implements ShopItemService {
                 .collect(Collectors.toList());
     }
     @Override
+    @CacheEvict(value = RedisCacheNames.SHOP_ITEMS, key = "'all'")
     public Long registerItem(ShopItemReqDTO shopItemReqDTO) {
 
         shopItemRepository.findByItemName(shopItemReqDTO.getItemName())
@@ -127,6 +132,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     }
 
     @Override
+    @CacheEvict(value = RedisCacheNames.SHOP_ITEMS, key = "'all'")
     public void modifyItem(ShopItemReqDTO shopItemReqDTO) {
 
         ShopItem shopItem = shopItemRepository.findById(shopItemReqDTO.getShopItemId())
@@ -149,6 +155,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     }
 
     @Override
+    @CacheEvict(value = RedisCacheNames.SHOP_ITEMS, key = "'all'")
     public void modifyImageOrder(ImageOrderReqDTO imageOrderReqDTO) {
 
         ShopItem shopItem = shopItemRepository.findById(imageOrderReqDTO.getObjectId())
@@ -176,6 +183,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     }
 
     @Override
+    @CacheEvict(value = RedisCacheNames.SHOP_ITEMS, key = "'all'")
     public void deleteItem(Long itemId) {
         shopItemRepository.deleteById(itemId);
     }
