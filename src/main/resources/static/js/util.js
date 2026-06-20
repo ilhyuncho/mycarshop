@@ -165,8 +165,15 @@ async function callRemoveFiles() {
     return removeFailResult
 }
 
+function isAuthenticatedUser() {
+    return window.__isAuthenticated === true;
+}
+
 // html 페이지 로딩시 호출
 function pageInit(){
+    if (!isAuthenticatedUser()) {
+        return;
+    }
 
     // 새로운 알림 정보 있는지 요청
     checkNewAlarm(true)
@@ -174,6 +181,9 @@ function pageInit(){
 
 // 고객에게 온 새로운 알림이 있는지 체크
 function checkNewAlarm(checkLocal){
+    if (!isAuthenticatedUser()) {
+        return;
+    }
 
     let isRefreshNewAlarm = false;
     const newAlarm = localStorage.getItem("newAlarm");
@@ -198,6 +208,9 @@ function checkNewAlarm(checkLocal){
 }
 
 function resetNewAlarmInfo(){
+    if (!isAuthenticatedUser()) {
+        return;
+    }
 
      getNewAlarm().then(data=>{
         // localStorage 에 새롭게 등록

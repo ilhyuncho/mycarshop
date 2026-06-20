@@ -95,6 +95,9 @@ async function getAlarmList({page, size}){
 
 // 고객이 안읽은 알림 정보 있는지
 async function getNewAlarm(){
+    if (typeof isAuthenticatedUser === 'function' && !isAuthenticatedUser()) {
+        return false;
+    }
 
     const response = await axios.get(`/alarm/new`)
 
